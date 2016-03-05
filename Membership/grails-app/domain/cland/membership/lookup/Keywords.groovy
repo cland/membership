@@ -3,9 +3,9 @@ package cland.membership.lookup
 import java.util.Date;
 
 import javax.management.modelmbean.RequiredModelMBean;
-
+ 
 class Keywords {
-	transient cbcApiService
+	//transient cbcApiService
 	String name
 	String label
 	String category
@@ -29,11 +29,11 @@ class Keywords {
 		sort name: "asc"
 	}
 	def beforeInsert = {
-		createdBy = cbcApiService.getCurrentUserId()
+		createdBy = 1 //TODO: cbcApiService.getCurrentUserId()
 		if(label == "" | label == null) label = name
 	}
 	def beforeUpdate = {
-		lastUpdatedBy = cbcApiService.getCurrentUserId()
+		lastUpdatedBy = 1 //TODO: cbcApiService.getCurrentUserId()
 		if(!label) label = name
 	}
 	def beforeDelete = {
