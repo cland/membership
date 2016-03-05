@@ -25,7 +25,7 @@ class Person implements Serializable {
 	String email
 	String gender
 	Race race
-	List phones
+	//List phones
 	Person(String username, String password) {
 		this()
 		this.username = username
