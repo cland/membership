@@ -1,35 +1,42 @@
-import cland.membership.*
-import cland.membership.security.*
-import cland.membership.lookup.*
-import grails.util.*
+import java.util.logging.Level.KnownLevel;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.AuthorityUtils
-import org.springframework.security.core.context.SecurityContextHolder as SCH
+import cland.membership.security.Person
+import cland.membership.security.PersonRole
+import cland.membership.security.RequestMap
+import cland.membership.security.RoleGroup
+import cland.membership.security.RoleGroupRole
+import cland.membership.security.Role
+import cland.membership.*
+
 class BootStrap {
 
     def init = { servletContext ->
-		println "Bootstrap > environment: " + Environment.getCurrent()
-		def appName = grails.util.Metadata.current.'app.name'
-		println (">> Bootstrapping: ${appName} on OS >> " + System.properties["os.name"] )
 		boolean doBootStrap = false
+		
 		def userlist = Person.list()
 		if(userlist?.size() < 1){
 			println("BootStrap >> ON!")
 			doBootStrap = true
 		}else{
-		println("BootStrap >> off!")
+			println("BootStrap >> off!")
 		}
 		if(doBootStrap){
-			switch(Environment.getCurrent()){
+			println "Doing Bootstrap"
+			println ("1. Create users ...")
+			createUsers("admin123")
+		//	println ("2. Login ...")
+		//	loginAsAdmin()
+			println ("3. Initialize Request map ...")
+			initRequestmap()
+			/*switch(Environment.getCurrent()){
 				case "DEVELOPMENT":
-				
+				createLocations()
 					println ("1. Create users ...")
-					createUsers("admin123")			
+					createUsers("admin123")
+				//	println ("2. Login ...")
+				//	loginAsAdmin()
 					println ("3. Initialize Request map ...")
 					initRequestmap()
-					println ("4. Add other components of the app ...")					
-					createOtherComponents()
 				//	println ("5. Logout ...")
 					// logout
 				//	SCH.clearContext()
@@ -41,67 +48,84 @@ class BootStrap {
 				//	loginAsAdmin()
 					println ("3. Initialize Request map ...")
 					initRequestmap()
-					println ("4. Add other components of the app ...")
-					
-					createOtherComponents()
 				break
-			} //end switch
+			} //end switch*/
 		} //end doBootStrap
-				
-    } //end init
+    }
     def destroy = {
     }
-	
-	// *** HELPER FUNCTIONS ***
-	
-	/**
-	 * Creates initial users
-	 * @return
-	 */
+		
 	private boolean createUsers(String pwd) {
-		
 		//Create office and person
-		def personAdmin = new Person(username: "admin", enabled: true, password: pwd,firstName:"Sys",lastName:"Sysuser",idNumber :"1111111111",
-			dateOfBirth:(new Date() - 365*30),
-			gender:Gender.MALE.toString()).save(flush:true)
-		def personDev = new Person(username: "dev", enabled: true, password: pwd,firstName:"Sys",lastName:"Devuser",idNumber :"10101010101",
-			dateOfBirth:(new Date() - 365*30),
-			gender:Gender.MALE.toString()).save(flush:true)
-		
-		
+		def personDev
+		def personAdmin
+		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
+		//if(!race.save(flush: true)){
+			println "Race saved"
+			 personAdmin = new Person(firstName:"Sys",lastName:"Sysuser", 
+				username: "admin", password: pwd, email: "email@doman.com", gender:"Male",
+				knownAs: "Sys", race: Race.get(1))
+			 personDev = new Person(firstName:"Sys",lastName:"Devuser", password: pwd, username: "dev")
+			if(!personAdmin.save(flush: true)){
+				println "Error occured"
+				personAdmin.errors.each{
+					println it
+				}
+			}else{
+				println "Success!"
+			}
+		/*}else{
+			println "Errors race"
+			println race.errors
+			race.errors.each {
+				println it
+			}
+		}*/
 		try{
-			//create ROLES		
+			//create ROLES
+		//	new Role(authority:"ROLE_ADMINTEST",description:"test description").save(flush:true)
+			/*groupManagerService.generateRoles()
+			groupManagerService.generateOfficeGroups(mainOffice)*/
 			
 			println ">> find a admin and dev roles"
-			def adminRole = Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)	// new Role(authority:"ROLE_ADMIN").save(flush:true)
-			def devRole = Role.findByAuthority(SystemRoles.ROLE_DEVELOPER.value) //new Role(authority:"ROLE_USER").save(flush:true)
-			
-			
-			//SYSTEM ADMIN group(s)
-			def adminGroup = new RoleGroup(name:"GROUP_ADMIN",description:"Administrators").save(flush:true)
-			def devGroup = new RoleGroup(name:"GROUP_DEVELOPER",description:"Developers").save(flush:true)
+			def adminRole = new Role(authority:"ROLE_ADMIN") /*Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)*/	 
+			if(!adminRole.save(flush:true)){
+				println adminRole.errors
+			}else{
+				println "Admin Role saved"
+			}
+			def userRole = new Role(authority:"ROLE_USER").save(flush:true)
+			def adminGroup = new RoleGroup(name:"GROUP_ADMIN").save(flush:true)
+			def devRole = new Role(name: "GROUP_DEV").save(flush: true)
+			if(!adminGroup.save(flush:true)){
+				println adminGroup.errors
+			}else{
+				println "Success person group"
+			}
+			def userGroup = new RoleGroup(authority:"GROUP_USER").save(flush:true)
+			def devGroup = new RoleGroup(authority: "GROUP_DEV").save(flush:true)
+			/*def devGroup = new RoleGroup(name:"GROUP_DEVELOPER").save(flush:true)
+			def userGroup = new RoleGroup(name:"GROUP_USER").save(flush:true)*/
 			println ">> creating RoleGroupRoles..."
 			RoleGroupRole.create adminGroup, adminRole
+			RoleGroupRole.create userGroup, userRole 
 			RoleGroupRole.create devGroup, devRole
+			/*RoleGroupRole.create userGroup, userRole*/
 			
-					
-			if(!personDev.hasErrors()){
-				UserRoleGroup.create personDev, devGroup
-				UserRoleGroup.create personDev, adminGroup, true
-				//Add Admin user to list of roles
-				//println ">> Adding admin to office groups"
-				//groupManagerService.addUserToGroup(admin, mainOffice, [SystemRoles.ROLE_OCO,SystemRoles.ROLE_CWO])
-			}else{
-				println(personDev.errors)
-			}
-			if(!personAdmin.hasErrors()){
-				UserRoleGroup.create admin, adminGroup, true
-				//Add Admin user to list of roles
-				//println ">> Adding admin to office groups"
-				//groupManagerService.addUserToGroup(admin, mainOffice, [SystemRoles.ROLE_OCO,SystemRoles.ROLE_CWO])
-			}else{
-				println(personAdmin.errors)
-			}
+			/*1.times {
+				long id = it + 1
+				def user = new Person(username: "dev$id", enabled: true, password: pwd,person:personDev).save(flush:true)
+				//UserRoleGroup.create user, devGroup
+				if(!user.hasErrors()){
+					println ">> Adding dev user to office groups"
+					groupManagerService.addUserToGroup(user, mainOffice, SystemRoles.list())
+				}else{
+					println(user.errors)
+				}
+				
+			}*/
+		
+			
 		}catch(Exception e){
 			println "Error " + e
 			return false
@@ -110,14 +134,10 @@ class BootStrap {
 		return true
 	} //end create users
 	
-	private void loginAsAdmin(String pwd) {
-		// have to be authenticated as an admin to create ACLs
-		SCH.context.authentication = new UsernamePasswordAuthenticationToken( 'admin', pwd, AuthorityUtils.createAuthorityList(SystemRoles.ROLE_ADMIN.value))
-	}
-	
 	private void initRequestmap(){
 		
 		for (String url in [
+			'/',
 			 '/**/favicon.ico',
 			 '/**/js/**',
 			 '/**/css/**',
@@ -127,7 +147,8 @@ class BootStrap {
 			 '/login/*',
 			 '/logout',
 			 '/logout.*',
-			 '/logout/*']) {
+			 '/logout/*',
+			 '/assets/*']) {
 			 new RequestMap( url: url, configAttribute: 'permitAll').save()
 		}
 			 // show and lists/index
@@ -135,8 +156,31 @@ class BootStrap {
 				 '/index',
 				 '/index.gsp',
 				 '/acl/**/**',
+				 '/person/personlist/**',
+				 '/case/jq_list_actions',
+				 '/office/jq_list_cases',
+				 '/office/jq_list_staff',
+				 '/organisation/orglist/**',
+				 '/labour/**',
+				 '/eviction/**',
+				 '/country/**',
+				 '/region/**',
+				 '/report/**',
+				 '/category/**',
+				 '/case/index/**',
 				 '/**/show/**',
-				  '/**/index/**']) {
+				  '/**/index/**',
+				   '/Membership/*',
+				   '/Membership/assets/*',
+				   '/Membership/person/*',
+				   '/person/*',
+				   '/Membership/parent/*',
+				   '/parent/*',
+				   '/Membership/parent/edit/8',
+				   '*/parent/*',
+				   '/Membership/child/*',
+				   '/child/*',
+				   '*/child/*']) {
 				  new RequestMap( url: url, configAttribute:'isFullyAuthenticated()').save()
 			 }
 		
@@ -148,9 +192,9 @@ class BootStrap {
 				 '/**/save/**',
 				 '/**/update/**',
 				 '/**/edit/**',]) {
-				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ',' + SystemRoles.ROLE_DEV.value).save()
+				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value).save()
 			 }
-			 
+			  
 			
 			 //strictly admin
 			 for (String url in [ '/requestmap/**',
@@ -163,20 +207,4 @@ class BootStrap {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
 	} //end method
-	private void createOtherComponents(){
-		new Race(name:"Asian").save()
-		new Race(name:"Black").save()
-		new Race(name:"Caucasian").save()
-		new Race(name:"Coloured").save()
-		new Race(name:"Indian").save()
-		new Race(name:"Other").save()
-		
-		//keywords for location
-		def keyword = new Keywords(name:"system_areas",label:"System Areas",category:"system_locations")
-		keyword.addToValues(new Keywords(name:"one",label:"This One",category:"System")	)
-		keyword.save()
-		if(keyword.hasErrors()){
-		println keyword.errors
-		}
-	}
-} //end class
+}
