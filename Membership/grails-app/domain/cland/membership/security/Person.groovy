@@ -26,6 +26,26 @@ class Person implements Serializable {
 	String gender
 	Race race
 	//List phones
+	
+	static constraints = {
+		/*username blank: false, unique: true
+		password blank: false
+		firstName blank: false*/
+		username nullable: false, unique: true
+		 password nullable: false
+		 firstName nullable: false
+		race nullable: true
+		accountExpired nullable: true
+		knownAs nullable: true
+		title nullable: true
+		email nullable: true
+		gender nullable: true
+		lastName nullable: true
+		accountExpired nullable: true
+		accountLocked nullable: true
+		passwordExpired nullable: true
+		//springSecurityService nullable: true
+	}
 	Person(String username, String password) {
 		this()
 		this.username = username
@@ -51,12 +71,6 @@ class Person implements Serializable {
 	}
 
 	static transients = ['springSecurityService']
-
-	static constraints = {
-		username blank: false, unique: true
-		password blank: false
-		firstName blank: false
-	}
 
 	static mapping = {
 		password column: '`password`'

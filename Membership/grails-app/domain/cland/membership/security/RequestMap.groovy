@@ -30,5 +30,7 @@ class RequestMap implements Serializable {
 
 	static mapping = {
 		cache true
+		configAttribute nullable: true
+		httpMethod nullable: true
 	}
 }
