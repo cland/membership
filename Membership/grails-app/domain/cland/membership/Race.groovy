@@ -3,7 +3,7 @@ package cland.membership
 import java.util.Date;
 
 class Race {
-	transient cbcApiService
+	//transient cbcApiService
 	String name
 	long createdBy
 	long lastUpdatedBy
@@ -14,12 +14,12 @@ class Race {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
     }
-	def beforeInsert = {
+	/*def beforeInsert = {
 	createdBy = cbcApiService.getCurrentUserId()
 	}
 	def beforeUpdate = {
 	lastUpdatedBy = cbcApiService.getCurrentUserId()
-	}
+	}*/
 	def beforeDelete = {
 	// your code goes here
 	}
