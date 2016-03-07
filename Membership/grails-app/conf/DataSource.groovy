@@ -28,8 +28,10 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+           username = "root"
+			password = "20gR@ils16"
+			dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+			url = "jdbc:mysql://localhost:3306/membership?autoreconnect=true"
         }
     }
     production {
