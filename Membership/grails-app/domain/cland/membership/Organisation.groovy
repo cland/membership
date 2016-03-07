@@ -15,7 +15,6 @@ class Organisation {
 	
 	boolean isMember
 	boolean isHost
-	boolean isLabourBroker
 	Integer staffCount
 	long createdBy
 	long lastUpdatedBy

@@ -172,8 +172,9 @@ class BootStrap {
 				   '/person/*',
 				   '/Membership/parent/*',
 				   '/parent/*',
-				   '/Membership/parent/edit/8',
-				   '*/parent/*',
+				   '/Membership/parent/edit/**',
+				   '/Membership/parent/create/**',
+				   '/parent/**',
 				   '/Membership/child/*',
 				   '/child/*',
 				   '*/child/*']) {

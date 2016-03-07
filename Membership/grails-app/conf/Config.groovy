@@ -86,14 +86,30 @@ grails.hibernate.cache.queries = false
 grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
-
+println ("Configuring taglet '${appName}', on '" + System.properties["os.name"] + "'")
+grails.attachmentable.maxInMemorySize = 1024
+grails.attachmentable.maxUploadSize = 31457280
 environments {
     development {
+		if (System.properties["os.name"] == "Linux") {
+			println(System.properties["os.name"] + " appname: " + appName)
+			grails.attachmentable.uploadDir = "file:~" + File.separator + "temp"
+		}else{
+			println(System.properties["os.name"] + " appname: " + appName)
+			grails.attachmentable.uploadDir = "C:" + File.separator + "temp" + File.separator + "uploads"
+		}
+		
         grails.logging.jul.usebridge = true
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
+		if (System.properties["os.name"] == "Linux") {
+			grails.config.locations = ["file:" + File.separator + "var" + File.separator + "grails" + File.separator + "app-conf" + File.separator + "${appName}-config.groovy"]
+		}else{
+			grails.config.locations = ["file:C:" + File.separator + "grails" + File.separator + "app-conf" + File.separator + "${appName}-config.groovy"]
+		}
+		println("Config.Locations set to: '" + grails.config.locations + "'")
     }
 }
 

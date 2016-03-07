@@ -1,5 +1,7 @@
 package cland.membership.security
 
+import java.util.Date;
+
 import cland.membership.Race
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -25,6 +27,8 @@ class Person implements Serializable {
 	String email
 	String gender
 	Race race
+	String idNumber
+	Date dateOfBirth
 	//List phones
 	
 	static constraints = {
@@ -44,7 +48,8 @@ class Person implements Serializable {
 		accountExpired nullable: true
 		accountLocked nullable: true
 		passwordExpired nullable: true
-		//springSecurityService nullable: true
+		idNumber  blank:true, nullable:true
+		dateOfBirth blank:true, nullable:true
 	}
 	Person(String username, String password) {
 		this()
@@ -74,5 +79,9 @@ class Person implements Serializable {
 
 	static mapping = {
 		password column: '`password`'
+	}
+	
+	String toString(){
+		return firstName + " " + lastName
 	}
 }
