@@ -8,7 +8,7 @@ class UrlMappings {
         }
 		
 		//"/"(controller:"home",action:"index")
-		//"/admin/technical" (view:"/admin/technical")
+		"/admin/technical" (view:"/admin/technical")
 		//"/admin/"(view:"/admin/index")
 		
         "/"(view:"/index")

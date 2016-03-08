@@ -1,15 +1,10 @@
 import java.util.logging.Level.KnownLevel;
 
-import cland.membership.security.Person
-import cland.membership.security.PersonRole
-import cland.membership.security.RequestMap
-import cland.membership.security.RoleGroup
-import cland.membership.security.RoleGroupRole
-import cland.membership.security.Role
+import cland.membership.security.*
 import cland.membership.*
 
 class BootStrap {
-
+	def groupManagerService
     def init = { servletContext ->
 		boolean doBootStrap = false
 		
@@ -84,17 +79,17 @@ class BootStrap {
 		try{
 			//create ROLES
 		//	new Role(authority:"ROLE_ADMINTEST",description:"test description").save(flush:true)
-			/*groupManagerService.generateRoles()
-			groupManagerService.generateOfficeGroups(mainOffice)*/
+			groupManagerService.generateRoles()
+			/*groupManagerService.generateOfficeGroups(mainOffice)*/
 			
 			println ">> find a admin and dev roles"
-			def adminRole = new Role(authority:"ROLE_ADMIN") /*Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)*/	 
+			def adminRole = Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)	 
 			if(!adminRole.save(flush:true)){
 				println adminRole.errors
 			}else{
 				println "Admin Role saved"
 			}
-			def userRole = new Role(authority:"ROLE_USER").save(flush:true)
+			def userRole = Role.findByAuthority(SystemRoles.ROLE_USER.value) //new Role(authority:"ROLE_USER").save(flush:true)
 			def adminGroup = new RoleGroup(name:"GROUP_ADMIN").save(flush:true)
 			def devRole = new Role(name: "GROUP_DEV").save(flush: true)
 			if(!adminGroup.save(flush:true)){
@@ -111,6 +106,9 @@ class BootStrap {
 			RoleGroupRole.create userGroup, userRole 
 			RoleGroupRole.create devGroup, devRole
 			/*RoleGroupRole.create userGroup, userRole*/
+			
+			PersonRoleGroup.create personAdmin, adminGroup
+			PersonRoleGroup.create personDev, devGroup
 			
 			/*1.times {
 				long id = it + 1
@@ -168,12 +166,13 @@ class BootStrap {
 				  '/**/index/**',
 				   '/Membership/*',
 				   '/Membership/assets/*',
-				   '/Membership/person/*',
-				   '/person/*',
-				   '/Membership/parent/*',
+				   '/person/edit/**',
+				   '/person/create/**',
+				   '/person/delete/**',
+				   '/parent/delete/**',
 				   '/parent/*',
-				   '/Membership/parent/edit/**',
-				   '/Membership/parent/create/**',
+				   '/parent/edit/**',
+				   '/parent/create/**',
 				   '/parent/**',
 				   '/Membership/child/*',
 				   '/child/*',
@@ -188,13 +187,18 @@ class BootStrap {
 				 '/**/dialogsave/**',
 				 '/**/save/**',
 				 '/**/update/**',
-				 '/**/edit/**',]) {
+				 '/**/edit/**',
+				 '/requestMap/delete/**',
+				 '/requestMap/update/**',
+				 '/requestMap/show/**',
+				 '/requestMap/edit/**',
+				 '/requestMap/create/**']) {
 				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value).save()
 			 }
 			  
 			
 			 //strictly admin
-			 for (String url in [ '/requestmap/**',
+			 for (String url in [ '/requestMap/**',
 				 '/admin/**',
 				 '/**/delete/**',
 				 '/office/delete/**',

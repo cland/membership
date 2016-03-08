@@ -71,7 +71,7 @@ grails.project.dependency.resolution = {
 		compile ":spring-security-core:2.0.0"
 		compile ":attachmentable:0.4.1"
 		compile ":joda-time:1.5"
-		compile ":jquery-ui:1.10.4"
+		//compile ":jquery-ui:1.10.4"
 		compile ":famfamfam:1.0.1"
 		compile ":mail:1.0.7"
         // Uncomment these to enable additional asset-pipeline capabilities

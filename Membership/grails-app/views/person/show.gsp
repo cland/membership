@@ -1,4 +1,4 @@
-
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.security.Person" %>
 <!DOCTYPE html>
 <html>
@@ -6,6 +6,7 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'person.label', default: 'Person')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<g:render template="head" var="thisInstance" bean="${personInstance }" model="[sidenav:page_nav]"></g:render>
 	</head>
 	<body>
 		<a href="#show-person" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -21,6 +22,16 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			<div id="tabs" style="display: none;">
+				<ul>
+					<li><a href="#tab-1">Details</a></li>
+					<li><a href="#tab-2">Other</a></li>
+					<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_MANAGER }">
+						<li><a href="#tab-2">Admin</a></li>	
+					</sec:ifAnyGranted>
+				
+				</ul>
+				<div id="tab-1">
 			<ol class="property-list person">
 			
 				<g:if test="${personInstance?.username}">
@@ -141,6 +152,11 @@
 				</g:if>
 			
 			</ol>
+			</div>
+			<div id="tab-2">
+				<p>== TAB2 == </p>
+			</div>
+			</div>
 			<g:form url="[resource:personInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${personInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
@@ -148,5 +164,27 @@
 				</fieldset>
 			</g:form>
 		</div>
+<script>
+			$(document).ready(function() {		
+				
+				$("#tabs").tabs(
+								{
+								active:cbc_params.active_tab(),
+								create: function (event,ui){	
+									//executed after is created								
+									$('#tabs').show()
+								},
+								show: function(event,ui){
+									//on every tabs clicked
+								},
+								beforeLoad : function(event, ui) {
+										ui.jqXHR.error(function() {
+											ui.panel
+											.html("Couldn't load this tab. We'll try to fix this as soon as possible. ");
+										});
+									}
+						});		                
+			});  
+		</script>		
 	</body>
 </html>
