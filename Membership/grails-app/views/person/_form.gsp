@@ -61,13 +61,12 @@
 		
 		</div>
 		
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'email', 'error')} ">
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'email', 'error')} required">
 			<label for="email">
-				<g:message code="person.email.label" default="Email" />
-				
+				<g:message code="user.email.label" default="Email" />
+				<span class="required-indicator">*</span>
 			</label>
-			<g:textField name="email" value="${personInstance?.email}"/>
-		
+			<g:field type="email" name="email" required="" value="${personInstance?.email}"/>
 		</div>
 		
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'gender', 'error')} ">
@@ -116,15 +115,6 @@
 				<g:field type="password" name="passwordConfirm" required="" value=""/>
 			</div>
 		</g:if>
-				
-
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'email', 'error')} required">
-			<label for="email">
-				<g:message code="user.email.label" default="Email" />
-				<span class="required-indicator">*</span>
-			</label>
-			<g:field type="email" name="email" required="" value="${personInstance?.email}"/>
-		</div>
 			
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'enabled', 'error')} ">
 			<label for="enabled">
