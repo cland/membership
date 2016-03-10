@@ -71,32 +71,7 @@ function getCurrentTabText(){
 function getCurrentTabLink(){
 	return $("#tabs ul.ui-tabs-nav li.ui-tabs-selected a").prop("href")
 }
-function stageDisplay(stage){
-	if(stage) stage = stage.toLowerCase()
-	if(stage == "stage1"){		
-		$(".vstage2_" + stage).hide();
-		$(".vstage3_" + stage).hide();
-		$(".vstage1_" + stage).show();
-	}else if(stage == "stage2"){
-		$(".vstage1_" + stage).hide();		
-		$(".vstage3_" + stage).hide();
-		$(".vstage2_" + stage).show();
-	}else if(stage == "stage3"){
-		$(".vstage1_" + stage).hide();		
-		$(".vstage2_" + stage).hide();
-		$(".vstage3_" + stage).show();
-	}
-	
-	if($("#viewas_" + stage).prop("value") == "list"){
-		$("#submit_" + stage + "_top").hide()
-		$("#submit_" + stage + "_bottom").hide()
-	}else{
-		$("#submit_" + stage + "_top").show()
-		$("#submit_" + stage + "_bottom").show()
-	}
-	$("#hidden_viewas_" + stage).prop("value",$("#viewas_" + stage).val())
-	$("#hidden_sortby_" + stage).prop("value",$("#sortby_" + stage).val())
-} // end function
+
 var cbc_datepickers = {
 		reset_picker : function resetPicker(picker_id,altfield_id, type){
 			$("#" + picker_id).multiDatesPicker('resetDates',type);

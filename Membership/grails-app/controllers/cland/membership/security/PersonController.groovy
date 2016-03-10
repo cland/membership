@@ -3,11 +3,13 @@ package cland.membership.security
 
 
 import static org.springframework.http.HttpStatus.*
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class PersonController {
-
+	def autoCompleteService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -100,5 +102,13 @@ class PersonController {
             }
             '*'{ render status: NOT_FOUND }
         }
-    }
-}
+    } //end not Found()
+	
+	/**
+	 * Custom functions added:
+	 */
+	def personlist = {
+		render autoCompleteService.searchPeople(params) as JSON
+	}
+	
+} //end class

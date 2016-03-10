@@ -103,7 +103,7 @@ class cbcApiService {
 	
 	
 	String generateIdNumber(Date birthday){
-		String charset = (('A'..'Z') + ('0'..'9')).join()
+		String charset = (('A'..'Z') + ('0'..'9')).iterator().join()
 		Integer length = 7
 		String randomString = RandomStringUtils.random(length, charset.toCharArray())
 		if(birthday == null) birthday = new Date();

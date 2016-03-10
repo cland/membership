@@ -5,6 +5,7 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'person.label', default: 'Person')}" />
 		<title><g:message code="default.edit.label" args="[entityName]" /></title>
+		<asset:javascript src="jquery-ui.multidatespicker.js"/>
 	</head>
 	<body>
 		<a href="#edit-person" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -35,7 +36,35 @@
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 				</fieldset>
-			</g:form>
+			</g:form>		
 		</div>
+<script>
+			$(document).ready(function() {						
+				$("#tabs").tabs(
+								{
+								active:cbc_params.active_tab(),
+								create: function (event,ui){	
+									//executed after is created								
+									$('#tabs').show()
+								},
+								show: function(event,ui){
+									//on every tabs clicked
+								},
+								beforeLoad : function(event, ui) {
+										ui.jqXHR.error(function() {
+											ui.panel
+											.html("Couldn't load this tab. We'll try to fix this as soon as possible. ");
+										});
+									}
+						});	
+				$( "#birth-date" ).datepicker({
+					dateFormat: "dd-M-yy",
+					altFormat: "yy-mm-dd",
+					defaultDate : "-18y",					
+					maxDate:"-2y",
+					minDate:"-90y"
+					});		                
+			});  
+		</script>			
 	</body>
 </html>

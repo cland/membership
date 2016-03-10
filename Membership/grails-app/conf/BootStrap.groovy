@@ -57,9 +57,7 @@ class BootStrap {
 		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
 		//if(!race.save(flush: true)){
 			println "Race saved"
-			 personAdmin = new Person(firstName:"Sys",lastName:"Sysuser", 
-				username: "admin", password: pwd, email: "email@doman.com", gender:"Male",
-				knownAs: "Sys", race: Race.get(1))
+			 personAdmin = new Person(firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:"Male",	knownAs: "Sys", race: Race.get(1))
 			 personDev = new Person(firstName:"Sys",lastName:"Devuser", password: pwd, username: "dev")
 			if(!personAdmin.save(flush: true)){
 				println "Error occured"
@@ -82,23 +80,19 @@ class BootStrap {
 			groupManagerService.generateRoles()
 			/*groupManagerService.generateOfficeGroups(mainOffice)*/
 			
-			println ">> find a admin and dev roles"
-			def adminRole = Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)	 
-			if(!adminRole.save(flush:true)){
-				println adminRole.errors
-			}else{
-				println "Admin Role saved"
-			}
+			println ">> find roles to assign to groups"
+			def adminRole = Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)	 			
 			def userRole = Role.findByAuthority(SystemRoles.ROLE_USER.value) //new Role(authority:"ROLE_USER").save(flush:true)
-			def adminGroup = new RoleGroup(name:"GROUP_ADMIN").save(flush:true)
-			def devRole = new Role(name: "GROUP_DEV").save(flush: true)
-			if(!adminGroup.save(flush:true)){
-				println adminGroup.errors
-			}else{
-				println "Success person group"
-			}
-			def userGroup = new RoleGroup(authority:"GROUP_USER").save(flush:true)
-			def devGroup = new RoleGroup(authority: "GROUP_DEV").save(flush:true)
+			def devRole = Role.findByAuthority(SystemRoles.ROLE_DEVELOPER.value) //new Role(name: "GROUP_DEV").save(flush: true)
+			
+			println ">> create groups"
+			def adminGroup = new RoleGroup(name:"GROUP_ADMIN",description:"Administrators Group").save(flush:true)
+			if(adminGroup.hasErrors()) adminGroup.errors
+			def userGroup = new RoleGroup(name:"GROUP_USER",description:"Users Group").save(flush:true)
+			if(userGroup.hasErrors()) userGroup.errors
+			def devGroup = new RoleGroup(name: "GROUP_DEVELOPER",description:"Developers Group").save(flush:true)
+			if(devGroup.hasErrors()) devGroup.errors
+			
 			/*def devGroup = new RoleGroup(name:"GROUP_DEVELOPER").save(flush:true)
 			def userGroup = new RoleGroup(name:"GROUP_USER").save(flush:true)*/
 			println ">> creating RoleGroupRoles..."
@@ -107,9 +101,11 @@ class BootStrap {
 			RoleGroupRole.create devGroup, devRole
 			/*RoleGroupRole.create userGroup, userRole*/
 			
+			println ">> adding person(s) to groups"
 			PersonRoleGroup.create personAdmin, adminGroup
+			println ">> padmin"
 			PersonRoleGroup.create personDev, devGroup
-			
+			println ">> pdev"
 			/*1.times {
 				long id = it + 1
 				def user = new Person(username: "dev$id", enabled: true, password: pwd,person:personDev).save(flush:true)
