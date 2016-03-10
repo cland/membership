@@ -75,7 +75,15 @@
 				<g:message code="person.gender.label" default="Gender" />
 				
 			</label>
-			<g:textField name="gender" value="${personInstance?.gender}"/>
+			<g:select name="gender" from="${personInstance.constraints.gender.inList}" value="${personInstance?.gender}" valueMessagePrefix="gender" noSelection="['': '']"/>
+		
+		</div>
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'office', 'error')} ">
+			<label for="office">
+				<g:message code="person.office.label" default="Office" />
+				
+			</label>
+			<g:select id="office" name="office.id" from="${cland.membership.Office.list()}" optionKey="id" required="" value="1" class="many-to-one" noSelection="['': '']"/>
 		
 		</div>
 		

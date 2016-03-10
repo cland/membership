@@ -5,6 +5,7 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'person.label', default: 'Person')}" />
 		<title><g:message code="default.edit.label" args="[entityName]" /></title>
+		<g:render template="head" var="thisInstance" bean="${personInstance }" model="[sidenav:page_nav]"></g:render>
 		<asset:javascript src="jquery-ui.multidatespicker.js"/>
 	</head>
 	<body>

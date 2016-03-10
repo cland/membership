@@ -31,7 +31,9 @@ class PersonController {
             notFound()
             return
         }
-
+		bindData(personInstance, params, [exclude: 'dateOfBirth'])
+		bindData(personInstance, ['dateOfBirth': params.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
+		
         if (personInstance.hasErrors()) {
             respond personInstance.errors, view:'create'
             return
@@ -58,7 +60,9 @@ class PersonController {
             notFound()
             return
         }
-
+		bindData(personInstance, params, [exclude: 'dateOfBirth'])
+		bindData(personInstance, ['dateOfBirth': params.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
+		
         if (personInstance.hasErrors()) {
             respond personInstance.errors, view:'edit'
             return
