@@ -56,16 +56,31 @@ class BootStrap {
 		def personAdmin
 		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
 		//if(!race.save(flush: true)){
-			println "Race saved"
-			 personAdmin = new Person(firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:"Male",	knownAs: "Sys", race: Race.get(1))
-			 personDev = new Person(firstName:"Sys",lastName:"Devuser", password: pwd, username: "dev")
-			if(!personAdmin.save(flush: true)){
-				println "Error occured"
-				personAdmin.errors.each{
-					println it
-				}
-			}else{
-				println "Success!"
+			println "Race saved " + race
+			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:Gender.MALE.toString(),	idNumber :"10101010101", dateOfBirth:(new Date() - 365*30))
+			 
+		//	if(!personAdmin.save(flush: true)){
+		//		println("personAdmin error...")
+		//		personAdmin.errors
+		//	}else{
+		//		println "Admin person saved!" //  + personAdmin.toString()
+		//	}
+			
+			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", gender:Gender.FEMALE.toString(),	idNumber :"156456556551", dateOfBirth:(new Date() - 365*30)) //.save(flush: true)
+		//	if(!personDev.save(flush: true)){
+		//		println("personDev error...")
+		//		personDev.errors
+		//	}else{
+		//		println "Dev person saved! " //+ personDev.toString()
+		//	}
+			
+			def mainOffice = new Office(name:"Main Office",code:"NHO",status:"Active")
+			mainOffice.addToStaff(personAdmin)
+			mainOffice.addToStaff(personDev)
+			mainOffice.save()
+			if(mainOffice.hasErrors()) {
+				println mainOffice.errors
+				return false;
 			}
 		/*}else{
 			println "Errors race"

@@ -48,10 +48,10 @@ class Office {
 		location nullable:true
     }
 	def beforeInsert = {
-		createdBy = cbcApiService.getCurrentUserId()
+		createdBy = groupManagerService.getCurrentUserId()
 	}
 	def beforeUpdate = {
-		lastUpdatedBy = cbcApiService.getCurrentUserId()
+		lastUpdatedBy = groupManagerService.getCurrentUserId()
 	}
 	/**
 	 * To ensure that all attachments are removed when the "owner" domain is deleted.

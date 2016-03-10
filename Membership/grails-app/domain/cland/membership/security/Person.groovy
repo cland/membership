@@ -43,20 +43,17 @@ class Person implements Serializable {
 	String history
 	static belongsTo = [office:Office]
 	//static hasMany = [phones:Phone]
-	static constraints = {
-		/*username blank: false, unique: true
-		password blank: false
-		firstName blank: false*/
-		username nullable: false, unique: true
-		 password nullable: false
-		 firstName nullable: false
+	static constraints = {		
+		username blank: false,nullable: false, unique: true
+		password blank: false,nullable: false
+		firstName blank: false,nullable: false
+		lastName blank: false,nullable: true
 		race nullable: true
 		accountExpired nullable: true
 		knownAs nullable: true
 		title nullable: true
 		email nullable: true
-		gender nullable: true
-		lastName nullable: true
+		gender inList: Gender.list(), nullable: true		
 		accountExpired nullable: true
 		accountLocked nullable: true
 		passwordExpired nullable: true
