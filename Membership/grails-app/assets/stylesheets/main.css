@@ -212,6 +212,7 @@ fieldset,
 	zoom: 1;
 	border: none;
 }
+fieldset {margin:0.3em; padding: 0.3em;border: solid 1px #aea9a9}
 #tabs fieldset {border:solid 1px #999;margin-bottom:1em;}
 .property-list .fieldcontain {
 	list-style: none;
@@ -611,4 +612,83 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 .lookup-admin-key{
 	display:none;
 	font-size:6pt;
+}
+
+/** CLOCK AND PERSON-CARD STYLE **/
+.clock{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 15px;
+}
+
+.clock > div{
+    padding: 4px;
+    border-radius: 3px;
+    display: inline-block;
+	background:#00BF96;
+}
+.clock-warn > div {background:#FCA82B;}
+.clock-done > div {background:#FF7171;}
+
+.clock div > span{
+    padding: 5px;
+    border-radius: 3px;
+    display: inline-block;
+	font-weight:bold;
+	background: #00816A;
+}
+.clock-warn div > span{ background: #ea7d13;}
+.clock-done div > span{ background: #ef1212;}
+.smalltext{
+    padding-top: 0px;
+    font-size: 12px;
+}
+
+.person-card {
+  font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+  height: 300px;
+  width: 300px;
+  overflow: hidden;
+  border: 1px solid #2780E3;
+  margin:5px;
+  margin-bottom:20px;
+  text-align:center;
+}
+.person-card .person-img {
+  width: 80%;
+  height: auto;
+}
+.person-card .person-info {
+  position: absolute;
+  top: 190px;
+  height: 300px;
+  width: 100%;
+  color: #fff;
+  background-color: #2780E3;
+  opacity: 0.9;
+  -ms-transition: -ms-transform 0.75s;
+  -webkit-transition: -webkit-transform 0.75s;
+  transition: transform 0.75s;
+}
+.person-card .person-info:hover {
+  -ms-transform: translateY(-190px);
+  -webkit-transform: translateY(-190px);
+  transform: translateY(-190px);
+}
+.person-card .person-info .details-title {
+  height: 80px;
+  font-size: 20px;
+  padding: 10px;
+}
+.person-card .person-info .details-title small {
+  font-size: 70%;
+  color: #f7f7f7;
+}
+.person-card .person-info .details-body {
+  padding: 10px;
+  text-align: center;
 }

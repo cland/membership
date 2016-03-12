@@ -7,7 +7,7 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class RequestMapController {
-
+	def springSecurityService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -36,7 +36,7 @@ class RequestMapController {
         }
 
         requestMapInstance.save flush:true
-
+		springSecurityService.clearCachedRequestmaps()
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'requestMap.label', default: 'RequestMap'), requestMapInstance.id])
@@ -82,7 +82,7 @@ class RequestMapController {
         }
 
         requestMapInstance.delete flush:true
-
+		springSecurityService.clearCachedRequestmaps()
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'RequestMap.label', default: 'RequestMap'), requestMapInstance.id])

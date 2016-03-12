@@ -5,6 +5,9 @@ package cland.membership.security
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.transaction.Transactional
+import org.joda.time.DateTime
+import org.joda.time.Days
+import org.joda.time.Period
 
 @Transactional(readOnly = true)
 class PersonController {
@@ -113,6 +116,13 @@ class PersonController {
 	 */
 	def personlist = {
 		render autoCompleteService.searchPeople(params) as JSON
+	}
+	
+	def visits = {
+		//TODO: created JSON test data of visits to display on the live panel.
+		DateTime tmp = new DateTime(2016,3,13,0,5)
+		def data = [name:"jason",startdate:tmp,period:2]
+		render data as JSON
 	}
 	
 } //end class

@@ -163,7 +163,7 @@ class BootStrap {
 			 // show and lists/index
 			 for (String url in ['/',
 				 '/index',
-				 '/index.gsp',
+				 '/livepanel',
 				 '/acl/**/**',
 				 '/person/personlist/**',
 				 '/office/jq_list_cases',
