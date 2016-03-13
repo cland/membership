@@ -164,7 +164,6 @@ class BootStrap {
 			 // show and lists/index
 			 for (String url in ['/',
 				 '/index',
-				 '/livepanel',
 				 '/acl/**/**',
 				 '/person/personlist/**',
 				 '/office/jq_list_cases',
@@ -178,6 +177,7 @@ class BootStrap {
 				  '/**/index/**',
 				   '/Membership/*',
 				   '/Membership/assets/*',
+				   '/person/**',
 				   '/person/edit/**',
 				   '/person/create/**',
 				   '/person/delete/**',

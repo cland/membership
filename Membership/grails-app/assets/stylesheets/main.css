@@ -42,9 +42,9 @@ body {
 	margin: 0 auto;
 	max-width: 960px;
 	overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
-	   -moz-box-shadow: 0 0 0.3em #255b17;
-	-webkit-box-shadow: 0 0 0.3em #255b17;
-	        box-shadow: 0 0 0.3em #255b17;
+	   -moz-box-shadow: 0 0 0.3em #fcc0c0;
+	-webkit-box-shadow: 0 0 0.3em #fcc0c0;
+	        box-shadow: 0 0 0.3em #fcc0c0;
 }
 
 #grailsLogo {
@@ -55,7 +55,7 @@ body {
 .ie6 body,
 .ie7 body,
 .ie8 body {
-	border-color: #255b17;
+	border-color: #fcc0c0;
 	border-style: solid;
 	border-width: 0 1px;
 }
@@ -108,7 +108,7 @@ img {
 }
 
 .footer {
-	background: #edefe9;
+	background: #ffcece;
 	color: #000;
 	clear: both;
 	font-size: 0.8em;
