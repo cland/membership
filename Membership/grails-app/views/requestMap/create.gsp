@@ -7,9 +7,8 @@
 	</head>
 	<body>
 		<a href="#create-requestMap" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+		<div class="nav navpage" role="navigation">
+			<ul>				
 				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
@@ -31,6 +30,7 @@
 				</fieldset>
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/requestMap/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
 			</g:form>
 		</div>
