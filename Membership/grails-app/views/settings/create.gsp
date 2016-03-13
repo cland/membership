@@ -34,6 +34,7 @@
 						</fieldset>
 						<fieldset class="buttons">
 							<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+							<input type="button" name="cancel" onclick="document.location='${request.contextPath}'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 						</fieldset>
 					</g:form>
 				</div>

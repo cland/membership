@@ -48,7 +48,7 @@ body {
 }
 
 #grailsLogo {
-	background-color: #abbf78;
+	background-color: #f30b0b;
 }
 
 /* replace with .no-boxshadow body if you have modernizr available */
@@ -65,7 +65,7 @@ body {
 }
 
 a:link, a:visited, a:hover {
-	color: #48802c;
+	color: #0080c0;
 }
 
 a:hover, a:active {
@@ -91,7 +91,7 @@ img {
 
 #grailsLogo a {
 	display: inline-block;
-	margin: 1em;
+	margin: 0.2em;
 }
 
 .content {
@@ -108,17 +108,18 @@ img {
 }
 
 .footer {
-	background: #abbf78;
+	background: #edefe9;
 	color: #000;
 	clear: both;
 	font-size: 0.8em;
 	margin-top: 1.5em;
-	padding: 1em;
+	padding: 0.6em;
 	min-height: 1em;
+	text-align:center;
 }
 
 .footer a {
-	color: #255b17;
+	color: #0080c0;
 }
 
 .spinner {
@@ -141,8 +142,9 @@ img {
 	-webkit-box-shadow: 0 0 3px 1px #aaaaaa;
 	        box-shadow: 0 0 3px 1px #aaaaaa;
 	zoom: 1;
+	font-weight:bold
 }
-
+.navpage {background-color:#fff;font-weight:normal;font-size:0.9em;}
 .nav ul {
 	overflow: hidden;
 	padding-left: 0;
@@ -156,7 +158,7 @@ img {
 	margin-right: 0.5em;
 	padding: 0;
 }
-
+.navpage li{float:right;}
 .nav a {
 	color: #666666;
 	display: block;
@@ -200,6 +202,9 @@ img {
 
 .nav a.create {
 	background-image: url(../images/skin/database_add.png);
+}
+.nav a.cancel {
+	background-image: url(../images/skin/database_cancel.png);
 }
 
 /* CREATE/EDIT FORMS AND SHOW PAGES */
@@ -568,7 +573,7 @@ th:hover, tr:hover {
 	text-decoration: underline;
 }
 
-.buttons .delete, .buttons .edit, .buttons .save {
+.buttons .delete, .buttons .edit, .buttons .save, .buttons .cancel {
 	background-position: 0.7em center;
 	background-repeat: no-repeat;
 	text-indent: 25px;
@@ -589,6 +594,9 @@ th:hover, tr:hover {
 
 .buttons .save {
 	background-image: url(../images/skin/database_save.png);
+}
+.buttons .cancel {
+	background-image: url(../images/skin/database_cancel.png);
 }
 
 a.skip {
@@ -650,8 +658,8 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 .person-card {
   font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: relative;
-  height: 300px;
-  width: 300px;
+  height: 220px;
+  width: 220px;
   overflow: hidden;
   border: 1px solid #2780E3;
   margin:5px;
@@ -664,8 +672,8 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 }
 .person-card .person-info {
   position: absolute;
-  top: 190px;
-  height: 300px;
+  top: 110px;
+  height: 220px;
   width: 100%;
   color: #fff;
   background-color: #2780E3;
@@ -675,9 +683,9 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
   transition: transform 0.75s;
 }
 .person-card .person-info:hover {
-  -ms-transform: translateY(-190px);
-  -webkit-transform: translateY(-190px);
-  transform: translateY(-190px);
+  -ms-transform: translateY(-110px);
+  -webkit-transform: translateY(-110px);
+  transform: translateY(-110px);
 }
 .person-card .person-info .details-title {
   height: 80px;

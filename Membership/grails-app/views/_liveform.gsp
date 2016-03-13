@@ -36,7 +36,7 @@
 	  </div>
 	</div>
 	<div class="person-card float-left">
-	  <img class="person-img" src="assets/kidface.png" alt="Child" />
+	  <img class="person-img" src="${assetPath(src: 'kidface.png')}" alt="Child" />
 	  <div class="person-info">
 		<div class="details-title">
 		  <span>Steve Jobs</span><br/>
@@ -72,7 +72,7 @@
 	  </div>
 	</div>
 	<div class="person-card float-left">
-	  <img class="person-img" src="assets/kidface.png" alt="Child" />
+	  <img class="person-img" src="${assetPath(src: 'male.jpg')}" alt="Child" />
 	  <div class="person-info">
 		<div class="details-title">
 		  <span>James Chikerema</span><br/>
@@ -108,7 +108,7 @@
 	  </div>
 	</div>
 	<div class="person-card float-left">
-	  <img class="person-img" src="assets/kidface.png" alt="Child" />
+	  <img class="person-img" src="${assetPath(src: 'female.jpg')}" alt="Child" />
 	  <div class="person-info">
 		<div class="details-title">
 		  <span>Allan Donald</span><br/>

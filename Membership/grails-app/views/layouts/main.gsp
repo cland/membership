@@ -17,10 +17,10 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><a href="http://grails.org"><asset:image src="grails_logo.png" alt="Grails"/></a></div>
-		
+		<div id="grailsLogo" role="banner"><a href="${request.contextPath}"><asset:image src="logo.png" alt="Membership System"/></a></div>
+		<g:render template="/layouts/navbar"></g:render>
 		<g:layoutBody/>
-		<div class="footer" role="contentinfo"></div>
+		<div class="footer" role="contentinfo"><g:render template="/layouts/footer"></g:render></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 	</body>
 </html>

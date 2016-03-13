@@ -42,7 +42,7 @@
 			}
 
 			#page-body {
-				margin: 2em 0.5em 1.25em 1em;
+				margin: 0.5em 0.5em 1.25em 1em;
 			}
 
 			h2 {
@@ -89,14 +89,7 @@ var cbc_params = {
 </script>
 	</head>
 	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="/"><g:message code="default.home.label"/></a></li>
-				<li><a class="list" href="/">Clients</a></li>
-				<li><a class="list" href="/">Settings</a></li>
-			</ul>
-		</div> 
+		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">			
 			<fieldset><legend>Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
