@@ -97,9 +97,7 @@ var cbc_params = {
 				<li><a class="list" href="/">Settings</a></li>
 			</ul>
 		</div> 
-		<div id="page-body" role="main">
-			<h1>Checked-In Clients</h1>
-			<p>Lists all the currently checked-in clients. <a href="admin/technical/">LIST OF DOMAINS HERE</a></p>
+		<div id="page-body" role="main">			
 			<fieldset><legend>Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
 					<ul>

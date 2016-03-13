@@ -23,6 +23,7 @@ class BootStrap {
 		//	loginAsAdmin()
 			println ("3. Initialize Request map ...")
 			initRequestmap()
+			new Settings(name:"Wiggly Toes IPC",title:"Wiggly Toes",subtitle:"Indoor Play Centre",visitcount:5,notifytime:5).save(flush:true)
 			/*switch(Environment.getCurrent()){
 				case "DEVELOPMENT":
 				createLocations()
@@ -181,6 +182,7 @@ class BootStrap {
 				   '/person/create/**',
 				   '/person/delete/**',
 				   '/parent/delete/**',
+				   '/parent/',
 				   '/parent/*',
 				   '/parent/edit/**',
 				   '/parent/create/**',
@@ -215,7 +217,8 @@ class BootStrap {
 				 '/office/delete/**',
 				 '/role/**',
 				 '/roleGroup/**',
-				 '/user/**']) {
+				 '/settings/**',				 
+				 '/settings/edit/**']) {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
 	} //end method
