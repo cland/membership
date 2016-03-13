@@ -7,9 +7,37 @@
 		<g:message code="child.parent.label" default="Parent" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="parent" name="parent.id" from="${cland.membership.Parent.list()}" optionKey="id" required="" value="${childInstance?.parent?.id}" class="many-to-one"/>
+	<g:select id="parent" name="parent" from="${cland.membership.Parent.list()}" optionKey="id" required="" value="${childInstance?.parent?.id}" class="many-to-one"/>
 
 </div>
+<div class="fieldcontain ${hasErrors(bean: childInstance, field: 'comments', 'error')} ">
+			<label for="comments">
+				<g:message code="child.comments.label" default="Comments" />
+				
+			</label>
+			<g:textField name="comments" value="${childInstance?.comments}"/>
+		
+		</div>
+		
+		<div class="fieldcontain ${hasErrors(bean: childInstance, field: 'medicalComments', 'error')} ">
+			<label for="medicalComments">
+				<g:message code="child.medicalComments.label" default="Medical Comments" />
+				
+			</label>
+			<g:textField name="medicalComments" value="${childInstance?.medicalComments}"/>
+		
+		</div>
+		
+		<div class="fieldcontain ${hasErrors(bean: childInstance, field: 'accessNumber', 'error')} ">
+			<label for="accessNumber">
+				<g:message code="child.accessNumber.label" default="Access Number" />
+				
+			</label>
+			<g:textField name="accessNumber" value="${childInstance?.accessNumber}"/>
+		
+		</div>
+		
+		
 
 <%--div class="fieldcontain ${hasErrors(bean: childInstance, field: 'person', 'error')} required">
 	<label for="person">

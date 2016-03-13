@@ -90,7 +90,7 @@
 				</g:if>
 				<g:if test="${parentInstance?.comments}">
 				<li class="fieldcontain">
-					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="COmments" /></span>
+					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="Comments" /></span>
 					
 						<span class="property-value" aria-labelledby="comments-label"><g:fieldValue bean="${parentInstance}" field="comments"/></span>
 					

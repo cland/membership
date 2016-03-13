@@ -40,6 +40,33 @@
 					
 				</li>
 				</g:if>
+				
+				<g:if test="${childInstance?.accessNumber}">
+				<li class="fieldcontain">
+					<span id="accessNumber-label" class="property-label"><g:message code="parent.accessNumber.label" default="Access Number" /></span>
+					
+						<span class="property-value" aria-labelledby="accessNumber-label"><g:fieldValue bean="${childInstance}" field="accessNumber"/></span>
+					
+				</li>
+				</g:if>
+				
+				<g:if test="${childInstance?.comments}">
+				<li class="fieldcontain">
+					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="Comments" /></span>
+					
+						<span class="property-value" aria-labelledby="comments-label"><g:fieldValue bean="${childInstance}" field="comments"/></span>
+					
+				</li>
+				</g:if>
+				
+				<g:if test="${childInstance?.medicalComments}">
+				<li class="fieldcontain">
+					<span id="medicalComments-label" class="property-label"><g:message code="parent.medicalComments.label" default="Medical Comments" /></span>
+					
+						<span class="property-value" aria-labelledby="medicalComments-label"><g:fieldValue bean="${childInstance}" field="medicalComments"/></span>
+					
+				</li>
+				</g:if>
 			
 				<g:if test="${childInstance?.visits}">
 				<li class="fieldcontain">

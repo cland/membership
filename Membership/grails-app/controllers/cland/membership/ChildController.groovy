@@ -28,9 +28,20 @@ class ChildController {
     @Transactional
     def save(Child childInstance) {
 		println "In the save controller"
-        
+		Parent parent
 		println params
-		
+		println "This is the username: " +params.username
+		if (childInstance == null) {
+			notFound()
+			return
+		}
+		try{
+			println params.child.id
+		    parent = Parent.get((params.child.id).toLong())
+			println "This is the parent: " + parent
+		}catch(e){
+			println e.message
+		}
 		Person person = new Person()
 		person.username = params.username
 		person.password = params.password
@@ -83,6 +94,9 @@ class ChildController {
 		}
 		println "Person Saved"
 		childInstance.person = person
+		if(parent){
+			childInstance.parent = parent
+		}
 		if (childInstance == null) {
 			println 'Child not  found'
 			notFound()
@@ -92,8 +106,10 @@ class ChildController {
 			println "Successfully saved child class"
 			
 		}else{
+			println "Faile to save child class"
+			println childInstance.errors
 			render(contentType: "text/json"){
-				person.errors
+				childInstance.errors
 			}
 		}
 		/*if (childInstance.hasErrors()) {
@@ -102,7 +118,6 @@ class ChildController {
 			//respond childInstance.errors, view:'create'
 			return
 		}*/
-        childInstance.save flush:true
 
         request.withFormat {
             form multipartForm {
