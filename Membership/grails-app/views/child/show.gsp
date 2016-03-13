@@ -103,6 +103,7 @@
 				</fieldset>
 			</g:form>
 		</div>
+		</div>
 		<script>
 		$(document).ready(function() {		
 			
