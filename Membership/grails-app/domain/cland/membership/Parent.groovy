@@ -8,5 +8,6 @@ class Parent {
 	Date date
 	static hasMany = [children:Child] 
     static constraints = {
+		person2 nullable: true
     }
 }

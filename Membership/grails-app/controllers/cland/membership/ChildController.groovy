@@ -3,10 +3,12 @@ package cland.membership
 
 
 import static org.springframework.http.HttpStatus.*
+import cland.membership.security.Person
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class ChildController {
+	def springSecurityService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -25,16 +27,81 @@ class ChildController {
 
     @Transactional
     def save(Child childInstance) {
-        if (childInstance == null) {
-            notFound()
-            return
-        }
-
-        if (childInstance.hasErrors()) {
-            respond childInstance.errors, view:'create'
-            return
-        }
-
+		println "In the save controller"
+        
+		println params
+		
+		Person person = new Person()
+		person.username = params.username
+		person.password = params.password
+		person.enabled = true
+		person.firstName = params.firstName
+		person.lastName = params.lastName
+		person.knownAs = params.knownAs
+		person.title = params.title
+		person.email = params.email
+		person.gender = params.gender
+		person.idNumber = params.idNumber
+		person.dateOfBirth = params.dateOfBirth
+		person.createdBy = springSecurityService.currentUser.id
+		
+		Office office = new Office()
+		
+		//TODO: add the items below as template
+		office.name = params.name
+		office.code = params.code
+		office.status = params.status
+		
+		if (office.hasErrors()) {
+			println "Office has errors"
+			respond office.errors, view:'create'
+			return
+		}
+		
+		if(office.save(flush:true)){
+			println "Office saved"
+			println office
+		   }else{
+		   	println "Error saving office"
+			   render(contentType: "text/json"){
+				   office.errors
+			   }
+		   }
+		
+		person.office = office
+		println "office saved"
+		
+		if(person.save(flush:true)){
+			println "Successfully saved person class"
+			childInstance.person = person
+			
+		}else{
+			println "Failed saving person class"
+			render(contentType: "text/json"){
+				person.errors
+			}
+		}
+		println "Person Saved"
+		childInstance.person = person
+		if (childInstance == null) {
+			println 'Child not  found'
+			notFound()
+			return
+		}
+		if(childInstance.save(flush:true)){
+			println "Successfully saved child class"
+			
+		}else{
+			render(contentType: "text/json"){
+				person.errors
+			}
+		}
+		/*if (childInstance.hasErrors()) {
+			println "person errors"
+			println childInstance.errors
+			//respond childInstance.errors, view:'create'
+			return
+		}*/
         childInstance.save flush:true
 
         request.withFormat {

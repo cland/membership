@@ -29,7 +29,7 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: parentInstance, field: 'person1', 'error')} required">
+<%--div class="fieldcontain ${hasErrors(bean: parentInstance, field: 'person1', 'error')} required">
 	<label for="person1">
 		<g:message code="parent.person1.label" default="Person1" />
 		<span class="required-indicator">*</span>
@@ -45,5 +45,5 @@
 	</label>
 	<g:select id="person2" name="person2.id" from="${cland.membership.security.Person.list()}" optionKey="id" required="" value="${parentInstance?.person2?.id}" class="many-to-one"/>
 
-</div>
+</div--%>
 

@@ -29,6 +29,13 @@
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>
+				<fieldset class="form">
+					<tmpl:/person/list/>
+				</fieldset>
+				<fieldset class="form">
+					<tmpl:/office/form/>
+				</fieldset>
+				
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
 				</fieldset>

@@ -27,9 +27,22 @@
 				<li class="fieldcontain">
 					<span id="children-label" class="property-label"><g:message code="parent.children.label" default="Children" /></span>
 					
+					<table>
+					<thead>
+					<tr><td>ID</td>
+					<td>First Name</td>
+					<td>Date Of Birth</td>
+					<td>Gender</td></tr>
+					</thead>
 						<g:each in="${parentInstance.children}" var="c">
-						<span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						<tr><td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						</td>
+						<td>${c?.person?.firstName}</td>
+						<td>${c?.person?.dateOfBirth}</td>
+						<td>${c?.person?.gender}</td>
+						</tr>
 						</g:each>
+						</table>
 					
 				</li>
 				</g:if>
