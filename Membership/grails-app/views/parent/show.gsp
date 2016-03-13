@@ -6,6 +6,7 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'parent.label', default: 'Parent')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<g:render template="head" var="thisInstance" bean="${parentInstance }" model="[sidenav:page_nav]"></g:render>
 	</head>
 	<body>
 		<a href="#show-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -21,6 +22,13 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			<div id="tabs" style="display: none;">
+					<ul>
+						<li><a href="#tab-1">Parent Details</a></li>
+						<li><a href="#tab-2">Person Details</a></li>
+						<li><a href="#tab-3">Office Details</a></li>
+					</ul>
+					<div id="tab-1">
 			<ol class="property-list parent">
 			
 				<g:if test="${parentInstance?.children}">
@@ -29,10 +37,10 @@
 					
 					<table>
 					<thead>
-					<tr><td>ID</td>
-					<td>First Name</td>
-					<td>Date Of Birth</td>
-					<td>Gender</td></tr>
+					<tr><th>ID</th>
+					<th>First Name</th>
+					<th>Date Of Birth</th>
+					<th>Gender</th></tr>
 					</thead>
 						<g:each in="${parentInstance.children}" var="c">
 						<tr><td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
@@ -43,15 +51,6 @@
 						</tr>
 						</g:each>
 						</table>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${parentInstance?.date}">
-				<li class="fieldcontain">
-					<span id="date-label" class="property-label"><g:message code="parent.date.label" default="Date" /></span>
-					
-						<span class="property-value" aria-labelledby="date-label"><g:formatDate date="${parentInstance?.date}" /></span>
 					
 				</li>
 				</g:if>
@@ -75,6 +74,13 @@
 				</g:if>
 			
 			</ol>
+			</div>
+			<div id="tab-2">
+			<p>===PERSON DETAIS===</p>
+			</div>
+			<div id="tab-3">
+			<p>====OFFICE DETAILS</p>
+			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${parentInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
@@ -82,5 +88,27 @@
 				</fieldset>
 			</g:form>
 		</div>
+		<script>
+		$(document).ready(function() {		
+			
+			$("#tabs").tabs(
+							{
+							active:cbc_params.active_tab(),
+							create: function (event,ui){	
+								//executed after is created								
+								$('#tabs').show()
+							},
+							show: function(event,ui){
+								//on every tabs clicked
+							},
+							beforeLoad : function(event, ui) {
+									ui.jqXHR.error(function() {
+										ui.panel
+										.html("Couldn't load this tab. We'll try to fix this as soon as possible. ");
+									});
+								}
+					});		                
+		});  
+		</script>
 	</body>
 </html>

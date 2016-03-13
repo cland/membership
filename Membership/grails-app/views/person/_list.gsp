@@ -1,4 +1,4 @@
-<legend>Person Details</legend>
+<fieldset><legend>Person Details</legend>
 <div class="fieldcontain ${hasErrors(bean: personInstance, field: 'firstName', 'error')} required">
 			<label for="firstName">
 				<g:message code="person.firstName.label" default="First Name" />
@@ -69,9 +69,7 @@
 		</div>
 		
 		</fieldset>
-	</div>
 	
-	<div id="tab-2">
 	<fieldset><legend>Login Details</legend>
 	<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'username', 'error')} required">
 			<label for="username">

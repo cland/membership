@@ -36,7 +36,7 @@
 				<g:each in="${parentInstanceList}" status="i" var="parentInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${parentInstance.id}">${fieldValue(bean: parentInstance, field: "date")}</g:link></td>
+						<td><g:link action="show" id="${parentInstance.id}">${fieldValue(bean: parentInstance.person1, field: "firstName")}</g:link></td>
 					
 						<td>${fieldValue(bean: parentInstance, field: "person1")}</td>
 					

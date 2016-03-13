@@ -29,7 +29,6 @@
 			</g:hasErrors>
 			<g:form url="[resource:personInstance, action:'save']" >
 				<fieldset class="form">
-					<tmpl:/person/form/>
 					<g:render template="form"/>
 				</fieldset>
 				<fieldset class="buttons">
