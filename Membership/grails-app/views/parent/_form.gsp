@@ -17,5 +17,29 @@
 </li>
 </ul>
 </div>
+<div class="fieldcontain ${hasErrors(bean: parentInstance, field: 'clientType', 'error')} ">
+			<label for="gender">
+				<g:message code="parent.clientType.label" default="Client Type" />
+				
+			</label>
+			<g:select name="clientType" from="${parentInstance.constraints.clientType.inList}" value="${personInstance?.clientType}" valueMessagePrefix="clientType" noSelection="['': '']"/>
+		
+		</div>
+		<div class="fieldcontain ${hasErrors(bean: parentInstance, field: 'comments', 'error')} ">
+			<label for="title">
+				<g:message code="parent.comments.label" default="Comments" />
+				
+			</label>
+			<g:textField name="comments" value="${parentInstance?.comments}"/>
+		
+		</div>
+		<div class="fieldcontain ${hasErrors(bean: parentInstance, field: 'membershipNo', 'error')} ">
+			<label for="membershipNo">
+				<g:message code="parent.memberhipNo.label" default="membership" />
+				
+			</label>
+			<g:textField name="membershipNo" value="${parentInstance?.membershipNo}"/>
+		
+		</div>
 
 

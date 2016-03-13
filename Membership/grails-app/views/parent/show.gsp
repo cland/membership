@@ -63,7 +63,7 @@
 					
 				</li>
 				</g:if>
-			
+							
 				<g:if test="${parentInstance?.person2}">
 				<li class="fieldcontain">
 					<span id="person2-label" class="property-label"><g:message code="parent.person2.label" default="Person2" /></span>
@@ -72,6 +72,31 @@
 					
 				</li>
 				</g:if>
+				<g:if test="${parentInstance?.membershipNo}">
+				<li class="fieldcontain">
+					<span id="membershipNo-label" class="property-label"><g:message code="parent.membershipNo.label" default="Membership Number" /></span>
+					
+						<span class="property-value" aria-labelledby="membershipNo-label"><g:fieldValue bean="${parentInstance}" field="membershipNo"/></span>
+					
+				</li>
+				</g:if>
+				<g:if test="${parentInstance?.clientType}">
+				<li class="fieldcontain">
+					<span id="clientType-label" class="property-label"><g:message code="parent.clientType.label" default="Client Type" /></span>
+					
+						<span class="property-value" aria-labelledby="clientType-label"><g:fieldValue bean="${parentInstance}" field="clientType"/></span>
+					
+				</li>
+				</g:if>
+				<g:if test="${parentInstance?.comments}">
+				<li class="fieldcontain">
+					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="COmments" /></span>
+					
+						<span class="property-value" aria-labelledby="comments-label"><g:fieldValue bean="${parentInstance}" field="comments"/></span>
+					
+				</li>
+				</g:if>
+				
 			
 			</ol>
 			</div>

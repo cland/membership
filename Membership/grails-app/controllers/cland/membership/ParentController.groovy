@@ -46,7 +46,6 @@ class ParentController {
 		person.idNumber = params.idNumber
 		person.dateOfBirth = params.dateOfBirth
 		person.createdBy = springSecurityService.currentUser.id
-		parentInstance.date = new Date()
 		
 		Office office = new Office()
 		
