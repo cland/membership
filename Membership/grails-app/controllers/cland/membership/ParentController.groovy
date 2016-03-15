@@ -9,6 +9,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class ParentController {
 	def springSecurityService
+	def emailService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -87,6 +88,12 @@ class ParentController {
 		if(person.save(flush:true)){
 			println "Person saved"
 			parentInstance.person1 = person
+			sendMail {
+				to "ndabantethelelo@gmail.com"
+				subject "Notification"
+				body "Hello " + person.firstName +" this is to verify that your account has been created"
+			  }
+			
 			
 		}else{
 			println person.errors
