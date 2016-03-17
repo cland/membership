@@ -95,7 +95,8 @@ var cbc_params = {
 				<div id="tabs" style="display: none;">
 					<ul>
 						<li><a href="#tab-1">Search Existing</a></li>
-						<li><a href="#tab-2">New Client</a></li>					
+						<li><a href="#tab-2">New Client</a></li>
+						<li><a href="#tab-3">Group/Birthday Booking</a></li>									
 					</ul>
 					<div id="tab-1">
 						<form action="">
@@ -104,8 +105,10 @@ var cbc_params = {
 						</form>
 					</div>
 					<div id="tab-2">
-						<p>== KEY PARENT n KIDS FORM HERE TO COMPLETE AND SUBMIT ==</p>
-						<p>A visit is immediately created for each child entered and appended to the list below.</p>
+						<g:render template="newclient"></g:render>
+					</div>
+					<div id="tab-2">
+						<g:render template="groupclient"></g:render>
 					</div>
 				</div>
 			</fieldset>

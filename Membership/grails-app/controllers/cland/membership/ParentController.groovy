@@ -89,7 +89,7 @@ class ParentController {
 			println "Person saved"
 			parentInstance.person1 = person
 			sendMail {
-				to "ndabantethelelo@gmail.com"
+				to "dembaremba@gmail.com"
 				subject "Notification"
 				body "Hello " + person.firstName +" this is to verify that your account has been created"
 			  }
