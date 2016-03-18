@@ -100,20 +100,20 @@ var cbc_params = {
 					</ul>
 					<div id="tab-1">
 						<form action="">
-							<input name="query" value="">
+							<input style="width:40em;padding:10px;" name="query" value="" placeholder="Search for membership no. or lastname or child name">
 							<g:submitButton name="Search" class="save" value="Search" />
 						</form>
 					</div>
 					<div id="tab-2">
 						<g:render template="newclient"></g:render>
 					</div>
-					<div id="tab-2">
+					<div id="tab-3">
 						<g:render template="groupclient"></g:render>
 					</div>
 				</div>
 			</fieldset>
-			
-			<g:render template="liveform" var="thisInstance" bean="" model=""></g:render>
+			<div class="wait">Loading, please wait...</div>
+			<g:render template="liveform" var="thisInstance" bean="${parentInstance }" model="[mode:'edit']"></g:render>
 			
 		</div>
 
@@ -161,7 +161,7 @@ var cbc_params = {
 		}
 		
 	
-		$(document).ready(function() {
+		$(document).ready(function() {		
 			$("#tabs").tabs(
 					{
 					active:cbc_params.active_tab(),
@@ -186,8 +186,36 @@ var cbc_params = {
 			initializeClock('clockdivtwo', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
 			initializeClock('clockdivthree', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
 			initializeClock('clockdivfour', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
+
+			//setup the datepicker calendars
+			initBirthDatePicker($( "#birth-date1" ),"-2y");
+			initBirthDatePicker($( "#birth-date2" ),"-2y");
+			initBirthDatePicker($( "#grp-birth-date1" ),"-2y");
+			initBirthDatePicker($( "#grp-bookingdate" ),"-2y");
 			
 		});
+
+		function onSuccessNewClientCallbackHander(data,textStatus){
+			}
+		function onLoading(){
+			$(".wait").show()
+		}
+		function onComplete(){
+			$(".wait").hide()
+		}
+		function onFailure(data,textStatus){
+			$(".wait").hide()
+			alert("Operation failed with status '" + textStatus + "'")
+		}
+		function initBirthDatePicker(el,def){
+			el.datepicker({
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd",
+				defaultDate : def,					
+				maxDate:"-0y",
+				minDate:"-90y"
+				});
+		}
 	</script>		
 	</body>
 </html>

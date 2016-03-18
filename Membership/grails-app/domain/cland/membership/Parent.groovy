@@ -8,11 +8,12 @@ class Parent {
 	BigInteger membershipNo
 	String clientType
 	String comments
+	String relationship
 	static hasMany = [children:Child] 
     static constraints = {
 		person2 nullable: true
-		clientType inList: ["Standard","Member"]
 		comments nullable: true
 		membershipNo unique: true
+		relationship nullable:true
     }
 }

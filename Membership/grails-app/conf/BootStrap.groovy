@@ -1,5 +1,6 @@
 import java.util.logging.Level.KnownLevel;
 
+import cland.membership.lookup.Keywords
 import cland.membership.security.*
 import cland.membership.*
 
@@ -23,7 +24,9 @@ class BootStrap {
 		//	loginAsAdmin()
 			println ("3. Initialize Request map ...")
 			initRequestmap()
-			new Settings(name:"Wiggly Toes IPC",title:"Wiggly Toes",subtitle:"Indoor Play Centre",visitcount:5,notifytime:5).save(flush:true)
+			
+			println("4. Creating other default records...")
+			createOther()
 			/*switch(Environment.getCurrent()){
 				case "DEVELOPMENT":
 				createLocations()
@@ -58,7 +61,7 @@ class BootStrap {
 		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
 		//if(!race.save(flush: true)){
 			println "Race saved " + race
-			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:Gender.MALE.toString(),	idNumber :"10101010101", dateOfBirth:(new Date() - 365*30))
+			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:Gender.MALE.toString(),	idNumber :"10101010101", dateOfBirth:(new Date() - 365*30),mobileNo:"+621859123")
 			 
 		//	if(!personAdmin.save(flush: true)){
 		//		println("personAdmin error...")
@@ -67,7 +70,7 @@ class BootStrap {
 		//		println "Admin person saved!" //  + personAdmin.toString()
 		//	}
 			
-			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", gender:Gender.FEMALE.toString(),	idNumber :"156456556551", dateOfBirth:(new Date() - 365*30)) //.save(flush: true)
+			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", gender:Gender.FEMALE.toString(),	idNumber :"156456556551", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
 		//	if(!personDev.save(flush: true)){
 		//		println("personDev error...")
 		//		personDev.errors
@@ -222,4 +225,20 @@ class BootStrap {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
 	} //end method
+	private void createOther(){
+		new Settings(name:"Wiggly Toes IPC",title:"Wiggly Toes",subtitle:"Indoor Play Centre",visitcount:5,notifytime:5).save(flush:true)
+		def keyword = new Keywords(name: "RelationshipTypes",label:"Relationship Types",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Mother",label:"Mother",category:"System")	)
+		keyword.addToValues(new Keywords(name:"Father",label:"Father",category:"System")	)
+		keyword.addToValues(new Keywords(name:"Guardian",label:"Guardian",category:"System")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		keyword = new Keywords(name: "ClientTypes",label:"Client Types",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Standard",label:"Standard",category:"System")	)
+		keyword.addToValues(new Keywords(name:"Member",label:"Member",category:"System")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+	}
 }
