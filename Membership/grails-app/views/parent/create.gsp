@@ -32,7 +32,6 @@
 					<ul>
 						<li><a href="#tab-1">Parent Details</a></li>
 						<li><a href="#tab-2">Person Details</a></li>
-						<li><a href="#tab-3">Office Details</a></li>
 					</ul>
 					<div id="tab-1">
 						<tmpl:form/>
@@ -43,11 +42,11 @@
 							<tmpl:/person/list/>
 						</fieldset>
 					</div>
-					<div id="tab-3">
+					<%-- div id="tab-3">
 						<fieldset class="form">
 							<tmpl:/office/form/>
 						</fieldset>
-					</div>
+					</div --%>
 				</div>
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />

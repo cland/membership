@@ -109,7 +109,22 @@
 	<g:select name="affiliates" from="${cland.membership.Organisation.list()}" multiple="multiple" optionKey="id" size="5" value="${officeInstance?.affiliates*.id}" class="many-to-many"/>
 
 </div>
+<div class="fieldcontain ${hasErrors(bean: officeInstance, field: 'numAdults', 'error')} ">
+	<label for="numAdults">
+		<g:message code="office.numAdults.label" default="numAdults" />
+		
+	</label>
+	<g:textField name="numAdults" readonly="readonly" value="${officeInstance?.numAdults}"/>
 
+</div>
+<div class="fieldcontain ${hasErrors(bean: officeInstance, field: 'numKids', 'error')} ">
+	<label for="numKids">
+		<g:message code="office.numKids.label" default="numKids" />
+		
+	</label>
+	<g:textField name="numKids" readonly="readonly" value="${officeInstance?.numKids}"/>
+
+</div>
 <div class="fieldcontain ${hasErrors(bean: officeInstance, field: 'staff', 'error')} ">
 	<label for="staff">
 		<g:message code="office.staff.label" default="Staff" />
