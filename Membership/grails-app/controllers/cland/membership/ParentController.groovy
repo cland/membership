@@ -104,13 +104,6 @@ class ParentController {
 					e
 				}
 			}*/
-			//auto create visit - DONE
-			//return to home page after parent creation - DONE
-			//complete form, default office - DONE 
-			//booking ->person in charge, num kids, num adults
-			//notification sms last priority
-			
-			//send query to fetch children
 			
 		}else{
 			println person.errors
