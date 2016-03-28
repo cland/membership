@@ -1,5 +1,6 @@
 <%@page import="org.apache.jasper.compiler.Node.ParamsAction"%>
 <%@ page import="cland.membership.security.Person" %>
+<%@ page import="cland.membership.Parent" %>
 
 <div id="tabs" style="display: none;">
 	<ul>
@@ -15,7 +16,7 @@
 				<g:message code="person.firstName.label" default="First Name" />
 				<span class="required-indicator">*</span>
 			</label>
-			<g:textField name="firstName" required="" value="${personInstance?.firstName}"/>
+			<g:textField name="firstName" required="" value="${personInstance?.firstName?:parentInstance?.person?.firstName}"/>
 		
 		</div>
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'lastName', 'error')} ">
