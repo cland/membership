@@ -700,3 +700,4 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
   padding: 10px;
   text-align: center;
 }
+.hide, .wait {display:none;padding:10px; border:solid 1px red;text-align:center;font-weight:bold;font-size:1.5em;color:#EB8F2A;}

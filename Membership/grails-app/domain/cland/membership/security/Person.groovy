@@ -33,6 +33,8 @@ class Person implements Serializable {
 	String gender
 	Race race
 	String idNumber
+	String mobileNo
+	String telNo
 	Date dateOfBirth
 	//List phones
 	/** Admin Tracking Information **/
@@ -62,6 +64,7 @@ class Person implements Serializable {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
 		history nullable:true,editable:false
+		telNo nullable:true
 	}
 	Person(String username, String password) {
 		this()

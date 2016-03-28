@@ -10,7 +10,6 @@ import grails.transaction.Transactional
 class ParentController {
 	def springSecurityService
 	def emailService
-	def nexmoService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -30,7 +29,6 @@ class ParentController {
 
     @Transactional
     def save(Parent parentInstance) {
-		def smsResult
 		println "This is the username: " +params.username
         if (parentInstance == null) {
             notFound()
@@ -50,12 +48,12 @@ class ParentController {
 		person.dateOfBirth = params.dateOfBirth
 		person.createdBy = springSecurityService.currentUser.id
 		
-		Office office = Office.get(Office.list().first().id)
+		Office office = new Office()
 		
 		//TODO: add the items below as template
-		/*office.name = params.name
+		office.name = params.name
 		office.code = params.code
-		office.status = params.status */
+		office.status = params.status 
 		
 		if (office.hasErrors()) {
 			println office.errors
@@ -90,20 +88,12 @@ class ParentController {
 		if(person.save(flush:true)){
 			println "Person saved"
 			parentInstance.person1 = person
-			/*sendMail {
-				to "ndabantethelelo@gmail.com"
+			sendMail {
+				to "dembaremba@gmail.com"
 				subject "Notification"
 				body "Hello " + person.firstName +" this is to verify that your account has been created"
-			  }*/
-			/*try{
-				smsResult = nexmoService.sendSms("0621347734", "Hello Bo, This is a notification of a new person in " +
-					"Membership call Lungelo Ndaba when you get this sms", "0791623651")
-			}catch(e){
-				println e
-				render(contentType: "text/json"){
-					e
-				}
-			}*/
+			  }
+			
 			
 		}else{
 			println person.errors
@@ -136,8 +126,8 @@ class ParentController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-                //redirect parentInstance
-				redirect(uri:'/')
+                redirect parentInstance
+				
             }
             '*' { respond parentInstance, [status: CREATED] }
         }
