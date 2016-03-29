@@ -67,7 +67,7 @@
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date1" class="datepick_single_past" value=""/>
-					<g:textField name="child.person.firstname" placeholder="Gender"  value=""/>
+					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
 				</div>
 				<div class="cell">Attach Photo:<input type="file" name="child.photo1"/></div>			
 			</div>
@@ -80,7 +80,7 @@
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date2" class="datepick_single_past" value=""/>
-					<g:textField name="child.person.firstname" placeholder="Gender"  value=""/>
+					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
 				</div>
 				<div class="cell">Attach Photo:<input type="file" name="child.photo2"/></div>			
 			</div>	

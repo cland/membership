@@ -26,7 +26,7 @@ class Child {
 		createdBy nullable:true, editable:false
     }
 	def beforeInsert() {
-		encodePassword()
+		//encodePassword()
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
 		lastUpdatedBy = curId
@@ -34,7 +34,7 @@ class Child {
 
 	def beforeUpdate() {
 		if (isDirty('password')) {
-			encodePassword()
+			//encodePassword()
 		}
 		lastUpdatedBy = groupManagerService.getCurrentUserId()
 	}
