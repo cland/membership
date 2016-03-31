@@ -11,13 +11,13 @@
 				<div class="cell"><label id="">First name:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="person.firstname" required="" value=""/>
+						<g:textField name="parent.person1.firstName" required="" value=""/>
 					</span>
 				</div>	
 				<div class="cell"><label id="">Cell number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="telNo" value=""/>
+						<g:textField name="parent.person1.mobileNo" value=""/>
 					</span>
 				</div>			
 			</div>
@@ -25,13 +25,13 @@
 				<div class="cell"><label id="">Surname:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="person.lastname" required="" value=""/>
+						<g:textField name="parent.person1.lastName" required="" value=""/>
 					</span>
 				</div>
 				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="email" value=""/>
+						<g:textField name="parent.person1.email" value=""/>
 					</span>
 				</div>			
 			</div>
@@ -40,7 +40,7 @@
 				<div class="cell"><label id="">Id number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="idNumber" value=""/>
+						<g:textField name="parent.person1.idNumber" value=""/>
 					</span>
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
@@ -63,26 +63,28 @@
 				<div class="cell" style="width:20px;"><h1>1.</h1></div>
 				<div class="cell">
 					<g:textField name="child.person.firstname" placeholder="First Name"  value=""/><br/>
-					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/>
+					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/><br/>
+					Check-in now: <g:checkBox name="child.checkin" value="Yes"/>
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date1" class="datepick_single_past" value=""/>
 					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
 				</div>
-				<div class="cell">Attach Photo:<input type="file" name="child.photo1"/></div>			
+				<div class="cell">Attach Photo:<input type="file" name="child.photo"/></div>			
 			</div>
 			<div class="row"><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
 			<div class="row">
 				<div class="cell" style="width:20px;"><h1>2.</h1></div>
 				<div class="cell">
 					<g:textField name="child.person.firstname" placeholder="First Name"  value=""/><br/>
-					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/>
+					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/><br/>
+					Check-in now: <g:checkBox name="child.checkin" value="Yes"/>
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date2" class="datepick_single_past" value=""/>
 					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
 				</div>
-				<div class="cell">Attach Photo:<input type="file" name="child.photo2"/></div>			
+				<div class="cell">Attach Photo:<input type="file" name="child.photo"/></div>			
 			</div>	
 		</div>
 	</fieldset>

@@ -5,7 +5,7 @@ import cland.membership.security.Person
 class Parent {
 	Person person1
 	Person person2
-	BigInteger membershipNo
+	String membershipNo
 	String clientType
 	String comments
 	String relationship

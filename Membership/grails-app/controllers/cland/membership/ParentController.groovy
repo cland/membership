@@ -11,6 +11,7 @@ import java.text.DateFormat
 @Transactional(readOnly = true)
 class ParentController {
 	def springSecurityService
+	def cbcApiService
 	def emailService
 	def nexmoService
 
@@ -29,71 +30,6 @@ class ParentController {
 		println "These are the parameters: " + params
         respond new Parent(params)
     }
-	
-	@Transactional
-	def newclient(){
-		JsonSlurper jsonSlurper = new JsonSlurper()
-		println params
-		Office office = Office.get(Office.list().first().id)
-		Person personInstance = new Person(params.person)
-		println personInstance
-		personInstance.username = params.person["firstname"]
-		personInstance.password = params.person["firstname"]
-		personInstance.firstName = params.person["firstname"]
-		personInstance.lastName = params.person["lastname"]
-		personInstance.mobileNo = params.telNo
-		personInstance.office = office
-		if(!personInstance.save(flush: true)){
-			println personInstance.errors
-			return
-		}else{
-			println "person saved"
-		}
-		Parent parentInstance = new Parent(params)
-		parentInstance.person1 = personInstance
-		parentInstance.clientType = "Standard"
-		parentInstance.membershipNo = Parent.last().membershipNo + 1
-		if(!parentInstance.save(flush: true)){
-			println parentInstance.errors
-			return
-		}else{
-			println "Parent saved"
-		}
-		/*** TEMPORAL  ***/
-		Person childPerson = new Person()
-		String username = (params.child["person"].firstname).toList().first()
-		println username
-		String lastname = (params.child["person"].lastname).toList().first()
-		Date dOb = Date.parse("dd-MMM-yyyy",((params.child["person"].dateOfBirth).toList().first()).toString())
-		
-		childPerson.username = username
-		childPerson.password = username
-		childPerson.firstName = username
-		childPerson.lastName = lastname
-		childPerson.dateOfBirth = dOb 
-		childPerson.mobileNo = personInstance.mobileNo
-		childPerson.office = office
-		if(!childPerson.save(flush: true)){
-			println childPerson.errors
-			return
-		}else{
-			println "Child person saved"
-		}
-		Child childInstance = new Child()
-		childInstance.parent = parentInstance
-		childInstance.accessNumber = Child.last().accessNumber + 1
-		childInstance.person = childPerson
-		childInstance.lastUpdated = new Date()
-		childInstance.dateCreated = new Date()
-		if(!childInstance.save(flush: true)){
-			println childInstance.errors
-			return
-		}else{
-			println "Child saved"
-		}
-		println "Success"
-		return "Successfully created person child parent and office"
-	}
 
     @Transactional
     def save(Parent parentInstance) {
@@ -262,4 +198,54 @@ class ParentController {
             '*'{ render status: NOT_FOUND }
         }
     }
+	
+	@Transactional
+	def newclient(){
+	
+		Office office = Office.list().first()
+		
+		Parent parentInstance = new Parent(params.parent)
+		parentInstance.clientType = "Standard"
+		def num = cbcApiService.generateIdNumber(new Date(),5)
+		parentInstance.membershipNo = num
+		Person person1 = new Person(params.parent.person1)
+		person1.office = office
+		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.password = person1.username
+		person1.enabled = false
+		
+		if(!person1.save(flush:true)){
+			println person1.errors
+		}
+		parentInstance.person1 = person1
+		
+		if(!parentInstance.save(flush: true)){
+			println parentInstance.errors
+			return
+		}else{
+			println "Parent saved"
+			params.child.person.firstname.eachWithIndex { value, index ->
+				def child = new Child()
+				def p = new Person()
+				p.firstName = value
+				p.lastName = params.child.person.lastname[index]
+				p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
+				p.gender = params.child.person.gender[index]
+				p.save()
+				child.person = p
+				if(parentInstance.children){ 
+					child.accessNumber = parentInstance.children.size() + 1
+				}else{
+					child.accessNumber = 1
+				}
+				parentInstance.addToChildren(child)
+				
+				
+			}
+		}
+		
+		
+		println "Success"
+		return "Successfully created person child parent and office"
+	}
 }

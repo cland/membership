@@ -8,14 +8,17 @@ class Child {
 	transient cbcApiService
 	transient springSecurityService
 	transient groupManagerService
+	
 	Person person
 	BigInteger accessNumber
 	String comments
 	String medicalComments
+	
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
+	
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
     static constraints = {

@@ -16,7 +16,7 @@ import org.apache.commons.lang.RandomStringUtils
  * @author Cland
  *
  */
-class cbcApiService {
+class CbcApiService {
 	static transactional = false
 	def springSecurityService
 	def groupManagerService
@@ -102,12 +102,12 @@ class cbcApiService {
 	}
 	
 	
-	String generateIdNumber(Date birthday){
+	String generateIdNumber(Date birthday,Integer length){
 		String charset = (('A'..'Z') + ('0'..'9')).iterator().join()
-		Integer length = 7
+		
 		String randomString = RandomStringUtils.random(length, charset.toCharArray())
 		if(birthday == null) birthday = new Date();
-		return birthday?.format("yymmdd") + randomString
+		return birthday?.format("yyyyMMdd") + randomString
 	}
 	private static int findUpperIndex(int offset, int max, int total) {
 		max = offset + max - 1
