@@ -221,8 +221,7 @@ class ParentController {
 			return
 		}
 		parentInstance.person1 = person1
-		
-		println "Adding children..." + params.child
+
 		params.child.person.firstname.eachWithIndex { value, index ->
 			def child = new Child()
 			def p = new Person()

@@ -4,6 +4,7 @@ package cland.membership
 
 import static org.springframework.http.HttpStatus.*
 import cland.membership.security.Person
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -183,4 +184,10 @@ class ChildController {
             '*'{ render status: NOT_FOUND }
         }
     }
-}
+	
+	/** CUSTOM FUNCTIONS **/
+	def visits(params){
+		def activeVisits = Visit.findAllByStatus("Active")
+		render activeVisits*.toMap() as JSON
+	}
+} //end class

@@ -1,4 +1,4 @@
-<g:formRemote name="newclient_form" url="[controller:'parent',action:'newclient']" 
+<g:formRemote id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']" 
 			update="livepanel" 
 			onSuccess="onSuccessNewClientCallbackHander(data,textStatus)"
 			onLoading="onLoading()"

@@ -58,7 +58,7 @@ class Parent {
 			clienttype:clientType,
 			comments:comments,
 			relationship:relationship,
-			childlist:children,
+			childlist:children*.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
 	}

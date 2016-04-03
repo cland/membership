@@ -22,7 +22,7 @@ class Child {
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
     static constraints = {
-		accessNumber unique: true
+		accessNumber unique:['parent']
 		comments nullable: true
 		medicalComments nullable: true
 		lastUpdatedBy nullable:true, editable:false
@@ -39,12 +39,18 @@ class Child {
 	}
 	def toMap(params = null){
 		return [id:id,
-			parent:parent,
-			person:person,
+			parent:[
+				person1:parent?.person1?.toMap(),
+				person2:parent?.person2?.toMap(),
+				membershipno:parent?.membershipNo,
+				clienttype:parent?.clientType,
+				comments:parent?.comments,
+				relationship:parent?.relationship],
+			person:person?.toMap(),
 			accessnumber:accessNumber,
 			comments:comments,
 			medicalcomments:medicalComments,
-			visits:visits,
+			visits:visits*.toMap(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			params:params]
 	}

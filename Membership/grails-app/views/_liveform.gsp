@@ -1,4 +1,5 @@
 <div id="livepanel" style="background:#fff;" >
+<!-- 
 	<div class="person-card float-left">
 	  <img class="person-img" src="assets/kidface.png" alt="Child" />
 	  <div class="person-info">
@@ -143,4 +144,5 @@
 		</div>
 	  </div>
 	</div>
+	 -->
 </div>

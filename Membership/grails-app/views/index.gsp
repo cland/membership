@@ -152,9 +152,17 @@ var cbc_params = {
 		    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
 		
 		    if (t.total <= 0) {
-			  console.log("Time up!")
-		      clearInterval(timeinterval);
-		    }
+		    	("#" + id).removeClass("clock-warn")
+		    	("#" + id).removeClass("clock-normal")  
+			  	("#" + id).addClass("clock-done")
+			  	console.log("Time up for '" + id + "'!")
+		      	clearInterval(timeinterval);
+		    }else if(t.total < 15){
+			    //warning
+			    ("#" + id).removeClass("clock-done")
+		    	("#" + id).removeClass("clock-normal")  
+			  	("#" + id).addClass("clock-warn")
+			}
 		  }
 		
 		  updateClock();
@@ -163,9 +171,8 @@ var cbc_params = {
 		
 	
 		$(document).ready(function() {	
-			addActiveVisit($("#livepanel"), "63","Jason Dembaremba","assets/kidface.png","082820","13:00","--","clock-done")
-			addActiveVisit($("#livepanel"), "78","Karen Milne","assets/female.jpg","0728209","13:33","--","clock-warn")
-			addActiveVisit($("#livepanel"), "79","Denny Chimbs","assets/kidface.png","0628255","14:45","--","")
+			var livepanel = $("#livepanel")
+			initVisits(livepanel)
 			$("#tabs").tabs(
 					{
 					active:cbc_params.active_tab(),
@@ -183,30 +190,26 @@ var cbc_params = {
 							});
 						}
 			});
-			var startDate = new Date(); //"11 March 2016 22:23:00";
-			var deadline = new Date(Date.parse(startDate)); //(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-			deadline.setHours(deadline.getHours() + 2);
-			initializeClock('clockdiv', deadline);
-			initializeClock('clockdivtwo', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
-			initializeClock('clockdivthree', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
-			initializeClock('clockdivfour', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
 
-			initializeClock('clockdiv_63', deadline);
-			initializeClock('clockdiv_78', deadline);
-			initializeClock('clockdiv_79', deadline);
 			//setup the datepicker calendars
 			initBirthDatePicker($( "#birth-date1" ),"-2y");
 			initBirthDatePicker($( "#birth-date2" ),"-2y");
 			initBirthDatePicker($( "#grp-birth-date1" ),"-2y");
 			initBirthDatePicker($( "#grp-bookingdate" ),"-2y");
-
+			
 			//setup the time pickers
 			initTimePicker($("#visit_time1"),"")
 			initTimePicker($("#visit_time2"),"")
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){
+				//append any new visits to the live panel
 				console.log(data)
+				console.log(data.membershipno)
+				$("#livepanel").empty();
+				$('#tabs').tabs("option", "active", 0);
+				initVisits($("#livepanel"))
+				$("#newclient_form").trigger("reset");
 			}
 		function onLoading(){
 			$(".wait").show()
@@ -236,6 +239,52 @@ var cbc_params = {
 				altFormat: "yy-mm-dd HH:mm",
 				stepMinute: 5
 			});
+		}
+		function initVisits(livepanel){
+			//ajax call here
+			var jqxhr = $.ajax( "http://localhost:8090/Membership/child/visits" )
+			  .done(function(data) {
+				  $.each(data,function(index,el){
+					  console.log(index + ") " + el.child.person.firstName)
+					  var name = el.child.person.firstname + " " + el.child.person.lastname
+					  var id = el.child.id
+					  var tel = el.child.parent.person1.mobileno
+					  var email = el.child.parent.person1.email
+					  var parent_name = el.child.parent.person1.firstname + " " + el.child.parent.person1.lastname
+					  var timein = el.starttime
+
+					 
+					  var deadline = new Date(Date.parse(timein));
+					  deadline.setHours(deadline.getHours() + 2)
+					  
+					  addActiveVisit(livepanel, "" + id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
+					  initializeClock('clockdiv_' + id, deadline);
+				});
+			  })
+			  .fail(function() {
+			    alert( "error" );
+			  })
+			  .always(function() {
+			    console.log( "complete!" );
+			  });
+
+				  
+			//addActiveVisit(livepanel, "63","Jason Dembaremba","assets/kidface.png","082820","13:00","--","clock-done")
+			//addActiveVisit(livepanel, "78","Karen Milne","assets/female.jpg","0728209","13:33","--","clock-warn")
+			//addActiveVisit(livepanel, "79","Denny Chimbs","assets/kidface.png","0628255","14:45","--","")
+			//var startDate = new Date(); //"11 March 2016 22:23:00";
+			//var deadline = new Date(Date.parse(startDate)); //(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+			//deadline.setHours(deadline.getHours() + 2);
+			//initializeClock('clockdiv_63', deadline);
+			//initializeClock('clockdiv_78', deadline);
+			//initializeClock('clockdiv_79', deadline);
+			
+			//initializeClock('clockdiv', deadline);
+			//initializeClock('clockdivtwo', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
+			//initializeClock('clockdivthree', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
+			//initializeClock('clockdivfour', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
+
+			
 		}
 
 		function addActiveVisit(el, divid,name,photo,tel,timein,extratime, clockstatus){

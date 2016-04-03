@@ -37,10 +37,23 @@ class Visit {
 	}
 	def toMap(params = null){
 		return [id:id,
-			child:child?.toMap(),
-			date:starttime?.toDate()?.format("dd-MMM-yyyy"),
-			starttime:starttime,
-			endtime:endtime,
+			child:[id:child.id,
+				person:child?.person?.toMap(),
+				accessno:child?.accessNumber,
+				comments:child?.comments,
+				medical:child?.medicalComments,
+				parent:[
+					person1:child?.parent?.person1?.toMap(),
+					person2:child?.parent?.person2?.toMap(),
+					membershipno:child?.parent?.membershipNo,
+					clienttype:child?.parent?.clientType,
+					comments:child?.parent?.comments,
+					relationship:child?.parent?.relationship
+					]
+				],			
+			date:starttime?.format("dd MMM yyyy"),
+			starttime:starttime?.format("dd MMM yyyy HH:mm"),
+			endtime:endtime?.format("dd MMM yyyy HH:mm"),
 			status:status,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
@@ -48,7 +61,7 @@ class Visit {
 	}
 	def toAutoCompleteMap(){		
 		return [id:id,
-		label:visitDate?.format("dd-MMM-yyyy") + " " + starttime + " to " + endtime + " | " + status,
+		label:starttime?.format("dd-MMM-yyyy") + " " + starttime?.format("HH:mm") + " to " + endtime?.format("HH:mm") + " | " + status,
 		value:id,
 		child:(this==null?Child.get(id):this),
 		category:(status==null?"Unknown":status)]
