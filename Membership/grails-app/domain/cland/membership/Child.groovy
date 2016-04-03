@@ -29,16 +29,12 @@ class Child {
 		createdBy nullable:true, editable:false
     }
 	def beforeInsert() {
-		//encodePassword()
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
 		lastUpdatedBy = curId
 	}
 
 	def beforeUpdate() {
-		if (isDirty('password')) {
-			//encodePassword()
-		}
 		lastUpdatedBy = groupManagerService.getCurrentUserId()
 	}
 	def toMap(params = null){

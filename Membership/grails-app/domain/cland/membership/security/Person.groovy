@@ -82,7 +82,7 @@ class Person implements Serializable {
 		createdBy = curId
 		lastUpdatedBy = curId
 		if(idNumber == null || idNumber?.equals("")){
-			idNumber = cbcApiService.generateIdNumber(dateOfBirth)
+			idNumber = cbcApiService.generateIdNumber(dateOfBirth,5)
 		}
 	}
 

@@ -5,7 +5,8 @@
 			onComplete="onComplete()"
 			onFailure="onFailure(data,textStatus)">
 	<g:set var="isEditMode" value="true"/>
-	<fieldset><legend>Parent/Guardian</legend>
+	<fieldset>
+	<legend >Parent/Guardian</legend>
 		<div class="table">
 			<div class="row">
 				<div class="cell"><label id="">First name:</label></div>
@@ -64,7 +65,8 @@
 				<div class="cell">
 					<g:textField name="child.person.firstname" placeholder="First Name"  value=""/><br/>
 					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/><br/>
-					Check-in now: <g:checkBox name="child.checkin" value="Yes"/>
+					Check-in now: <g:checkBox name="child.checkin" value="Yes" />
+					<g:textField name="child.visit.time" placeholder="Date and Time" value="" id="visit_time1" class="datetime-picker"/>
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date1" class="datepick_single_past" value=""/>
@@ -78,11 +80,12 @@
 				<div class="cell">
 					<g:textField name="child.person.firstname" placeholder="First Name"  value=""/><br/>
 					<g:textField name="child.person.lastname" placeholder="Last Name"  value=""/><br/>
-					Check-in now: <g:checkBox name="child.checkin" value="Yes"/>
+					Check-in now: <g:checkBox name="child.checkin" value="Yes"/> 
+					<g:textField name="child.visit.time" placeholder="Date and Time" value="" id="visit_time2" class="datetime-picker"/>
 				</div>
 				<div class="cell">
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date2" class="datepick_single_past" value=""/>
-					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
+					<g:textField name="child.person.gender" placeholder="Gender" value=""/>
 				</div>
 				<div class="cell">Attach Photo:<input type="file" name="child.photo"/></div>			
 			</div>	

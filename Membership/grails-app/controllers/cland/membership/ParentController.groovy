@@ -1,9 +1,8 @@
 package cland.membership
 
-
-
 import static org.springframework.http.HttpStatus.*
 import cland.membership.security.Person
+import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper
 import java.text.DateFormat
@@ -216,36 +215,39 @@ class ParentController {
 		
 		if(!person1.save(flush:true)){
 			println person1.errors
+			render person1.errors as JSON
+			return
 		}
 		parentInstance.person1 = person1
 		
-		if(!parentInstance.save(flush: true)){
-			println parentInstance.errors
-			return
-		}else{
-			println "Parent saved"
-			params.child.person.firstname.eachWithIndex { value, index ->
-				def child = new Child()
-				def p = new Person()
-				p.firstName = value
-				p.lastName = params.child.person.lastname[index]
-				p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
-				p.gender = params.child.person.gender[index]
-				p.save()
-				child.person = p
-				if(parentInstance.children){ 
-					child.accessNumber = parentInstance.children.size() + 1
-				}else{
-					child.accessNumber = 1
-				}
-				parentInstance.addToChildren(child)
-				
+		println "Adding children..."
+		params.child.person.firstname.eachWithIndex { value, index ->
+			def child = new Child()
+			def p = new Person()
+			p.firstName = value
+			p.lastName = params.child.person.lastname[index]
+			p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
+			p.gender = params.child.person.gender[index]
+			p.save()
+			child.person = p
+			if(parentInstance.children){
+				child.accessNumber = parentInstance.children.size() + 1
+			}else{
+				child.accessNumber = 1
+			}
+			//is checkin required now?
+			if( params.child.person.checkin[index] == "yes" ){
+				println ".. creating a visit now."
 				
 			}
+			parentInstance.addToChildren(child)
 		}
-		
-		
+		if(!parentInstance.save(flush: true)){
+			println parentInstance.errors
+			render parentInstance.errors as JSON
+			return
+		}
 		println "Success"
-		return "Successfully created person child parent and office"
+		render parentInstance.toMap() as JSON
 	}
 }

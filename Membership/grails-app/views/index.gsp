@@ -91,7 +91,8 @@ var cbc_params = {
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">			
-			<fieldset><legend>Quick Check-In Form</legend>			
+			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
+				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
 					<ul>
 						<li><a href="#tab-1">Search Existing</a></li>
@@ -192,7 +193,10 @@ var cbc_params = {
 			initBirthDatePicker($( "#birth-date2" ),"-2y");
 			initBirthDatePicker($( "#grp-birth-date1" ),"-2y");
 			initBirthDatePicker($( "#grp-bookingdate" ),"-2y");
-			
+
+			//setup the time pickers
+			initTimePicker($("#visit_time1"),"")
+			initTimePicker($("#visit_time2"),"")
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){
@@ -215,6 +219,15 @@ var cbc_params = {
 				maxDate:"-0y",
 				minDate:"-90y"
 				});
+		}
+		function initTimePicker(el,def){			
+			el.datetimepicker({
+				controlType: 'select',
+				oneLine: true,
+				timeFormat: 'HH:mm', // 'hh:mm tt',
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd"
+			});
 		}
 	</script>		
 	</body>
