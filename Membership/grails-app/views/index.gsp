@@ -162,7 +162,10 @@ var cbc_params = {
 		}
 		
 	
-		$(document).ready(function() {		
+		$(document).ready(function() {	
+			addActiveVisit($("#livepanel"), "63","Jason Dembaremba","assets/kidface.png","082820","13:00","--","clock-done")
+			addActiveVisit($("#livepanel"), "78","Karen Milne","assets/female.jpg","0728209","13:33","--","clock-warn")
+			addActiveVisit($("#livepanel"), "79","Denny Chimbs","assets/kidface.png","0628255","14:45","--","")
 			$("#tabs").tabs(
 					{
 					active:cbc_params.active_tab(),
@@ -188,6 +191,9 @@ var cbc_params = {
 			initializeClock('clockdivthree', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
 			initializeClock('clockdivfour', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
 
+			initializeClock('clockdiv_63', deadline);
+			initializeClock('clockdiv_78', deadline);
+			initializeClock('clockdiv_79', deadline);
 			//setup the datepicker calendars
 			initBirthDatePicker($( "#birth-date1" ),"-2y");
 			initBirthDatePicker($( "#birth-date2" ),"-2y");
@@ -230,6 +236,48 @@ var cbc_params = {
 				altFormat: "yy-mm-dd HH:mm",
 				stepMinute: 5
 			});
+		}
+
+		function addActiveVisit(el, divid,name,photo,tel,timein,extratime, clockstatus){
+			var html = '<div class="person-card float-left">' +
+			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
+			  '<div class="person-info">' +
+				'<div class="details-title">' +
+				  '<span>' + name + '</span><br/>' +
+				  '<small>Tel: ' + tel + '</small>' +
+				  '<div id="clockdiv_' + divid + '" class="clock ' + clockstatus +'">' +
+					  '<div style="display:none;">' +
+						'<span class="days"></span>' +
+						'<div class="smalltext">Days</div>' +
+					  '</div>' +
+					  '<div>' +
+						'<span class="hours"></span>' +
+						'<div class="smalltext">Hours</div>' +
+					  '</div>' +
+					  '<div>' +
+						'<span class="minutes"></span>' +
+						'<div class="smalltext">Minutes</div>' +
+					  '</div>' +
+					  '<div>' +
+						'<span class="seconds"></span>' +
+						'<div class="smalltext">Seconds</div>' +
+					  '</div>' +
+					'</div>' +
+				'</div>' +
+				'<div class="details-body">' +
+				  '<span>Time in: ' + timein + '</span><br/>' +
+				  '<span>Extra: ' + extratime + '</span><br/>' +
+				  '<span>' +
+					'<g:submitButton id="btn_notify_' + divid +'" onclick="sendNotification(this)" name="btn_' + divid + '" value="Notify" />' +
+					 '<g:submitButton id="btn_checkout_' + divid +'" onclick="checkOut(this)" name="btn_' + divid + '" value="Check-Out" />' +
+					 '<g:submitButton id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
+				  '</span>' +
+				'</div>' +
+			  '</div>' +
+			'</div>';
+
+			el.prepend(html);
+
 		}
 	</script>		
 	</body>
