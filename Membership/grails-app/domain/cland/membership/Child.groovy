@@ -18,7 +18,7 @@ class Child {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
-	
+	static transients = ['visitCount',"createdByName","lastUpdatedByName"]
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
     static constraints = {
@@ -65,5 +65,8 @@ class Child {
 	String getLastUpdatedByName(){
 		Person user = Person.get(lastUpdatedBy)
 		return (user==null?"unknown":user?.toString())
+	}
+	Integer getVisitCount(){
+		return visits?.size()
 	}
 }//end class

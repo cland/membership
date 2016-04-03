@@ -32,8 +32,7 @@ class Office {
 	
 	static belongsTo = []
 	static hasMany = [staff:Person, affiliates:Organisation]
-	static transients = ["officeGroups","region"]
-	
+	static transients = ["officeGroups","region","createdByName","lastUpdatedByName"]
     static constraints = {
 		name unique:true, blank:false
 		code unique:true, blank:false
@@ -91,5 +90,12 @@ class Office {
 	List<RoleGroup> getOfficeGroups(){
 		return groupManagerService.getOfficeGroups(this)
 	}
-
+	String getCreatedByName(){
+		Person user = Person.get(createdBy)
+		return (user==null?"unknown":user?.toString())
+	}
+	String getLastUpdatedByName(){
+		Person user = Person.get(lastUpdatedBy)
+		return (user==null?"unknown":user?.toString())
+	}
 } //end class

@@ -200,6 +200,7 @@ var cbc_params = {
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){
+				console.log(data)
 			}
 		function onLoading(){
 			$(".wait").show()
@@ -226,7 +227,8 @@ var cbc_params = {
 				oneLine: true,
 				timeFormat: 'HH:mm', // 'hh:mm tt',
 				dateFormat: "dd-M-yy",
-				altFormat: "yy-mm-dd"
+				altFormat: "yy-mm-dd HH:mm",
+				stepMinute: 5
 			});
 		}
 	</script>		

@@ -6,6 +6,8 @@ import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper
 import java.text.DateFormat
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 @Transactional(readOnly = true)
 class ParentController {
@@ -220,7 +222,7 @@ class ParentController {
 		}
 		parentInstance.person1 = person1
 		
-		println "Adding children..."
+		println "Adding children..." + params.child
 		params.child.person.firstname.eachWithIndex { value, index ->
 			def child = new Child()
 			def p = new Person()
@@ -228,7 +230,16 @@ class ParentController {
 			p.lastName = params.child.person.lastname[index]
 			p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
 			p.gender = params.child.person.gender[index]
-			p.save()
+			p.office = office
+			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+			p.password = p.username
+			p.enabled = false
+			p.mobileNo = "-1"
+			if(!p.save(flush:true)){
+				println p.errors
+				render p.errors as JSON
+				return
+			}
 			child.person = p
 			if(parentInstance.children){
 				child.accessNumber = parentInstance.children.size() + 1
@@ -236,10 +247,16 @@ class ParentController {
 				child.accessNumber = 1
 			}
 			//is checkin required now?
-			if( params.child.person.checkin[index] == "yes" ){
+			println "Processing checkin..."
+			if( params.child.checkin[index] == "Yes" ){
 				println ".. creating a visit now."
-				
+				println "time: " + params.child.visit.time[index]
+				DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+				def visit = new Visit(status:"Active",starttime:timein.toDate(),timerCheckPoint:timein.toDate())
+			//	visit.save()
+				child.addToVisits(visit)
 			}
+			//child.save()
 			parentInstance.addToChildren(child)
 		}
 		if(!parentInstance.save(flush: true)){

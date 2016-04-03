@@ -20,6 +20,7 @@ class Parent {
 	Date dateCreated
 	Date lastUpdated
 	String history
+	static transients = ["createdByName","lastUpdatedByName"]
 	static hasMany = [children:Child] 
     static constraints = {
 		person2 nullable: true
@@ -75,5 +76,8 @@ class Parent {
 	String getLastUpdatedByName(){
 		Person user = Person.get(lastUpdatedBy)
 		return (user==null?"unknown":user?.toString())
+	}
+	String toString(){
+		return person1.toString()
 	}
 } //end class

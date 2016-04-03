@@ -23,6 +23,7 @@ class Booking {
 	Date dateCreated
 	Date lastUpdated
 	String history
+	static transients = ["createdByName","lastUpdatedByName"]
     static constraints = {
 		numKids nullable: true
 		numAdults nullable: true

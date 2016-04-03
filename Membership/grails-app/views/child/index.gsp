@@ -22,21 +22,28 @@
 			<table>
 			<thead>
 					<tr>
-					
+						<th><g:message code="child.person.label" default="Child Name" /></th>
+						<th>Access Number</th>						
+						<th>Age</th>
+						<th>Gender</th>
+						<th>Visits</th>
 						<th><g:message code="child.parent.label" default="Parent" /></th>
-					
-						<th><g:message code="child.person.label" default="Person" /></th>
+						<th>Mobile</th>
+						<th>Email</th>
 					
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${childInstanceList}" status="i" var="childInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${childInstance.id}">${fieldValue(bean: childInstance, field: "parent")}</g:link></td>
-					
-						<td>${fieldValue(bean: childInstance, field: "person")}</td>
-					
+						<td><g:link action="show" id="${childInstance.id}">${fieldValue(bean: childInstance, field: "person")}</g:link></td>
+						<td>${fieldValue(bean: childInstance, field: "person.accessNumber")}</td>
+						<td>${fieldValue(bean: childInstance, field: "person.age")}</td>
+						<td>${fieldValue(bean: childInstance, field: "person.gender")}</td>
+						<td>${fieldValue(bean: childInstance, field: "parent.person.mobileNo")}</td>
+						<td><g:link action="show" id="${childInstance.parent.id}">${fieldValue(bean: childInstance, field: "parent")}</g:link></td>
+						<td>${fieldValue(bean: childInstance, field: "parent.person.mobileNo")}</td>
+						<td>${fieldValue(bean: childInstance, field: "parent.person.email")}</td>
 					</tr>
 				</g:each>
 				</tbody>

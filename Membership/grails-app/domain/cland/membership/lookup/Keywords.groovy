@@ -1,11 +1,13 @@
 package cland.membership.lookup
 
+import cland.membership.security.Person
 import java.util.Date;
 
 import javax.management.modelmbean.RequiredModelMBean;
  
 class Keywords {
 	//transient cbcApiService
+	transient groupManagerService
 	String name
 	String label
 	String category
@@ -17,6 +19,7 @@ class Keywords {
 	Keywords keyword
 	static belongsTo = [Keywords]
 	static hasMany = [values:Keywords]
+	static transients = ["createdByName","lastUpdatedByName"]
 	static constraints = {
 		name(unique:['keyword'])
 		category(nullable:true)
@@ -29,11 +32,13 @@ class Keywords {
 		sort name: "asc"
 	}
 	def beforeInsert = {
-		createdBy = 1 //TODO: cbcApiService.getCurrentUserId()
+		long curId = groupManagerService.getCurrentUserId()
+		createdBy = curId
+		lastUpdatedBy = curId	
 		if(label == "" | label == null) label = name
 	}
 	def beforeUpdate = {
-		lastUpdatedBy = 1 //TODO: cbcApiService.getCurrentUserId()
+		lastUpdatedBy = groupManagerService.getCurrentUserId()
 		if(!label) label = name
 	}
 	def beforeDelete = {
@@ -45,5 +50,13 @@ class Keywords {
 
 	String toString(){
 		(label?label:name)
+	}
+	String getCreatedByName(){
+		Person user = Person.get(createdBy)
+		return (user==null?"unknown":user?.toString())
+	}
+	String getLastUpdatedByName(){
+		Person user = Person.get(lastUpdatedBy)
+		return (user==null?"unknown":user?.toString())
 	}
 } //end class

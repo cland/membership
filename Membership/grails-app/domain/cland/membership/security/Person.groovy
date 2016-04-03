@@ -44,6 +44,7 @@ class Person implements Serializable {
 	Date lastUpdated
 	String history
 	static belongsTo = [office:Office]
+	
 	//static hasMany = [phones:Phone]
 	static constraints = {		
 		username blank: false,nullable: false, unique: true

@@ -9,23 +9,27 @@ class Visit {
 	transient cbcApiService
 	transient springSecurityService
 	transient groupManagerService
-	Date visitDate
-	DateTime starttime
-	DateTime endtime
+	//Date visitDate
+	Date starttime
+	Date endtime
+	Date timerCheckPoint
 	String status
 	static belongsTo = [child:Child]
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
+	static transients = ["createdByName","lastUpdatedByName"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
+		endtime nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
-		lastUpdatedBy = curId		
+		lastUpdatedBy = curId	
+		timerCheckPoint = starttime	
 	}
 
 	def beforeUpdate() {
@@ -34,7 +38,7 @@ class Visit {
 	def toMap(params = null){
 		return [id:id,
 			child:child?.toMap(),
-			date:visitDate?.format("dd-MMM-yyyy"),
+			date:starttime?.toDate()?.format("dd-MMM-yyyy"),
 			starttime:starttime,
 			endtime:endtime,
 			status:status,
