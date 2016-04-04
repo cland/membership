@@ -242,7 +242,7 @@ var cbc_params = {
 		}
 		function initVisits(livepanel){
 			//ajax call here
-			var jqxhr = $.ajax( "http://localhost:8090/Membership/child/visits" )
+			var jqxhr = $.ajax( "${resource()}/child/visits" )
 			  .done(function(data) {
 				  $.each(data,function(index,el){
 					  console.log(index + ") " + el.child.person.firstName)
@@ -317,7 +317,7 @@ var cbc_params = {
 				  '<span>Time in: ' + timein + '</span><br/>' +
 				  '<span>Extra: ' + extratime + '</span><br/>' +
 				  '<span>' +
-					'<g:submitButton id="btn_notify_' + divid +'" onclick="sendNotification(this)" name="btn_' + divid + '" value="Notify" />' +
+					'<g:submitButton id="btn_notify_' + divid +'" onclick="sendNotification(' + divid + ')" name="btn_' + divid + '" value="Notify" />' +
 					 '<g:submitButton id="btn_checkout_' + divid +'" onclick="checkOut(this)" name="btn_' + divid + '" value="Check-Out" />' +
 					 '<g:submitButton id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
 				  '</span>' +
@@ -328,6 +328,41 @@ var cbc_params = {
 			el.prepend(html);
 
 		}
+
+		function sendNotification(_id){
+			_id = 1;
+			console.log("id: " + _id)
+		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
+		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_id])}')
+		                
+		                .dialog({
+		                	modal:true,
+		                    autoOpen: false,
+		                    dialogClass: 'no-close',
+		                    width:800,
+		                    beforeClose: function(event,ui){
+		                    	
+		                    },
+		                    buttons:{
+		                        "DONE":function(){
+		                      	 // location.reload();
+		                         	 $(this).dialog('close')
+		                            },
+		                         "CANCEL":function(){
+		                      	   $(this).dialog('close')
+		                             }
+		                       },
+		                    close: function(event,ui){
+		                  	  $(this).dialog('destroy').remove()
+		                  	  //location.reload();
+		                    },
+		                    position: {my:"top",at:"top",of:window},
+		                    title: 'Send SMS Notification'                         
+		                });
+		                    
+		                $dialog.dialog('open');
+		                
+		  } //end function sendNotification()
 	</script>		
 	</body>
 </html>

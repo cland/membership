@@ -160,7 +160,7 @@ class BootStrap {
 			 '/login/*',
 			 '/logout',
 			 '/logout.*',
-			 '/logout/*',
+			 '/logout/*',			 
 			 '/assets/*']) {
 			 new RequestMap( url: url, configAttribute: 'permitAll').save()
 		}
@@ -192,6 +192,9 @@ class BootStrap {
 				   '/parent/**',
 				   '/Membership/child/*',
 				   '/child/*',
+				   '/harare/smsdialogcreate/**',
+				   '/htown',
+				   '/harare/htown/**',
 				   '*/child/*']) {
 				  new RequestMap( url: url, configAttribute:'isFullyAuthenticated()').save()
 			 }

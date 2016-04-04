@@ -74,6 +74,7 @@ grails.project.dependency.resolution = {
 		//compile ":jquery-ui:1.10.4"
 		compile ":famfamfam:1.0.1"
 		compile ":mail:1.0.7"
+		compile ":rest:0.8"
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"
         //compile ":less-asset-pipeline:1.10.0"

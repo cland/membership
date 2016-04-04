@@ -10,6 +10,7 @@ class UrlMappings {
 		//"/"(controller:"home",action:"index")
 		"/admin/technical" (view:"/admin/technical")
 		"/livepanel" (view:"/livepanel")
+		"/htown" (view:"htown")
 		//"/admin/"(view:"/admin/index")
 		
         "/"(view:"/index")
