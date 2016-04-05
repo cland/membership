@@ -190,7 +190,7 @@ class BootStrap {
 				   '/parent/edit/**',
 				   '/parent/create/**',
 				   '/parent/**',
-				   '/Membership/child/*',
+				   '/booking/**',
 				   '/child/*',
 				   '/harare/smsdialogcreate/**',
 				   '/htown',
@@ -223,7 +223,8 @@ class BootStrap {
 				 '/office/delete/**',
 				 '/role/**',
 				 '/roleGroup/**',
-				 '/settings/**',				 
+				 '/settings/**',	
+				 '/reports/**',
 				 '/settings/edit/**']) {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}

@@ -17,6 +17,7 @@ class HarareController {
     def htown(params) {
 		
 		println(params)
+		return;
 		/*
 		sendMail {
 		 to "dembaremba@gmail.com"
@@ -68,6 +69,6 @@ class HarareController {
 	
 	def smsdialogcreate() {
 		println(params)
-		render (view:"/htown",model:[childInstance: Child.get(params?.id), id:params?.id]) //new Child(params)
+		render (view:"/home/htown",model:[childInstance: Child.get(params?.id), id:params?.id]) //new Child(params)
 	}
 } //end class

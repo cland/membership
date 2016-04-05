@@ -17,46 +17,22 @@
 			</ul>
 		</div>
 		<div id="show-parent" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+			<h1>Client: ${parentInstance }</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<div id="tabs" style="display: none;">
 					<ul>
 						<li><a href="#tab-1">Parent Details</a></li>
-						<li><a href="#tab-2">Person Details</a></li>
-						<li><a href="#tab-3">Office Details</a></li>
+						<li><a href="#tab-2">Children Details</a></li>
+						<li><a href="#tab-3">All Visits</a></li>
 					</ul>
 					<div id="tab-1">
-			<ol class="property-list parent">
-			
-				<g:if test="${parentInstance?.children}">
-				<li class="fieldcontain">
-					<span id="children-label" class="property-label"><g:message code="parent.children.label" default="Children" /></span>
-					
-					<table>
-					<thead>
-					<tr><th>ID</th>
-					<th>First Name</th>
-					<th>Date Of Birth</th>
-					<th>Gender</th></tr>
-					</thead>
-						<g:each in="${parentInstance.children}" var="c">
-						<tr><td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
-						</td>
-						<td>${c?.person?.firstName}</td>
-						<td>${c?.person?.dateOfBirth}</td>
-						<td>${c?.person?.gender}</td>
-						</tr>
-						</g:each>
-						</table>
-					
-				</li>
-				</g:if>
+			<ol class="property-list parent">		
 			
 				<g:if test="${parentInstance?.person1}">
 				<li class="fieldcontain">
-					<span id="person1-label" class="property-label"><g:message code="parent.person1.label" default="Person1" /></span>
+					<span id="person1-label" class="property-label"><g:message code="parent.person1.label" default="Parent/Guardian" /></span>
 					
 						<span class="property-value" aria-labelledby="person1-label"><g:link controller="person" action="show" id="${parentInstance?.person1?.id}">${parentInstance?.person1?.encodeAsHTML()}</g:link></span>
 					
@@ -100,10 +76,25 @@
 			</ol>
 			</div>
 			<div id="tab-2">
-			<p>===PERSON DETAIS===</p>
+			<table>
+					<thead>
+					<tr><th>ID</th>
+					<th>First Name</th>
+					<th>Date Of Birth</th>
+					<th>Gender</th></tr>
+					</thead>
+						<g:each in="${parentInstance.children}" var="c">
+						<tr><td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						</td>
+						<td>${c?.person?.firstName}</td>
+						<td>${c?.person?.dateOfBirth?.format("dd MMM yyyy")}</td>
+						<td>${c?.person?.gender}</td>
+						</tr>
+						</g:each>
+						</table>
 			</div>
 			<div id="tab-3">
-			<p>====OFFICE DETAILS</p>
+			<p>List of all the children's visits</p>
 			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

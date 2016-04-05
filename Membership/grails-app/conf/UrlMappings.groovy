@@ -7,13 +7,14 @@ class UrlMappings {
             }
         }
 		
-		//"/"(controller:"home",action:"index")
-		"/admin/technical" (view:"/admin/technical")
-		"/livepanel" (view:"/livepanel")
-		"/htown" (view:"htown")
+		"/"(controller:"home",action:"index")
+		"/htown" (controller:"home",action:"htown")
+		"/admin/technical" (view:"/admin/technical")		
+		
 		//"/admin/"(view:"/admin/index")
 		
-        "/"(view:"/index")
+        //"/"(view:"/index")
         "500"(view:'/error')
+		"404"(view:'/error')
 	}
 }

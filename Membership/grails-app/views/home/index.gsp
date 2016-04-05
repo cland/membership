@@ -313,13 +313,13 @@ var cbc_params = {
 					  '</div>' +
 					'</div>' +
 				'</div>' +
-				'<div class="details-body">' +
-				  '<span>Time in: ' + timein + '</span><br/>' +
-				  '<span>Extra: ' + extratime + '</span><br/>' +
-				  '<span>' +
-					'<g:submitButton id="btn_notify_' + divid +'" onclick="sendNotification(' + divid + ')" name="btn_' + divid + '" value="Notify" />' +
-					 '<g:submitButton id="btn_checkout_' + divid +'" onclick="checkOut(this)" name="btn_' + divid + '" value="Check-Out" />' +
-					 '<g:submitButton id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
+				'<br/><div class="details-body">' +
+				  '<span><b>Time in:</b> ' + timein + '</span><br/>' +
+				  '<span><b>Extra:</b> ' + extratime + '</span><br/>' +
+				  '<br/><span>' +
+					'<g:submitButton class="button" id="btn_notify_' + divid +'" onclick="sendNotification(' + divid + ')" name="btn_' + divid + '" value="Notify" />' +
+					 '<g:submitButton class="button" id="btn_checkout_' + divid +'" onclick="checkOut(this)" name="btn_' + divid + '" value="Check-Out" />' +
+					 '<g:submitButton class="button" id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
 				  '</span>' +
 				'</div>' +
 			  '</div>' +
@@ -333,8 +333,7 @@ var cbc_params = {
 			_id = 1;
 			console.log("id: " + _id)
 		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
-		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_id])}')
-		                
+		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_id])}')		                
 		                .dialog({
 		                	modal:true,
 		                    autoOpen: false,
@@ -344,24 +343,23 @@ var cbc_params = {
 		                    	
 		                    },
 		                    buttons:{
-		                        "DONE":function(){
-		                      	 // location.reload();
-		                         	 $(this).dialog('close')
+		                        "DONE":function(){			                      	 
+		                         	 $dialog.dialog('close')
 		                            },
 		                         "CANCEL":function(){
-		                      	   $(this).dialog('close')
+		                      	   $dialog.dialog('close')
 		                             }
-		                       },
+			                    },
 		                    close: function(event,ui){
-		                  	  $(this).dialog('destroy').remove()
-		                  	  //location.reload();
+		                  	  	$dialog.dialog('destroy').remove()
+		                  	
 		                    },
 		                    position: {my:"top",at:"top",of:window},
 		                    title: 'Send SMS Notification'                         
 		                });
 		                    
 		                $dialog.dialog('open');
-		                
+		               
 		  } //end function sendNotification()
 	</script>		
 	</body>

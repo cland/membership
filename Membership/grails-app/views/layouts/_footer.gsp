@@ -1,6 +1,6 @@
 <%@ page import="cland.membership.SystemRoles" %>
 
-<a href="${request.contextPath}">Home</a> |
+<a href="${request.contextPath}/">Home</a> |
 <sec:ifNotLoggedIn>
 <g:link controller="login" action="index" >Login</g:link> |
 </sec:ifNotLoggedIn>
@@ -17,4 +17,4 @@
 <g:link controller="logout" action="index" >Logout</g:link>
 </sec:ifLoggedIn>
 <br/>
-<div class="copyright"><g:meta name="app.name"/> version: <g:meta name="app.version"/> | <g:copyright startYear="2013"></g:copyright></div>
+<div class="copyright"><g:meta name="app.name"/> version: <g:meta name="app.version"/> | <g:copyright startYear="2016"></g:copyright></div>

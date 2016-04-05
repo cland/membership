@@ -15,7 +15,7 @@
 			</ul>
 		</div>
 		<div id="list-parent" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+			<h1>Client List (Parents/Guardians)</h1>
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -23,11 +23,11 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="date" title="${message(code: 'parent.date.label', default: 'Date')}" />
-					
-						<th><g:message code="parent.person1.label" default="Person1" /></th>
-					
-						<th><g:message code="parent.person2.label" default="Person2" /></th>
+						<th><g:message code="parent.person1.label" default="Name" /></th>
+						<th><g:message code="parent.person1.mobile" default="Contact No." /></th>
+						<th><g:message code="parent.person1.email" default="Email" /></th>
+						<th><g:message code="parent.person1.membershipno" default="Membership No." /></th>
+						<th><g:message code="parent.person2.childcount" default="No. of Children" /></th>
 					
 					</tr>
 				</thead>
@@ -35,11 +35,11 @@
 				<g:each in="${parentInstanceList}" status="i" var="parentInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${parentInstance.id}">${fieldValue(bean: parentInstance.person1, field: "firstName")}</g:link></td>
-					
-						<td>${fieldValue(bean: parentInstance, field: "person1")}</td>
-					
-						<td>${fieldValue(bean: parentInstance, field: "person2")}</td>
+						<td><g:link action="show" id="${parentInstance.id}">${fieldValue(bean: parentInstance.person1, field: "firstName")} ${fieldValue(bean: parentInstance.person1, field: "firstName")}</g:link></td>					
+						<td>${fieldValue(bean: parentInstance, field: "person1.mobileNo")}</td>
+						<td>${fieldValue(bean: parentInstance, field: "person1.email")}</td>	
+						<td>${fieldValue(bean: parentInstance, field: "membershipNo")}</td>					
+						<td>${parentInstance?.children?.size()}</td>
 					
 					</tr>
 				</g:each>
