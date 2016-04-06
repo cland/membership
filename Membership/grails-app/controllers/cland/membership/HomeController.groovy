@@ -4,6 +4,7 @@ import grails.plugin.springsecurity.annotation.*
 
 class HomeController {
 	def cbcApiService
+	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def index = {
 //		if (!isLoggedIn()) {
 //			redirect(controller:"Login")
@@ -14,7 +15,7 @@ class HomeController {
 	}
 	
 	def htown = {
-	
+		render (view:"index")
 	}
 	def aboutus = {
 		render (view:"aboutus")
