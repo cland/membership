@@ -13,6 +13,7 @@ class HomeController {
 		//redirect(action: "inde", params: params)
 		
 	}
+	def index1 = {}
 	
 	def htown = {
 		render (view:"index")
