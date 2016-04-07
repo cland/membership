@@ -242,7 +242,7 @@ var cbc_params = {
 		}
 		function initVisits(livepanel){
 			//ajax call here
-			var jqxhr = $.ajax( "${resource()}/child/visits" )
+			var jqxhr = $.ajax( "${request.contextPath}/child/visits" )
 			  .done(function(data) {
 				  $.each(data,function(index,el){
 					  console.log(index + ") " + el.child.person.firstName)
@@ -267,24 +267,7 @@ var cbc_params = {
 			  .always(function() {
 			    console.log( "complete!" );
 			  });
-
-				  
-			//addActiveVisit(livepanel, "63","Jason Dembaremba","assets/kidface.png","082820","13:00","--","clock-done")
-			//addActiveVisit(livepanel, "78","Karen Milne","assets/female.jpg","0728209","13:33","--","clock-warn")
-			//addActiveVisit(livepanel, "79","Denny Chimbs","assets/kidface.png","0628255","14:45","--","")
-			//var startDate = new Date(); //"11 March 2016 22:23:00";
-			//var deadline = new Date(Date.parse(startDate)); //(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-			//deadline.setHours(deadline.getHours() + 2);
-			//initializeClock('clockdiv_63', deadline);
-			//initializeClock('clockdiv_78', deadline);
-			//initializeClock('clockdiv_79', deadline);
-			
-			//initializeClock('clockdiv', deadline);
-			//initializeClock('clockdivtwo', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
-			//initializeClock('clockdivthree', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
-			//initializeClock('clockdivfour', new Date((Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000)));
-
-			
+		
 		}
 
 		function addActiveVisit(el, divid,name,photo,tel,timein,extratime, clockstatus){
