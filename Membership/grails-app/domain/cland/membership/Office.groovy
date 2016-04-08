@@ -77,7 +77,8 @@ class Office {
 			email:email,
 			contact_number:contactNumber,
 			cell_number:cellphoneNumber,
-			fax_number:faxNumber,			
+			fax_number:faxNumber,	
+			staff:staff*.toMap(),		
 			location:location?.toMap()]
 	}
 	def toAutoCompleteMap(){

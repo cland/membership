@@ -101,8 +101,11 @@ var cbc_params = {
 					</ul>
 					<div id="tab-1">
 						<form action="">
-							<input style="width:40em;padding:10px;" name="query" value="" placeholder="Search for membership no. or lastname or child name">
-							<g:submitButton name="Search" class="save" value="Search" />
+							<g:render template="searchform"></g:render>
+							<div id="searchform-actions" style="display:none">
+								<g:textField name="child.searchvisit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time_search" class="datetime-picker"/>
+								<input type="button" name="quick_checkin" id="checkin_btn" value="Check-In Selected"/>
+							</div>
 						</form>
 					</div>
 					<div id="tab-2">
@@ -136,7 +139,6 @@ var cbc_params = {
 		}
 		
 		function initializeClock(id, endtime) {
-			console.log("id: '" + id + "'")
 		  var clock = document.getElementById(id);
 		  var daysSpan = clock.querySelector('#' + id + ' .days');
 		  var hoursSpan = clock.querySelector('#' + id + ' .hours');
@@ -152,16 +154,16 @@ var cbc_params = {
 		    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
 		
 		    if (t.total <= 0) {
-		    	("#" + id).removeClass("clock-warn")
-		    	("#" + id).removeClass("clock-normal")  
-			  	("#" + id).addClass("clock-done")
+		    	$("#" + id).removeClass("clock-warn")
+		    	$("#" + id).removeClass("clock-normal")  
+			  	$("#" + id).addClass("clock-done")
 			  	console.log("Time up for '" + id + "'!")
 		      	clearInterval(timeinterval);
 		    }else if(t.total < 15){
 			    //warning
-			    ("#" + id).removeClass("clock-done")
-		    	("#" + id).removeClass("clock-normal")  
-			  	("#" + id).addClass("clock-warn")
+			    $("#" + id).removeClass("clock-done")
+		    	$("#" + id).removeClass("clock-normal")  
+			  	$("#" + id).addClass("clock-warn")
 			}
 		  }
 		
@@ -200,12 +202,11 @@ var cbc_params = {
 			//setup the time pickers
 			initTimePicker($("#visit_time1"),"")
 			initTimePicker($("#visit_time2"),"")
+			initTimePicker($("#visit_time_search"),"")
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){
 				//append any new visits to the live panel
-				console.log(data)
-				console.log(data.membershipno)
 				$("#livepanel").empty();
 				$('#tabs').tabs("option", "active", 0);
 				initVisits($("#livepanel"))
@@ -245,7 +246,6 @@ var cbc_params = {
 			var jqxhr = $.ajax( "${request.contextPath}/child/visits" )
 			  .done(function(data) {
 				  $.each(data,function(index,el){
-					  console.log(index + ") " + el.child.person.firstName)
 					  var name = el.child.person.firstname + " " + el.child.person.lastname
 					  var id = el.child.id
 					  var tel = el.child.parent.person1.mobileno
@@ -314,7 +314,6 @@ var cbc_params = {
 
 		function sendNotification(_id){
 			_id = 1;
-			console.log("id: " + _id)
 		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
 		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_id])}')		                
 		                .dialog({

@@ -42,15 +42,7 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${personInstance?.password}">
-				<li class="fieldcontain">
-					<span id="password-label" class="property-label"><g:message code="person.password.label" default="Password" /></span>
-					
-						<span class="property-value" aria-labelledby="password-label"><g:fieldValue bean="${personInstance}" field="password"/></span>
-					
-				</li>
-				</g:if>
-			
+							
 				<g:if test="${personInstance?.firstName}">
 				<li class="fieldcontain">
 					<span id="firstName-label" class="property-label"><g:message code="person.firstName.label" default="First Name" /></span>
@@ -59,7 +51,14 @@
 					
 				</li>
 				</g:if>
-			
+			<g:if test="${personInstance?.lastName}">
+				<li class="fieldcontain">
+					<span id="lastName-label" class="property-label"><g:message code="person.lastName.label" default="Last Name" /></span>
+					
+						<span class="property-value" aria-labelledby="lastName-label"><g:fieldValue bean="${personInstance}" field="lastName"/></span>
+					
+				</li>
+				</g:if>
 				<g:if test="${personInstance?.race}">
 				<li class="fieldcontain">
 					<span id="race-label" class="property-label"><g:message code="person.race.label" default="Race" /></span>
@@ -114,14 +113,7 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${personInstance?.lastName}">
-				<li class="fieldcontain">
-					<span id="lastName-label" class="property-label"><g:message code="person.lastName.label" default="Last Name" /></span>
-					
-						<span class="property-value" aria-labelledby="lastName-label"><g:fieldValue bean="${personInstance}" field="lastName"/></span>
-					
-				</li>
-				</g:if>
+				
 			
 				<g:if test="${personInstance?.accountLocked}">
 				<li class="fieldcontain">

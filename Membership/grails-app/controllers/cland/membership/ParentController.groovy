@@ -266,4 +266,27 @@ class ParentController {
 		println "Success"
 		render parentInstance.toMap() as JSON
 	}
-}
+	def search(){		
+		def term = "%" + params?.term + "%"
+		def results = Parent.createCriteria().list(params) {
+			or{
+				person1 {
+					or{
+						ilike('lastName',term)
+						ilike('mobileNo',term)
+						ilike('email',term)
+					}					
+				}
+				ilike('membershipNo',term)
+				
+			}
+		}
+		def selectList = []
+		results.each {
+			selectList.add(it.toAutoCompleteMap())
+		}
+
+		render selectList as JSON
+	} //end search
+	
+} //end class

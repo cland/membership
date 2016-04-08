@@ -67,7 +67,7 @@ class Visit {
 		category:(status==null?"Unknown":status)]
 	}
 	String toString(){
-		return starttime + " - " + endtime
+		return starttime?.format("dd-MMM-yyyy") + " " + starttime?.format("HH:mm") + " to " + endtime?.format("HH:mm")
 	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)

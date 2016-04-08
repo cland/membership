@@ -207,6 +207,7 @@ class BootStrap {
 				 '/**/save/**',
 				 '/**/update/**',
 				 '/**/edit/**',
+				 '/parent/search/**',
 				 '/requestMap/delete/**',
 				 '/requestMap/update/**',
 				 '/requestMap/show/**',

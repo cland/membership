@@ -42,7 +42,9 @@ class PersonController {
             return
         }
 
-        personInstance.save flush:true
+        if(!personInstance.save(flush:true)){
+			println personInstance.errors
+		}
 
         request.withFormat {
             form multipartForm {

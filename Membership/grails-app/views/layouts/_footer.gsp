@@ -17,4 +17,4 @@
 <g:link controller="logout" action="index" >Logout</g:link>
 </sec:ifLoggedIn>
 <br/>
-<div class="copyright"><g:meta name="app.name"/> version: <g:meta name="app.version"/> | <g:copyright startYear="2016"></g:copyright></div>
+<div class="copyright"><g:meta name="app.name"/> version: <g:meta name="app.version"/> | <g:copyright startYear="2016"> Crafted by: <span><a href="http://www.tagumiinvestments.com/solutions.html" target="_blank" style="color:green;font-weight:bold;">Tagumi Solutions</a></span></g:copyright></div>

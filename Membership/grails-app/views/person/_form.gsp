@@ -22,9 +22,9 @@
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'lastName', 'error')} ">
 			<label for="lastName">
 				<g:message code="person.lastName.label" default="Last Name" />
-				
+				<span class="required-indicator">*</span>
 			</label>
-			<g:textField name="lastName" value="${personInstance?.lastName}"/>
+			<g:textField name="lastName" required="" value="${personInstance?.lastName}"/>
 		
 		</div>
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'dateOfBirth', 'error')} ">
@@ -35,33 +35,17 @@
 		<%--	<g:datePicker required="" name="dateOfBirth" precision="day"  value="${personInstance?.dateOfBirth}" default="none" relativeYears="[-80..-2]" noSelection="['': '-choose-']" />--%>
 			<g:textField name="dateOfBirth" id="birth-date" class="datepick_single_past" value="${personInstance?.dateOfBirth?.format('dd-MMM-yyyy')}"/>
 		</div>
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'race', 'error')} ">
-			<label for="race">
-				<g:message code="person.race.label" default="Race" />
-				
+		
+		
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'mobileNo', 'error')} ">
+			<label for="mobileNo">
+				<g:message code="person.mobileNo.label" default="Mobile No." />
+				<span class="required-indicator">*</span>
 			</label>
-			<g:select id="race" name="race.id" from="${cland.membership.Race.list()}" optionKey="id" value="${personInstance?.race?.id}" class="many-to-one" noSelection="['null': '']"/>
+			<g:textField name="mobileNo" required="" value="${personInstance?.mobileNo}"/>
 		
 		</div>
-		
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'knownAs', 'error')} ">
-			<label for="knownAs">
-				<g:message code="person.knownAs.label" default="Known As" />
 				
-			</label>
-			<g:textField name="knownAs" value="${personInstance?.knownAs}"/>
-		
-		</div>
-		
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'title', 'error')} ">
-			<label for="title">
-				<g:message code="person.title.label" default="Title" />
-				
-			</label>
-			<g:textField name="title" value="${personInstance?.title}"/>
-		
-		</div>
-		
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'email', 'error')} required">
 			<label for="email">
 				<g:message code="user.email.label" default="Email" />
@@ -78,10 +62,18 @@
 			<g:select name="gender" from="${personInstance.constraints.gender.inList}" value="${personInstance?.gender}" valueMessagePrefix="gender" noSelection="['': '']"/>
 		
 		</div>
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'race', 'error')} ">
+			<label for="race">
+				<g:message code="person.race.label" default="Race" />
+				
+			</label>
+			<g:select id="race" name="race.id" from="${cland.membership.Race.list()}" optionKey="id" value="${personInstance?.race?.id}" class="many-to-one" noSelection="['null': '']"/>
+		
+		</div>
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'office', 'error')} ">
 			<label for="office">
 				<g:message code="person.office.label" default="Office" />
-				
+				<span class="required-indicator">*</span>
 			</label>
 			<g:select id="office" name="office.id" from="${cland.membership.Office.list()}" optionKey="id" required="" value="1" class="many-to-one" noSelection="['': '']"/>
 		
