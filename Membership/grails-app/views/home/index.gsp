@@ -243,7 +243,10 @@ var cbc_params = {
 		}
 		function initVisits(livepanel){
 			//ajax call here
-			var jqxhr = $.ajax( "${request.contextPath}/child/visits" )
+			var jqxhr = $.ajax({ 
+					url: "${request.contextPath}/child/visits",
+					cache: false
+				 })
 			  .done(function(data) {
 				  $.each(data,function(index,el){
 					  var name = el.child.person.firstname + " " + el.child.person.lastname
