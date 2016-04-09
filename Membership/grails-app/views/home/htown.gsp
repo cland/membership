@@ -112,7 +112,6 @@ var cbc_params = {
 
 		$(document).ready(function() {	
 			//sendToHtown()
-			console.log("${resource()}")
 			$(document).on("click","#sendsms_btn",sendSMS)
 		});		
 		
@@ -159,7 +158,7 @@ var cbc_params = {
 			//ajax call here
 			var jqxhr = $.ajax({
 				  method: "POST",
-				  url: "${resource()}/harare/htown",
+				  url: "${request.contextPath}/harare/htown",
 				  data: { to: "dembaremba@gmail.com", subject: "This is a test email",body:"This is the test body text", key:""  }
 				})
 			  .done(function(data) {
