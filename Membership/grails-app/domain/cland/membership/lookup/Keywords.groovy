@@ -59,4 +59,12 @@ class Keywords {
 		Person user = Person.get(lastUpdatedBy)
 		return (user==null?"unknown":user?.toString())
 	}
+	def toMap(params = null){
+		return [id:id,
+				name:name,
+				label:label,
+				category:category,
+				description:description,
+				values: values*.toMap()]	
+	}
 } //end class

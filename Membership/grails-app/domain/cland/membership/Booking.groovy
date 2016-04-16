@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.joda.time.DateTime
 
+import cland.membership.lookup.Keywords
 import cland.membership.security.Person
 
 class Booking {
@@ -13,10 +14,14 @@ class Booking {
 	Person person
 	Child birthdayChild
 	DateTime bookingDate
+	Keywords timeslot  		// [PartyTimeSlots] 10:00 - 11:30  |  11:30 - 13:00 | 13:00 - 14:30		
 	Integer numKids
 	Integer numAdults
 	String comments
-	String bookingType
+	Keywords bookingType  	// [BookingType]	birthday | group
+	Keywords room			// [Room]			red | yellow
+	Keywords partyPackage 	// [PartyPackage]	STANDARD | Wiggly Party
+	Keywords partyTheme		// [PartyTheme]		Fairy | Children's Jungle | Happy Birthday | Princess | Under The Sea
 	/** Admin Tracking Information **/
 	long createdBy
 	long lastUpdatedBy
@@ -24,12 +29,16 @@ class Booking {
 	Date lastUpdated
 	String history
 	static transients = ["createdByName","lastUpdatedByName"]
+	static hasMany = [children:ChildLead]
     static constraints = {
 		numKids nullable: true
 		numAdults nullable: true
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
-		history nullable:true,editable:false		
+		history nullable:true,editable:false	
+		partyPackage nullable:true
+		partyTheme nullable:true
+		comments nullable:true	
     }
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()
@@ -55,9 +64,15 @@ class Booking {
 			person:person.toMap(),
 			birthdaychild:birthdayChild.toMap(),
 			bookingdate:bookingDate,
+			timeslot:timeslot?.toMap(),
 			numkids:numKids,
 			numadults:numAdults,
 			comments:comments,
+			children:children*.toMap(),
+			bookingtype:bookingType?.toMap(),
+			room:room?.toMap(),
+			theme:partyTheme?.toMap(),
+			partypackage: partyPackage?.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
 	}
