@@ -125,20 +125,27 @@ var cbc_params = {
 	<script>
 		function getTimeRemaining(endtime) {
 		  var t = Date.parse(endtime) - Date.parse(new Date());
-		  var seconds = Math.floor((t / 1000) % 60);
-		  var minutes = Math.floor((t / 1000 / 60) % 60);
-		  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-		  var days = Math.floor(t / (1000 * 60 * 60 * 24));
-		  return {
-		    'total': t,
-		    'days': days,
-		    'hours': hours,
-		    'minutes': minutes,
-		    'seconds': seconds
-		  };
+		  return parseClock(t);
+		}
+		function parseClock(t){
+			var seconds = Math.floor((t / 1000) % 60);
+			  var minutes = Math.floor((t / 1000 / 60) % 60);
+			  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+			  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+			  return {
+			    'total': t,
+			    'days': days,
+			    'hours': hours,
+			    'minutes': minutes,
+			    'seconds': seconds
+			  };
+		}
+		function getTimeSpent(time) {
+			 var t = Date.parse(new Date()) - Date.parse(time);
+			 return parseClock(t);
 		}
 		
-		function initializeClock(id, endtime) {
+		function initializeClock(id, time,countup,warning_limit,done_limit) {
 		  var clock = document.getElementById(id);
 		  var daysSpan = clock.querySelector('#' + id + ' .days');
 		  var hoursSpan = clock.querySelector('#' + id + ' .hours');
@@ -146,25 +153,44 @@ var cbc_params = {
 		  var secondsSpan = clock.querySelector('#' + id + ' .seconds');
 		
 		  function updateClock() {
-		    var t = getTimeRemaining(endtime);
+		    var t = 0;
+		    if(countup) t = getTimeSpent(time); else t = getTimeRemaining(time);
 		
 		    daysSpan.innerHTML = t.days;
 		    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
 		    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
 		    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-		
-		    if (t.total <= 0) {
-		    	$("#" + id).removeClass("clock-warn")
-		    	$("#" + id).removeClass("clock-normal")  
-			  	$("#" + id).addClass("clock-done")
-			  	console.log("Time up for '" + id + "'!")
-		      	clearInterval(timeinterval);
-		    }else if(t.total < 15){
-			    //warning
-			    $("#" + id).removeClass("clock-done")
-		    	$("#" + id).removeClass("clock-normal")  
-			  	$("#" + id).addClass("clock-warn")
+
+		    if(countup){
+			    //count up
+		    	if(t.total > warning_limit & t.total < done_limit){
+				    //warning
+				    $("#" + id).removeClass("clock-done")
+			    	$("#" + id).removeClass("clock-normal")  
+				  	$("#" + id).addClass("clock-warn")
+				}else if (t.total >= done_limit) {
+			    	$("#" + id).removeClass("clock-warn")
+			    	$("#" + id).removeClass("clock-normal")  
+				  	$("#" + id).addClass("clock-done")
+				  	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
+			      	//clearInterval(timeinterval);
+			    }
+			}else{
+				//count down
+		    	if(t.total < warning_limit & t.total > done_limit){
+				    //warning
+				    $("#" + id).removeClass("clock-done")
+			    	$("#" + id).removeClass("clock-normal")  
+				  	$("#" + id).addClass("clock-warn")
+				}else if (t.total <= done_limit) {
+			    	$("#" + id).removeClass("clock-warn")
+			    	$("#" + id).removeClass("clock-normal")  
+				  	$("#" + id).addClass("clock-done")
+				  	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
+			      //	clearInterval(timeinterval);
+			    }		
 			}
+		    
 		  }
 		
 		  updateClock();
@@ -258,10 +284,13 @@ var cbc_params = {
 
 					 
 					  var deadline = new Date(Date.parse(timein));
-					  deadline.setHours(deadline.getHours() + 2)
+					 // deadline.setHours(deadline.getHours() + 2)
 					  
 					  addActiveVisit(livepanel, "" + id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
-					  initializeClock('clockdiv_' + id, deadline);
+					  var countup =  true;
+					  var warning_limit = 4000000; //milliseconds = 15 min
+					  var done_limit = 9900000; //just over 2 hours
+					  initializeClock('clockdiv_' + id, deadline,countup,warning_limit,done_limit);
 				});
 			  })
 			  .fail(function() {

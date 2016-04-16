@@ -27,6 +27,7 @@
 						<ul>
 					<li><a href="#tab-1">Configuration</a></li>
 					<li><a href="#tab-2">Staff</a></li>
+					<li><a href="#tab-3">Notification Templates</a></li>
 				</ul>
 				<div id="tab-1">
 					<g:form url="[resource:settingsInstance, action:'update']" method="PUT" >
@@ -73,6 +74,9 @@
 						</g:each>
 						</tbody>
 					</table>
+				</div>
+				<div id="tab-3">
+					<p> Notification templates defined here.</p>
 				</div>
 			</div>
 		</div>

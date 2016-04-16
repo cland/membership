@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main"/>
-		<title>H-Town</title>
+		<meta name="layout" content="maindialog"/>
+		<title>Send Notification</title>
 		<style type="text/css" media="screen">
 			
 			#status {
@@ -152,6 +152,7 @@ var cbc_params = {
 			console.log(data);
 			console.log(data.response_code + " : " + data.response_msg);
 			$("#message").html("<p style='font-weight:bold;color:green;'>" + data.response_code + " : " + data.response_msg + "</p>");
+			//TODO: if success full we need to save a record to the notifications database list
 		}
 
 		function sendToHtown(){
