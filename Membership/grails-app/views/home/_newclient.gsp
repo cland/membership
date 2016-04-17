@@ -1,4 +1,4 @@
-<%@ page import="import org.joda.time.DateTime" %>
+<%@ page import="org.joda.time.DateTime" %>
 <g:formRemote id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']" 
 			update="livepanel" 
 			onSuccess="onSuccessNewClientCallbackHander(data,textStatus)"

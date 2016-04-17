@@ -7,6 +7,7 @@ import cland.membership.*
 class BootStrap {
 	def groupManagerService
     def init = { servletContext ->
+		TimeZone.setDefault(TimeZone.getTimeZone("AWST"))
 		boolean doBootStrap = false
 		
 		def userlist = Person.list()

@@ -199,6 +199,11 @@ var cbc_params = {
 		
 	
 		$(document).ready(function() {	
+			var sa = new Date();
+			console.log(">> " + sa);
+			var perth    = moment().tz("2016-04-17 18:40", "Australia/Perth");
+			console.log(">> " + perth);
+			
 			var livepanel = $("#livepanel")
 			initVisits(livepanel)
 			$("#tabs").tabs(

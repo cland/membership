@@ -7,6 +7,8 @@
 //
 //= require jquery
 //= require_tree jqueryui/
+//= require moment.min.js
+//= require moment-timezone-with-data.min.js
 //= require_tree base/
 //= require_tree .
 //= require_self
