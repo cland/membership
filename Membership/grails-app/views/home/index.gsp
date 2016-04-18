@@ -124,7 +124,7 @@ var cbc_params = {
 <br/><br/>
 	<script>
 		function getTimeRemaining(endtime) {
-		  var t = Date.parse(endtime) - Date.parse(new Date());
+		  var t = Date.parse(endtime) - Date.parse(getAussieDate());
 		  return parseClock(t);
 		}
 		function parseClock(t){
@@ -141,7 +141,7 @@ var cbc_params = {
 			  };
 		}
 		function getTimeSpent(time) {
-			 var t = Date.parse(new Date()) - Date.parse(time);
+			 var t = Date.parse(getAussieDate()) - Date.parse(time);
 			 return parseClock(t);
 		}
 		
@@ -172,7 +172,7 @@ var cbc_params = {
 			    	$("#" + id).removeClass("clock-warn")
 			    	$("#" + id).removeClass("clock-normal")  
 				  	$("#" + id).addClass("clock-done")
-				  	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
+				 // 	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
 			      	//clearInterval(timeinterval);
 			    }
 			}else{
@@ -186,7 +186,7 @@ var cbc_params = {
 			    	$("#" + id).removeClass("clock-warn")
 			    	$("#" + id).removeClass("clock-normal")  
 				  	$("#" + id).addClass("clock-done")
-				  	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
+				  //	console.log("Time up for '" + id + "'! " + t.total + " : " + time)
 			      //	clearInterval(timeinterval);
 			    }		
 			}
@@ -197,12 +197,15 @@ var cbc_params = {
 		  var timeinterval = setInterval(updateClock, 1000);
 		}
 		
-	
+		function showTheTime() {
+		   var s = getAussieDate();    
+		   $("#time").html(s)
+		}
+		function getAussieDate(fmt){
+			if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
+			return moment().tz("Australia/Perth").format(fmt);
+		}
 		$(document).ready(function() {	
-			var sa = new Date();
-			console.log(">> " + sa);
-			var perth    = moment().tz("2016-04-17 18:40", "Australia/Perth");
-			console.log(">> " + perth);
 			
 			var livepanel = $("#livepanel")
 			initVisits(livepanel)
@@ -234,6 +237,10 @@ var cbc_params = {
 			initTimePicker($("#visit_time1"),"")
 			initTimePicker($("#visit_time2"),"")
 			initTimePicker($("#visit_time_search"),"")
+
+			//show datetime:
+			showTheTime(); // for the first load
+			setInterval(showTheTime, 250); // update it periodically 
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){
@@ -271,6 +278,7 @@ var cbc_params = {
 				altFormat: "yy-mm-dd HH:mm",
 				stepMinute: 5
 			});
+			el.prop("value",getAussieDate("DD-MMM-YYYY HH:mm"))
 		}
 		function initVisits(livepanel){
 			//ajax call here
@@ -280,6 +288,7 @@ var cbc_params = {
 				 })
 			  .done(function(data) {
 				  $.each(data,function(index,el){
+					  var visit_id = el.id;
 					  var name = el.child.person.firstname + " " + el.child.person.lastname
 					  var id = el.child.id
 					  var tel = el.child.parent.person1.mobileno
@@ -291,7 +300,7 @@ var cbc_params = {
 					  var deadline = new Date(Date.parse(timein));
 					 // deadline.setHours(deadline.getHours() + 2)
 					  
-					  addActiveVisit(livepanel, "" + id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
+					  addActiveVisit(livepanel, "" + id,visit_id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
 					  var countup =  true;
 					  var warning_limit = 4000000; //milliseconds = 15 min
 					  var done_limit = 9900000; //just over 2 hours
@@ -307,8 +316,8 @@ var cbc_params = {
 		
 		}
 
-		function addActiveVisit(el, divid,name,photo,tel,timein,extratime, clockstatus){
-			var html = '<div class="person-card float-left">' +
+		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus){
+			var html = '<div id="person_' + visit_id + '" class="person-card float-left">' +
 			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
 			  '<div class="person-info">' +
 				'<div class="details-title">' +
@@ -337,9 +346,9 @@ var cbc_params = {
 				  '<span><b>Time in:</b> ' + timein + '</span><br/>' +
 				  '<span><b>Extra:</b> ' + extratime + '</span><br/>' +
 				  '<br/><span>' +
-					'<g:submitButton class="button" id="btn_notify_' + divid +'" onclick="sendNotification(' + divid + ')" name="btn_' + divid + '" value="Notify" />' +
-					 '<g:submitButton class="button" id="btn_checkout_' + divid +'" onclick="checkOut(this)" name="btn_' + divid + '" value="Check-Out" />' +
-					 '<g:submitButton class="button" id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
+					'<input type="submit" class="button" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
+					 '<input type="submit" class="button" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\')" name="btn_' + divid + '" value="Check-Out" />' +
+					 '<input type="submit" class="button" id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
 				  '</span>' +
 				'</div>' +
 			  '</div>' +
@@ -348,11 +357,32 @@ var cbc_params = {
 			el.prepend(html);
 
 		}
-
-		function sendNotification(_id){
-			_id = 1;
+		function checkOut(_id){
+			var postdata = { 'id': _id, 'endtime': getAussieDate('DD-MMM-YYYY HH:mm') };
+			var jqxhr = $.ajax({ 
+				url: "${request.contextPath}/parent/checkout",
+				data:postdata,
+				method:"POST",
+				cache: false
+			 })
+		  .done(function(data) {
+			  if(data.result = "success"){
+				  console.log("Success...hide the entry..." + data.id);
+				  $("#person_" + data.id).hide();
+			  }else{
+				  alert("Failed to check out client: '" + data.message + "'")
+				}
+		  })
+		  .fail(function() {
+		    alert( "error" );
+		  })
+		  .always(function() {
+		    	//console.log( "complete!" );
+		  });
+		}
+		function sendNotification(_child_id,_visit_id){			
 		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
-		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_id])}')		                
+		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_child_id,visitid:_visit_id])}')		                
 		                .dialog({
 		                	modal:true,
 		                    autoOpen: false,

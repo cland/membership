@@ -24,16 +24,39 @@
 		
 		<script type="text/javascript">
 <!--  
+function checkIn(_timein, _values){
+	console.log(_timein + ": " + _values.toString());
+	var postdata = { 'values': _values.toString(), 'starttime': _timein };
+	var jqxhr = $.ajax({ 
+		url: "${request.contextPath}/parent/checkin",
+		data:postdata,
+		method:"POST",
+		cache: false
+	 })
+  .done(function(data) {
+	  if(data.result = "success"){
+		  console.log("Success...hide the entry..." + data);
+		  
+	  }else{
+		  alert("Failed to check in clients: '" + data.message + "'")
+		}
+  })
+  .fail(function() {
+    alert( "error" );
+  })
+  .always(function() {
+    	//console.log( "complete!" );
+  });
+}
 $(document).ready(function() {
 
 	$(document).on("click","#checkin_btn",function(){
-			alert("Check-in selected kids now...!!!");
 			var checkin_time = $("#visit_time_search").val();
 			var checkedValues = $('input[name="search_children"]:checked').map(function() {
 			    return this.value;
 			}).get();
-
-			console.log(checkin_time + ": " + checkedValues);
+	
+			checkIn(checkin_time,checkedValues)
 		});
 
 	//** PERSON CLIENT Auto Complete Call **//

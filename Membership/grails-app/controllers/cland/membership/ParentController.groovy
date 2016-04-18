@@ -6,6 +6,7 @@ import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -16,7 +17,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -202,7 +203,7 @@ class ParentController {
 	
 	@Transactional
 	def newclient(){
-	
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
 		
 		Parent parentInstance = new Parent(params.parent)
@@ -250,8 +251,9 @@ class ParentController {
 			if( params.child.checkin[index] == "Yes" ){
 				println ".. creating a visit now."
 				println "time: " + params.child.visit.time[index]
-				DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
-				def visit = new Visit(status:"Active",starttime:timein.toDate(),timerCheckPoint:timein.toDate())
+				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+				Date timein = dfmt.parse(params.child.visit.time[index]) 
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
 			//	visit.save()
 				child.addToVisits(visit)
 			}
@@ -288,5 +290,53 @@ class ParentController {
 
 		render selectList as JSON
 	} //end search
+	@Transactional
+	def checkout(params){
+		def result = []
+		Map<String, String[]> vars = request.getParameterMap()
+		def _id = vars.id[0]
+		def _endtime = vars.endtime[0]
+		def visit = Visit.get(_id)
+		if (visit != null){
+			def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+			
+			def dateout = dfmt.parse(_endtime) 			
+			println _endtime + ": To date: " + dateout
+			visit.endtime = dateout //timeout.toLocalDateTime();
+			visit.status = "InActive"
+			if(visit.save(flush:true)){
+				result = [result:"success"]
+				result.putAll(visit?.toMap())				
+			}else{
+				result.push([result:"failed", message:"Could not find visit with id '" + _id + "'"])
+			}
+		}else{
+			
+		}
+		
+		render result as JSON
+	} //end method checkout
+	boolean isCollectionOrArray(object) {
+		[Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
+	}
+	@Transactional
+	def checkin(params){
+		def result = []
+		//Set<String> parameterNames = request.getParameterMap().keySet();
+		//parameterNames.eachWithIndex {value,index ->
+		//	println ("p: " + isCollectionOrArray(value))
+		//}
+		
+		Map<String, String[]> vars = request.getParameterMap()
+		println vars
+		def _starttime = vars?.starttime[0]
+		def _children = vars?.values[0]?.split(",")
 	
+		_children.eachWithIndex { value, index ->
+			println("id: " + value)
+		}
+
+		result = [result:"success"]
+		render result as JSON
+	}
 } //end class

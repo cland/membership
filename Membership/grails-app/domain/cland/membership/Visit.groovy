@@ -52,8 +52,10 @@ class Visit {
 					]
 				],			
 			date:starttime?.format("dd MMM yyyy"),
+			startdatetime:starttime,
 			starttime:starttime?.format("dd MMM yyyy HH:mm"),
 			endtime:endtime?.format("dd MMM yyyy HH:mm"),
+			enddatetime:endtime,
 			status:status,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
