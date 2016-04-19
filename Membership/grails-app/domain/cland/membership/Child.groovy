@@ -51,6 +51,7 @@ class Child {
 			comments:comments,
 			medicalcomments:medicalComments,
 			visits:visits*.toMap(),
+			isactive:isActive(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			params:params]
 	}
@@ -74,5 +75,9 @@ class Child {
 	}
 	Integer getVisitCount(){
 		return visits?.size()
+	}
+	boolean isActive(){
+		def _list = visits.findAll {it.status == "Active"}
+		return (_list?.size() > 0)
 	}
 }//end class

@@ -36,48 +36,30 @@
 
 <div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'visitcount', 'error')} ">
 	<label for="visitcount">
-		<g:message code="settings.visitcount.label" default="Visitcount" />
+		<g:message code="settings.visitcount.label" default="Discount after how many visits? If say 5 then the 6th visit will be discounted." />
 		
 	</label>
 	<g:field name="visitcount" type="number" value="${settingsInstance.visitcount}"/>
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'Minutes left to send time reminder message', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'notifytime', 'error')} ">
 	<label for="notifytime">
-		<g:message code="settings.notifytime.label" default="Notifytime" />
+		<g:message code="settings.notifytime.label" default="Minutes after which to send reminder message (Warning/Orange)" />
 		
 	</label>
 	<g:field name="notifytime" type="number" value="${settingsInstance.notifytime}"/>
 
 </div>
-
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'Time reminder message', 'error')} ">
-	<label for="timereminder">
-		<g:message code="settings.timereminder.label" default="Timereminder" />
+<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'donetime', 'error')} ">
+	<label for="notifytime">
+		<g:message code="settings.donetime.label" default="Standard time up (Done/Red) after:" />
 		
 	</label>
-	<g:textArea name="timereminder" value="${settingsInstance?.timereminder}"  rows="5" cols="40"/>
+	<g:field name="donetime" type="number" value="${settingsInstance.donetime}"/>
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'Sick/Injured child message', 'error')} ">
-	<label for="sickchild">
-		<g:message code="settings.sickchild.label" default="Sickchild" />
-		
-	</label>
-	<g:textArea name="sickchild" value="${settingsInstance?.sickchild}"  rows="5" cols="40"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'Problem child message', 'error')} ">
-	<label for="problemchild">
-		<g:message code="settings.problemchild.label" default="Problemchild" />
-		
-	</label>
-	<g:textArea name="problemchild" value="${settingsInstance?.problemchild}"  rows="5" cols="40"/>
-
-</div>
 
 
 

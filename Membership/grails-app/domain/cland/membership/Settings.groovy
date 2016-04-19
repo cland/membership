@@ -10,10 +10,8 @@ class Settings {
 	String subtitle
 	String description
 	Integer visitcount	//The number of visits that allows for discount
-	Integer notifytime	//minutes left to trigger notification
-	String timereminder //message template to be send to the parent for time remaining
-	String sickchild 	//message related to injury/sickness
-	String problemchild //message related to problem with a child
+	Integer notifytime	//minutes after which warning indicator appears
+	Integer donetime	//minutes when standard time is up
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -22,9 +20,7 @@ class Settings {
 		description nullable:true
 		visitcount nullable:true
 		notifytime nullable:true
-		timereminder nullable:true
-		sickchild nullable:true
-		problemchild nullable:true
+		donetime nullable:true		
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
     }

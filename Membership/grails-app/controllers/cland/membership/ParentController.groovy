@@ -249,13 +249,13 @@ class ParentController {
 			//is checkin required now?
 			println "Processing checkin..."
 			if( params.child.checkin[index] == "Yes" ){
-				println ".. creating a visit now."
-				println "time: " + params.child.visit.time[index]
+				//println ".. creating a visit now."
+				//println "time: " + params.child.visit.time[index]
 				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
 				Date timein = dfmt.parse(params.child.visit.time[index]) 
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
 			//	visit.save()
-				child.addToVisits(visit)
+				child.addToVisits(visit)				
 			}
 			//child.save()
 			parentInstance.addToChildren(child)
@@ -269,6 +269,10 @@ class ParentController {
 		render parentInstance.toMap() as JSON
 	}
 	def search(){		
+		//def test = Child.get(1)
+		//def cnt = test.visits.findAll {it.status == "Active"}
+		//println("Active test cnt: " + cnt?.size())
+		
 		def term = "%" + params?.term + "%"
 		def results = Parent.createCriteria().list(params) {
 			or{
@@ -296,14 +300,13 @@ class ParentController {
 		Map<String, String[]> vars = request.getParameterMap()
 		def _id = vars.id[0]
 		def _endtime = vars.endtime[0]
+		def _status = vars.status[0]
 		def visit = Visit.get(_id)
 		if (visit != null){
-			def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-			
+			def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")			
 			def dateout = dfmt.parse(_endtime) 			
-			println _endtime + ": To date: " + dateout
 			visit.endtime = dateout //timeout.toLocalDateTime();
-			visit.status = "InActive"
+			visit.status = _status
 			if(visit.save(flush:true)){
 				result = [result:"success"]
 				result.putAll(visit?.toMap())				
@@ -322,21 +325,25 @@ class ParentController {
 	@Transactional
 	def checkin(params){
 		def result = []
-		//Set<String> parameterNames = request.getParameterMap().keySet();
-		//parameterNames.eachWithIndex {value,index ->
-		//	println ("p: " + isCollectionOrArray(value))
-		//}
-		
+		def msg = ""		
 		Map<String, String[]> vars = request.getParameterMap()
-		println vars
 		def _starttime = vars?.starttime[0]
 		def _children = vars?.values[0]?.split(",")
 	
 		_children.eachWithIndex { value, index ->
-			println("id: " + value)
+			def child = Child.get(value)
+			if(child != null){
+				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
+				child.addToVisits(visit)
+				if(!child.save(flush:true)){
+					println(child.errors)
+					msg = msg + "Child '" + value + "' failed to save! "
+				}
+			}
 		}
 
-		result = [result:"success"]
+		result = [result:"success",message:msg]
 		render result as JSON
 	}
 } //end class

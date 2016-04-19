@@ -34,9 +34,13 @@ function checkIn(_timein, _values){
 		cache: false
 	 })
   .done(function(data) {
-	  if(data.result = "success"){
-		  console.log("Success...hide the entry..." + data);
-		  
+	  if(data.result = "success"){		 
+		  if(data.result === "success"){
+			  var panel = $("#livepanel");
+			  panel.html("")
+			  clearSearchForm();
+			  initVisits(panel);
+		  }
 	  }else{
 		  alert("Failed to check in clients: '" + data.message + "'")
 		}
@@ -48,8 +52,14 @@ function checkIn(_timein, _values){
     	//console.log( "complete!" );
   });
 }
+function clearSearchForm(){
+	var _tbody = $("#child-list");				
+	_tbody.html("");
+	 $("#child-table").hide();
+	 $("#searchform-actions").hide()	 
+}
 $(document).ready(function() {
-
+	
 	$(document).on("click","#checkin_btn",function(){
 			var checkin_time = $("#visit_time_search").val();
 			var checkedValues = $('input[name="search_children"]:checked').map(function() {
@@ -59,6 +69,9 @@ $(document).ready(function() {
 			checkIn(checkin_time,checkedValues)
 		});
 
+	$(document).on("click","#clear_btn",function(){
+		clearSearchForm();
+	});
 	//** PERSON CLIENT Auto Complete Call **//
 	 $.widget( "custom.catcomplete", $.ui.autocomplete, {
 		_create: function() {
@@ -112,9 +125,14 @@ $(document).ready(function() {
 				_tbody.html("");
 				$.each(_childlist,function(item){
 					var _sel = '';
+					
 					var _chbox = "<input type='checkbox' name='search_children' value='" + this.id + "' " +_sel+ "/>";
+					if(this.isactive){
+						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
+					} 											
 					_tbody.append("<tr><td>" + _chbox + "</td><td>" + this.person.firstname + " " + this.person.lastname + "</td><td>" + this.person.age + "</td><td>" + this.person.gender + "</td>");	
 				})
+				initTimePicker($("#visit_time_search"),"")
 				$("#searchform-actions").show()					
 			}
 			ui.item.value = ""

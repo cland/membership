@@ -105,6 +105,7 @@ var cbc_params = {
 							<div id="searchform-actions" style="display:none">
 								<g:textField name="child.searchvisit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time_search" class="datetime-picker"/>
 								<input type="button" name="quick_checkin" id="checkin_btn" value="Check-In Selected"/>
+								<input type="button" name="quick_clear" id="clear_btn" value="Clear"/>
 							</div>
 						</form>
 					</div>
@@ -201,12 +202,16 @@ var cbc_params = {
 		   var s = getAussieDate();    
 		   $("#time").html(s)
 		}
-		function getAussieDate(fmt){
+		function getAussieDate(fmt,datestring){
 			if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
-			return moment().tz("Australia/Perth").format(fmt);
+			if(datestring === undefined || datestring === "") 
+				return moment().tz("Australia/Perth").format(fmt);
+			else
+				return moment(datestring).tz("Australia/Perth").format(fmt);
 		}
+		
 		$(document).ready(function() {	
-			
+			console.log("DATE: " + new Date())
 			var livepanel = $("#livepanel")
 			initVisits(livepanel)
 			$("#tabs").tabs(
@@ -295,15 +300,15 @@ var cbc_params = {
 					  var email = el.child.parent.person1.email
 					  var parent_name = el.child.parent.person1.firstname + " " + el.child.parent.person1.lastname
 					  var timein = el.starttime
-
-					 
+					
 					  var deadline = new Date(Date.parse(timein));
 					 // deadline.setHours(deadline.getHours() + 2)
 					  
 					  addActiveVisit(livepanel, "" + id,visit_id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
 					  var countup =  true;
-					  var warning_limit = 4000000; //milliseconds = 15 min
-					  var done_limit = 9900000; //just over 2 hours
+					  var warning_limit = getMillis(45); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
+					  var done_limit = getMillis(60); //just over 2 hours
+					 
 					  initializeClock('clockdiv_' + id, deadline,countup,warning_limit,done_limit);
 				});
 			  })
@@ -311,7 +316,7 @@ var cbc_params = {
 			    alert( "error" );
 			  })
 			  .always(function() {
-			    console.log( "complete!" );
+			    
 			  });
 		
 		}
@@ -347,8 +352,8 @@ var cbc_params = {
 				  '<span><b>Extra:</b> ' + extratime + '</span><br/>' +
 				  '<br/><span>' +
 					'<input type="submit" class="button" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
-					 '<input type="submit" class="button" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\')" name="btn_' + divid + '" value="Check-Out" />' +
-					 '<input type="submit" class="button" id="btn_view_' + divid +'" onclick="viewChild(this)" name="btn_' + divid + '" value="View More" />' +
+					 '<input type="submit" class="button" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\',\'Complete\')" name="btn_' + divid + '" value="Check-Out" />' +
+					 '<input type="submit" class="button" id="btn_view_' + divid +'" onclick="checkOut(\'' + visit_id + '\',\'Cancelled\')" name="btn_' + divid + '" value="Cancel" />' +
 				  '</span>' +
 				'</div>' +
 			  '</div>' +
@@ -357,8 +362,8 @@ var cbc_params = {
 			el.prepend(html);
 
 		}
-		function checkOut(_id){
-			var postdata = { 'id': _id, 'endtime': getAussieDate('DD-MMM-YYYY HH:mm') };
+		function checkOut(_id,status){
+			var postdata = { 'id': _id, 'endtime': getAussieDate('DD-MMM-YYYY HH:mm'),'status':status };
 			var jqxhr = $.ajax({ 
 				url: "${request.contextPath}/parent/checkout",
 				data:postdata,
@@ -366,9 +371,8 @@ var cbc_params = {
 				cache: false
 			 })
 		  .done(function(data) {
-			  if(data.result = "success"){
-				  console.log("Success...hide the entry..." + data.id);
-				  $("#person_" + data.id).hide();
+			  if(data.result = "success"){				 
+				  $("#person_" + data.id).remove();
 			  }else{
 				  alert("Failed to check out client: '" + data.message + "'")
 				}
@@ -410,6 +414,9 @@ var cbc_params = {
 		                $dialog.dialog('open');
 		               
 		  } //end function sendNotification()
+		  function getMillis(minutes){
+			  return (minutes * 60000);
+			  }
 	</script>		
 	</body>
 </html>
