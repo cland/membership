@@ -90,18 +90,19 @@ var cbc_params = {
 	</head>
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
-		<div id="page-body" role="main">			
+		<div id="page-body" role="main">	
+			<div>Child: ${childInstance?.person } - Came in at: ${visitInstance?.starttime }</div>		
 			<div class="wait">Sending message, please wait...</div>
 			<div id="message"></div>
 			<form role="form" id="smsform" name="contactform" action="none" >
 				<div class="form-group col-sm-4" id="name-group">
-					<input type="text" class="form-control" id="inputName" name="inputName" placeholder="Name">
+					To Parent/Guardian: <input type="text" class="form-control" id="inputName" name="inputName" value="${childInstance?.parent?.person1 }" placeholder="Name">
 				</div>
 				<div class="form-group col-sm-4" id="phone-group">
-					<input type="text" class="form-control" id="inputTel" name="inputTel" value='+61411111111' placeholder="Mobile Number">
+					Mobile No.:<input type="text" class="form-control" id="inputTel" name="inputTel" value='+61411111111' placeholder="Mobile Number">
 				</div>
 				<div class="form-group col-sm-12" id="message-group">
-					<textarea class="form-control" id="inputMessage" name="inputMessage" rows="6" placeholder="Message"></textarea>
+					<textarea class="form-control" readonly id="inputMessage" name="inputMessage" rows="6" placeholder="Message"></textarea>
 				</div>
 				<button type="submit" id="sendsms_btn" class="btn btn-primary btn-lg">Send SMS</button>
 			</form>

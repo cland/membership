@@ -384,9 +384,12 @@ var cbc_params = {
 		    	//console.log( "complete!" );
 		  });
 		}
-		function sendNotification(_child_id,_visit_id){			
+		function sendNotification(_child_id,_visit_id){		
+			 var _link = "${g.createLink(controller: 'harare', action: 'smsdialogcreate')}?cid=" + escape(_child_id) + "&vid=" + _visit_id ;
+			 console.log(_link);
+			 	
 		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
-		                .load('${g.createLink(controller: 'harare', action: 'smsdialogcreate',params:[id:_child_id,visitid:_visit_id])}')		                
+		                .load(_link)		                
 		                .dialog({
 		                	modal:true,
 		                    autoOpen: false,
@@ -397,10 +400,12 @@ var cbc_params = {
 		                    },
 		                    buttons:{
 		                        "DONE":function(){			                      	 
-		                         	 $dialog.dialog('close')
+		                         	// $dialog.dialog('close')
+		                         	 $dialog.dialog('destroy').remove()
 		                            },
 		                         "CANCEL":function(){
-		                      	   $dialog.dialog('close')
+		                        	 $dialog.dialog('destroy').remove()
+		                      	  // $dialog.dialog('close')
 		                             }
 			                    },
 		                    close: function(event,ui){

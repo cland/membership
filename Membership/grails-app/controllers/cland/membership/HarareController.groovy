@@ -69,6 +69,8 @@ class HarareController {
 	
 	def smsdialogcreate() {
 		println(params)
-		render (view:"/home/htown",model:[childInstance: Child.get(params?.id), id:params?.id]) //new Child(params)
+		def visit = Visit.get(params?.vid)
+		
+		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit]) //new Child(params)
 	}
 } //end class

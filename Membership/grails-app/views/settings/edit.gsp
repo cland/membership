@@ -50,11 +50,9 @@
 							
 								<g:sortableColumn property="firstName" title="${message(code: 'person.firstName.label', default: 'First Name')}" />
 							
-								<th><g:message code="person.race.label" default="Race" /></th>
+								<th><g:message code="person.lastName.label" default="Last Name" /></th>
 							
 								<g:sortableColumn property="accountExpired" title="${message(code: 'person.accountExpired.label', default: 'Account Expired')}" />
-							
-								<g:sortableColumn property="knownAs" title="${message(code: 'person.knownAs.label', default: 'Known As')}" />
 							
 							</tr>
 						</thead>
@@ -68,15 +66,133 @@
 							
 								<td>${fieldValue(bean: personInstance, field: "lastName")}</td>										
 							
-								<td>${fieldValue(bean: personInstance, field: "username")}</td>
+								<td>${fieldValue(bean: personInstance, field: "accountExpired")}</td>
 							
 							</tr>
 						</g:each>
 						</tbody>
 					</table>
+					<fieldset>
+						<legend >New Staff</legend>
+							<div class="table">
+								<div class="row">
+									<div class="cell"><label id="">First name:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.firstName" required="" value=""/>
+										</span>
+									</div>	
+									<div class="cell"><label id="">Cell number:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.mobileNo" value=""/>
+										</span>
+									</div>			
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Last name:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.lastName" required="" value=""/>
+										</span>
+									</div>
+									<div class="cell"><label id="">Email:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.email" value=""/>
+										</span>
+									</div>			
+								</div>
+						
+								<div class="row">
+									<div class="cell"><label id="">Username:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.username" value=""/>
+										</span>
+									</div>		
+									<div class="cell"><label id="">Password:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:field type="password" name="password" required="" value=""/><br/>
+											Confirm: <g:field type="password" name="passwordConfirm" required="" value=""/>
+										</span>
+									</div>			
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Enabled:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="person1.username" value=""/>
+										</span>
+									</div>		
+									<div class="cell"><label id=""></label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											
+										</span>
+									</div>			
+								</div>
+							
+							</div>
+							<fieldset><legend>Access Rights</legend>
+		<div>
+			<div id="group-finder-div">
+				Find a Group: <input id="group-search" name="group_search" value=""/>
+			</div>
+		
+			<table id="groups-table-office">
+			<thead>
+				<tr>
+					<th></th>
+					<g:sortableColumn property="name" title="${message(code: 'roleGroup.name.label', default: 'Group Name')}" />					
+					<g:sortableColumn property="description" title="${message(code: 'roleGroup.description.label', default: 'Description')}" />					
+				</tr>
+			</thead>
+			<tbody id="groups-list">
+			<g:each in="${(params.action=="create"? [] : (personInstance?.authorities?.size() > 0 ? personInstance?.authorities:personInstance?.person?.office?.officeGroups))}" status="i" var="roleGroupInstance">
+				<g:set var="isRoleChecked" value="false" />
+				<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					<g:if test="${personInstance?.authorities?.contains(roleGroupInstance) }">
+						<g:set var="isRoleChecked" value="true" />
+					</g:if>
+					<td><g:checkBox name="officegroups" value="${roleGroupInstance.id}" checked='${isRoleChecked}' label=""/></td>
+					<td><g:link controller="roleGroup" action="show" id="${roleGroupInstance.id}">${fieldValue(bean: roleGroupInstance, field: "name")}</g:link></td>					
+					<td>${fieldValue(bean: roleGroupInstance, field: "description")}</td>					
+				</tr>
+			</g:each>
+			</tbody>
+			</table>
+		</div>
+		
+		
+	</fieldset>	
+					</fieldset>
 				</div>
 				<div id="tab-3">
-					<p> Notification templates defined here.</p>
+					<fieldset>
+						<legend>New Notification Template</legend>
+							<div class="table">
+								<div class="row">
+									<div class="cell"><label id="">Title:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											<g:textField name="template.title" required="" value=""/>
+										</span>
+									</div>										
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Message:</label></div>
+									<div class="cell">
+										<span class="property-value" aria-labelledby="home-label">
+											
+											<g:textArea name="template.body" rows="6"></g:textArea>
+										</span>
+									</div>											
+								</div>														
+							
+							</div>
+						</fieldset>
 				</div>
 			</div>
 		</div>
@@ -105,7 +221,56 @@
 					defaultDate : "-18y",					
 					maxDate:"-2y",
 					minDate:"-90y"
-					});		                
+					});	
+
+				// Groups Picker
+				$( "#group-search" ).catcomplete({
+					source: function(request,response) {
+						$.ajax({
+							url : "${g.createLink(controller: 'acl', action: 'grouplist')}", 
+							dataType: "json",
+							data : request,
+							success : function(data) {
+								response(data); // set the response
+							},
+							error : function() { // handle server errors
+								alert("Unable to retrieve records");
+							}
+						});
+					},
+					minLength : 2, // triggered only after minimum 2 characters have been entered.
+					select : function(event, ui) { // event handler when user selects a company from the list.
+						var _id = ui.item.id;
+						var _name = ui.item.rolegroup.name
+						var _desc = ui.item.rolegroup.description
+						var _tbody = $("#groups-list");
+						var _sel = 'checked';
+						var _chbox = "<input type='checkbox' name='officegroups' value='" + _id + "' " +_sel+ " class='group-other'/>";
+						_tbody.append("<tr><td>" + _chbox + "</td><td>" + _name + "</td><td>" + _desc + "</td>");	
+						ui.item.value = ""
+					}
+				});	
+				 $.widget( "custom.catcomplete", $.ui.autocomplete, {
+						_create: function() {
+							this._super();
+							this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+						},
+						_renderMenu: function( ul, items ) {
+							var that = this,
+							currentCategory = "";
+							$.each( items, function( index, item ) {
+								var li;
+								if ( item.category != currentCategory ) {
+									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+									currentCategory = item.category;
+								}
+								li = that._renderItemData( ul, item );
+								if ( item.category ) {
+									li.attr( "aria-label", item.category + " : " + item.label );
+								}
+							});
+						}
+					});                
 			});  
 		</script>
 	</body>
