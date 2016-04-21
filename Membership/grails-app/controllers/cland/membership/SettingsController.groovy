@@ -22,7 +22,6 @@ class SettingsController {
 
     def create() {
 		def staff = Person.list(params)
-		println "Size: " + staff.size()
         respond new Settings(params), model:[personInstanceList:staff]
     }
 
@@ -50,9 +49,11 @@ class SettingsController {
     }
 
     def edit(Settings settingsInstance) {
-		def staff = Person.list(params)
-		println "Size: " + staff.size()
-        respond settingsInstance, model:[personInstanceList:staff]
+		def office = Office.get(1)
+		def staff = office?.staff //Person.list(params)
+		println (staff?.size())
+		def templates = Template.list(params)
+        respond settingsInstance, model:[personInstanceList:staff,templateInstanceList:templates]
     }
 
     @Transactional

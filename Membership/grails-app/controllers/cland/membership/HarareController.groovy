@@ -71,6 +71,6 @@ class HarareController {
 		println(params)
 		def visit = Visit.get(params?.vid)
 		
-		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit]) //new Child(params)
+		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit,templateInstanceList:Template.list()]) //new Child(params)
 	}
 } //end class

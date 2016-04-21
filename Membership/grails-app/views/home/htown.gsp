@@ -90,32 +90,87 @@ var cbc_params = {
 	</head>
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
-		<div id="page-body" role="main">	
-			<div>Child: ${childInstance?.person } - Came in at: ${visitInstance?.starttime }</div>		
-			<div class="wait">Sending message, please wait...</div>
+		<div id="page-body" role="main">
+		<span style="display:none;" id="code_parentname"></span>
+		<span style="display:none;" id="code_parentno">${childInstance?.person }</span>
+		<span style="display:none;" id="code_starttime">${visitInstance?.starttime }</span>
+		<span style="display:none;" id="code_childname"></span>	
+			<div style="text-align:right;">Child: ${childInstance?.person } - Checked-in at: ${visitInstance?.starttime }</div>		
+			<div class="send-wait">Sending message, please wait...</div>
 			<div id="message"></div>
-			<form role="form" id="smsform" name="contactform" action="none" >
-				<div class="form-group col-sm-4" id="name-group">
-					To Parent/Guardian: <input type="text" class="form-control" id="inputName" name="inputName" value="${childInstance?.parent?.person1 }" placeholder="Name">
+			<fieldset id="template-fieldset"><legend>Select Notification Template</legend>
+			<table>
+			<thead>
+					<tr><th></th>		
+						<th nowrap>${message(code: 'template.title.label', default: 'Title')}</th>							
+						<th>${message(code: 'template.body.label', default: 'Body')}</th>				
+					</tr>
+				</thead>
+				<tbody id="template_list">
+				<g:each in="${templateInstanceList}" status="i" var="templateInstance">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+						<td><input type="checkbox" class="template_checkbox" name="template_${templateInstance?.id}" id="template_${templateInstance?.id}" /></td>
+						<td nowrap><g:link controller="template" action="show" id="${templateInstance.id}"><span id="template_${templateInstance?.id}_title">${fieldValue(bean: templateInstance, field: "title")}</span></g:link></td>					
+						<td><span id="template_${templateInstance?.id}_body">${fieldValue(bean: templateInstance, field: "body")}</span></td>					
+					</tr>
+				</g:each>
+				</tbody>
+			</table>
+			</fieldset>
+			
+			<fieldset><legend>Preview Message</legend>
+				<form role="form" id="smsform" name="contactform" action="none" >
+				<div class="table">
+					<div class="row">
+						<div class="cell">
+							<div class="table">
+								<div class="row">
+									<div class="cell"><label id="">To Parent/Guardian:</label></div>
+									<div class="cell"><input type="text" class="form-control" id="inputName" name="inputName" value="${childInstance?.parent?.person1 }" placeholder="Name"></div>
+									<div class="cell"><label id="">Mobile No.:</label></div>
+									<div class="cell"><input type="text" class="form-control" id="inputTel" name="inputTel" value='+61411111111' placeholder="Mobile Number"> </div>
+								</div>								
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="cell">
+							<textarea class="form-control" style="width:99%" readonly id="inputMessage" name="inputMessage" rows="6" placeholder="Message"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="cell">
+							<button type="submit" id="sendsms_btn" class="btn btn-primary btn-lg">Send SMS</button>
+						</div>
+					</div>
 				</div>
-				<div class="form-group col-sm-4" id="phone-group">
-					Mobile No.:<input type="text" class="form-control" id="inputTel" name="inputTel" value='+61411111111' placeholder="Mobile Number">
-				</div>
-				<div class="form-group col-sm-12" id="message-group">
-					<textarea class="form-control" readonly id="inputMessage" name="inputMessage" rows="6" placeholder="Message"></textarea>
-				</div>
-				<button type="submit" id="sendsms_btn" class="btn btn-primary btn-lg">Send SMS</button>
-			</form>
+				</form>
+			</fieldset>
 		</div>
 
-<br/><br/>
 	<script>
 
 		$(document).ready(function() {	
 			//sendToHtown()
 			$(document).on("click","#sendsms_btn",sendSMS)
+			$(document).on("click",".template_checkbox",selectTemplate)
+			
 		});		
-		
+		function selectTemplate(){
+			var el = $(this);
+			if(el.prop("checked")){
+				var _id = el.prop("id")
+				var _body = $("#" + _id + "_body").text();
+				var _title = $("#" + _id + "_title").text();
+				console.log("id: " + _id + " = " + _body);
+				$("#inputMessage").val(
+						_body.replace(/{{parentname}}/gi,"${childInstance?.parent?.person1 }").
+						replace(/{{parentno}}/gi,"${childInstance?.parent?.membershipNo }").
+						replace(/{{childname}}/gi,"${childInstance?.person }").
+						replace(/{{starttime}}/gi,"${visitInstance?.starttime }")
+						)
+			}
+		}
 		function sendSMS(){
 			var name = $("#inputName").val();
 			var num = $("#inputTel").val();
@@ -140,15 +195,16 @@ var cbc_params = {
 					  'custom_string': 'from Wiggly Toes IPC'
 					}]
 				}
-			$(".wait").show();
+			$(".send-wait").show();
 			$("#message").hide();
 			$("#smsform").hide();
+			$("#template-fieldset").hide();
 			console.log(JSON.stringify(msg));
 			sendToStown(JSON.stringify(msg),sendToStownCallback)
 			return false;
 		}
 		function sendToStownCallback(data){
-			$(".wait").hide();
+			$(".send-wait").hide();
 			$("#message").show();
 			console.log(data);
 			console.log(data.response_code + " : " + data.response_msg);

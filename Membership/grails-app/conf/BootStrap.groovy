@@ -104,6 +104,8 @@ class BootStrap {
 			def adminRole = Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)	 			
 			def userRole = Role.findByAuthority(SystemRoles.ROLE_USER.value) //new Role(authority:"ROLE_USER").save(flush:true)
 			def devRole = Role.findByAuthority(SystemRoles.ROLE_DEVELOPER.value) //new Role(name: "GROUP_DEV").save(flush: true)
+			def managerRole = Role.findByAuthority(SystemRoles.ROLE_MANAGER.value)
+			def assistantRole = Role.findByAuthority(SystemRoles.ROLE_ASSISTANT.value)
 			
 			println ">> create groups"
 			def adminGroup = new RoleGroup(name:"GROUP_ADMIN",description:"Administrators Group").save(flush:true)
@@ -112,14 +114,17 @@ class BootStrap {
 			if(userGroup.hasErrors()) userGroup.errors
 			def devGroup = new RoleGroup(name: "GROUP_DEVELOPER",description:"Developers Group").save(flush:true)
 			if(devGroup.hasErrors()) devGroup.errors
+			def managerGroup = new RoleGroup(name:"GROUP_MANAGER",description:"Manager Group").save(flush:true)
+			if(managerGroup.hasErrors()) managerGroup.errors
+			def assistantGroup = new RoleGroup(name:"GROUP_ASSISTANT",description:"Assistant Group").save(flush:true)
+			if(assistantGroup.hasErrors()) assistantGroup.errors
 			
-			/*def devGroup = new RoleGroup(name:"GROUP_DEVELOPER").save(flush:true)
-			def userGroup = new RoleGroup(name:"GROUP_USER").save(flush:true)*/
 			println ">> creating RoleGroupRoles..."
 			RoleGroupRole.create adminGroup, adminRole
 			RoleGroupRole.create userGroup, userRole 
 			RoleGroupRole.create devGroup, devRole
-			/*RoleGroupRole.create userGroup, userRole*/
+			RoleGroupRole.create managerGroup, managerRole
+			RoleGroupRole.create assistantGroup, assistantRole
 			
 			println ">> adding person(s) to groups"
 			PersonRoleGroup.create personAdmin, adminGroup
@@ -209,10 +214,11 @@ class BootStrap {
 				 '/**/update/**',
 				 '/**/edit/**',
 				 '/parent/search/**',
+				 '/template/newtemplate/**',
 				 '/requestMap/delete/**',
 				 '/requestMap/update/**',
 				 '/requestMap/show/**',
-				 '/requestMap/edit/**',
+				 '/requestMap/edit/**',				 
 				 '/requestMap/create/**']) {
 				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value).save()
 			 }

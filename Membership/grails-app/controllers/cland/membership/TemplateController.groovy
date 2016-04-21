@@ -3,12 +3,13 @@ package cland.membership
 
 
 import static org.springframework.http.HttpStatus.*
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class TemplateController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", newtemplate:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -100,5 +101,25 @@ class TemplateController {
             }
             '*'{ render status: NOT_FOUND }
         }
-    }
-}
+    } //
+	
+	@Transactional
+	def newtemplate(){
+		def result = []
+		Map<String, String[]> vars = request.getParameterMap()
+		println(vars)
+		def _status = vars.status[0]
+		def _title = vars.title[0]
+		def _body = vars.body[0]
+
+		def template = new Template(title:_title, body:_body,status:_status)
+		if(!template.save(flush:true)){
+			println(template.errors)
+			result = [result:"failure",message:"Failed to save template!"]			
+		}else{
+			result = [result:"success",id:template?.id]
+		}
+		
+		render result as JSON
+	}
+} //end class

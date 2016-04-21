@@ -4,7 +4,7 @@ public enum SystemRoles {
 	//SUPER ADMIN
 	ROLE_ADMIN("ROLE_ADMIN","System Admin - Full access"),
 	ROLE_MANAGER("ROLE_MANAGER","Office manager - Limited privileged rights"),
-	ROLE_ASSISTANT("ROLE_MANAGER","Assistant staff - Limited rights"),
+	ROLE_ASSISTANT("ROLE_ASSISTANT","Assistant staff - Limited rights"),
 	ROLE_DEVELOPER("ROLE_DEVELOPER","System Developer - Full access"),	
 	ROLE_USER("ROLE_USER","User Role - Limited access"),
 	ROLE_REVIEWER("ROLE_REVIEWER","User Role - Reviewer")
@@ -30,6 +30,6 @@ public enum SystemRoles {
 	}
 
 	static list() {
-		[ROLE_USER,ROLE_ADMIN,ROLE_DEVELOPER,ROLE_REVIEWER]
+		[ROLE_ADMIN,ROLE_MANAGER,ROLE_ASSISTANT,ROLE_DEVELOPER,ROLE_USER,ROLE_REVIEWER]
 	}
 }

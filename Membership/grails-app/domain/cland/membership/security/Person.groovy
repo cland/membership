@@ -99,7 +99,7 @@ class Person implements Serializable {
 	}
 
 	static transients = ['springSecurityService','authorities',"createdByName","lastUpdatedByName","fullname",
-		'age']
+		'age','staffMemberStatus']
 
 	static mapping = {
 		password column: '`password`'
@@ -142,6 +142,7 @@ class Person implements Serializable {
 			datelastupdated:lastUpdated?.format("dd-MMM-yyyy"),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
+			isstaff:staffMemberStatus,
 			params:params]
 	}
 	public getAge(){
@@ -169,6 +170,9 @@ class Person implements Serializable {
 		category:(gender==null?"Unknown":gender),
 		usergroups:getAuthorities(),
 		officegroups:(office==null?null:office.getOfficeGroups())]
+	}
+	def getStaffMemberStatus(){
+		return office?.staff?.contains(this)
 	}
 	/*
 	def getPhonesList() {

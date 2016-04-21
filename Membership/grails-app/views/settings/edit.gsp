@@ -56,7 +56,7 @@
 							
 							</tr>
 						</thead>
-						<tbody>
+						<tbody >
 						<g:each in="${personInstanceList}" status="i" var="personInstance">
 							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 							
@@ -72,7 +72,7 @@
 						</g:each>
 						</tbody>
 					</table>
-					<fieldset>
+					<fieldset style="display:none;">
 						<legend >New Staff</legend>
 							<div class="table">
 								<div class="row">
@@ -168,30 +168,68 @@
 		
 	</fieldset>	
 					</fieldset>
+				
 				</div>
 				<div id="tab-3">
 					<fieldset>
-						<legend>New Notification Template</legend>
+						<legend>Template Notification Messages</legend>
+			<table>
+			<thead>
+					<tr>		
+						<th nowrap>${message(code: 'template.title.label', default: 'Title')}</th>							
+						<th>${message(code: 'template.body.label', default: 'Body')}</th>				
+					</tr>
+				</thead>
+				<tbody id="template_list">
+				<g:each in="${templateInstanceList}" status="i" var="templateInstance">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					
+						<td nowrap><g:link controller="template" action="show" id="${templateInstance.id}">${fieldValue(bean: templateInstance, field: "title")}</g:link></td>					
+						<td>${fieldValue(bean: templateInstance, field: "body")}</td>					
+					</tr>
+				</g:each>
+				</tbody>
+			</table>
+					</fieldset>
+					<fieldset>
+						<legend>Add New Notification Template</legend>							
+							<form id="new_template_form" name="new_template_form">							
+							<div style="padding:10px; font-size:9pt;color:green;">Recognized codes:							
+								<ul>
+									<li><b>{{parentname}}:</b> The parent/guardian's name</li>
+									<li><b>{{parentno}}:</b> The parent/guardian's membership number</li>
+									<li><b>{{childname}}:</b> The child's name</li>
+									<li><b>{{starttime}}:</b> The time the child was checked in</li>
+								</ul>
+							</div>
+							<br/>
+							<div id="new_template_msg" class="text-align:center"></div>
 							<div class="table">
 								<div class="row">
 									<div class="cell"><label id="">Title:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">
-											<g:textField name="template.title" required="" value=""/>
+											<g:textField id="template_title" name="template.title" required="" value="" placeholder="Template Name"/>
 										</span>
 									</div>										
 								</div>
 								<div class="row">
 									<div class="cell"><label id="">Message:</label></div>
 									<div class="cell">
-										<span class="property-value" aria-labelledby="home-label">
-											
-											<g:textArea name="template.body" rows="6"></g:textArea>
+										<span class="property-value" aria-labelledby="home-label">											
+											<g:textArea id="template_body" name="template.body" rows="6" required="" placeholder="Dear {{parentname}}/{{parentno}}, it's almost time to pickup {{childname}} who came in at {{starttime}}"></g:textArea>
 										</span>
 									</div>											
-								</div>														
-							
+								</div>	
+								<div class="row">
+									<div class="cell"></div>
+									<div class="cell">
+										<input type="hidden" name="template_status" id="template_status" value="active"/>
+										<input type="button" name="template_btn" id="template_btn" value="Submit"/>
+									</div>
+								</div>																				
 							</div>
+							</form>
 						</fieldset>
 				</div>
 			</div>
@@ -223,55 +261,50 @@
 					minDate:"-90y"
 					});	
 
-				// Groups Picker
-				$( "#group-search" ).catcomplete({
-					source: function(request,response) {
-						$.ajax({
-							url : "${g.createLink(controller: 'acl', action: 'grouplist')}", 
-							dataType: "json",
-							data : request,
-							success : function(data) {
-								response(data); // set the response
-							},
-							error : function() { // handle server errors
-								alert("Unable to retrieve records");
-							}
-						});
-					},
-					minLength : 2, // triggered only after minimum 2 characters have been entered.
-					select : function(event, ui) { // event handler when user selects a company from the list.
-						var _id = ui.item.id;
-						var _name = ui.item.rolegroup.name
-						var _desc = ui.item.rolegroup.description
-						var _tbody = $("#groups-list");
-						var _sel = 'checked';
-						var _chbox = "<input type='checkbox' name='officegroups' value='" + _id + "' " +_sel+ " class='group-other'/>";
-						_tbody.append("<tr><td>" + _chbox + "</td><td>" + _name + "</td><td>" + _desc + "</td>");	
-						ui.item.value = ""
-					}
-				});	
-				 $.widget( "custom.catcomplete", $.ui.autocomplete, {
-						_create: function() {
-							this._super();
-							this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
-						},
-						_renderMenu: function( ul, items ) {
-							var that = this,
-							currentCategory = "";
-							$.each( items, function( index, item ) {
-								var li;
-								if ( item.category != currentCategory ) {
-									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
-									currentCategory = item.category;
-								}
-								li = that._renderItemData( ul, item );
-								if ( item.category ) {
-									li.attr( "aria-label", item.category + " : " + item.label );
-								}
-							});
-						}
-					});                
+				  
+
+					//handle template submit button
+					$(document).on("click","#template_btn",function(){
+						saveTemplate();
+						});              
 			});  
+
+			function saveTemplate(){	
+					var _msgEl = $("#new_template_msg");
+					var _title = $("#template_title").val();
+					var _body = $("#template_body").val();
+					var _status = $("#template_status").val();
+					var _form = $("#new_template_form");
+					var _tbody = $("#template_list");
+					if(_title == "" || _body == ""){
+						_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing information!</span>")
+						return false;
+						}
+					var postdata = {
+							  'title': _title,
+							  'body':_body,
+							  'status': _status,							  
+							  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+							}												
+					var url = "${g.createLink(controller: 'template', action: 'newtemplate')}"
+					//ajax call here
+					var jqxhr = $.ajax({
+						  method: "POST",
+						  url: url,
+						  data: postdata
+						})
+					  .done(function(data) {
+							_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Template save successfully!</span>")
+							_tbody.append("<tr><td>" + _title +" </td><td>" + _body +"</td></tr>")
+							_form.trigger('reset')
+					  })
+					  .fail(function() {
+					    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
+					  })
+					  .always(function() { });
+					  
+					  return false;
+			}
 		</script>
 	</body>
 </html>

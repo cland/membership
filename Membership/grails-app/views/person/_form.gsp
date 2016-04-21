@@ -108,11 +108,15 @@
 				<g:field type="password" name="passwordConfirm" required="" value=""/>
 			</div>
 		</g:if>
-			
+		<div class="fieldcontain">
+			<label for="isStaff">
+				<g:message code="user.isstaff.label" default="Is Staff?" />				
+			</label>
+			<g:checkBox name="isStaff" value="${personInstance?.staffMemberStatus}" />
+		</div>	
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'enabled', 'error')} ">
 			<label for="enabled">
-				<g:message code="user.enabled.label" default="Enabled" />
-				
+				<g:message code="user.enabled.label" default="Enabled" />				
 			</label>
 			<g:checkBox name="enabled" value="${personInstance?.enabled}" />
 		</div>

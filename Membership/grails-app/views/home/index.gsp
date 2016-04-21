@@ -402,11 +402,7 @@ var cbc_params = {
 		                        "DONE":function(){			                      	 
 		                         	// $dialog.dialog('close')
 		                         	 $dialog.dialog('destroy').remove()
-		                            },
-		                         "CANCEL":function(){
-		                        	 $dialog.dialog('destroy').remove()
-		                      	  // $dialog.dialog('close')
-		                             }
+		                            }
 			                    },
 		                    close: function(event,ui){
 		                  	  	$dialog.dialog('destroy').remove()
