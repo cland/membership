@@ -249,8 +249,48 @@ class BootStrap {
 		keyword = new Keywords(name: "ClientTypes",label:"Client Types",category:"system_keywords")
 		keyword.addToValues(new Keywords(name:"Standard",label:"Standard",category:"System")	)
 		keyword.addToValues(new Keywords(name:"Member",label:"Member",category:"System")	)
+		keyword.addToValues(new Keywords(name:"Contract",label:"Premium Contract",category:"System")	)
 		keyword.save()
 		if(keyword.hasErrors()){ println keyword.errors }
 		
-	}
+		//Time slots: 10:00 - 11:30  |  11:30 - 13:00 | 13:00 - 14:30
+		keyword = new Keywords(name: "PartyTimeSlots",label:"Time Slots",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Timeslot1",label:"10:00 - 11:30",category:"Birth Day Time")	)
+		keyword.addToValues(new Keywords(name:"Timeslot2",label:"11:30 - 13:00",category:"Birth Day Time")	)
+		keyword.addToValues(new Keywords(name:"Timeslot3",label:"13:00 - 14:30",category:"Birth Day Time")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		//booking type: Birthday | Group
+		keyword = new Keywords(name: "BookingType",label:"Booking Type",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Birthday",label:"Birthday",category:"Booking Type")	)
+		keyword.addToValues(new Keywords(name:"Group",label:"Group",category:"Booking Type")	)		
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		//room: Red | Yellow
+		keyword = new Keywords(name: "Room",label:"Rooms",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Room1",label:"Red",category:"Rooms")	)
+		keyword.addToValues(new Keywords(name:"Room2",label:"Yellow",category:"Rooms")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		//Party Package: STANDARD | Wiggly Party
+		keyword = new Keywords(name: "PartyPackage",label:"Party Packages",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Package1",label:"Standard",category:"Party Packages")	)
+		keyword.addToValues(new Keywords(name:"Package2",label:"Wiggly Party",category:"Party Packages")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		//Party Theme: Fairy | Children's Jungle | Happy Birthday | Princess | Under The Sea
+		keyword = new Keywords(name: "PartyTheme",label:"Party Themes",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Theme1",label:"Fairy",category:"Party Themes")	)
+		keyword.addToValues(new Keywords(name:"Theme2",label:"Childres's Jungle",category:"Party Themes")	)
+		keyword.addToValues(new Keywords(name:"Theme3",label:"Happy Birthday",category:"Party Themes")	)
+		keyword.addToValues(new Keywords(name:"Theme4",label:"Princess",category:"Party Themes")	)
+		keyword.addToValues(new Keywords(name:"Theme5",label:"Under The Sea",category:"Party Themes")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+	} //end createOther
 }

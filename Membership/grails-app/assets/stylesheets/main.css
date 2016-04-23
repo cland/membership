@@ -249,6 +249,8 @@ label {
 	cursor: pointer;
 	display: inline-block;
 	margin: 0 0.25em 0 0;
+	color: #666666;
+	font-weight:bold;
 }
 
 input, select, textarea {
@@ -700,7 +702,7 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
   padding: 10px;
   text-align: center;
 }
-.hide, .wait,.send-wait {display:none;padding:10px; border:solid 1px red;text-align:center;font-weight:bold;font-size:1.5em;color:#EB8F2A;}
+.hide, .wait,.send-wait,.bookingwait {display:none;padding:10px; border:solid 1px red;text-align:center;font-weight:bold;font-size:1.5em;color:#EB8F2A;}
 
 /** TIME PICKER CSS **/
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }

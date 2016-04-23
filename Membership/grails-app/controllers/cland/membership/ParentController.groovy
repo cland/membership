@@ -2,6 +2,7 @@ package cland.membership
 
 import static org.springframework.http.HttpStatus.*
 import cland.membership.security.Person
+import cland.membership.lookup.*
 import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper
@@ -207,7 +208,7 @@ class ParentController {
 		Office office = Office.list().first()
 		
 		Parent parentInstance = new Parent(params.parent)
-		parentInstance.clientType = "Standard"
+		parentInstance.clientType = Keywords.findByName("Standard")
 		def num = cbcApiService.generateIdNumber(new Date(),5)
 		parentInstance.membershipNo = num
 		Person person1 = new Person(params.parent.person1)

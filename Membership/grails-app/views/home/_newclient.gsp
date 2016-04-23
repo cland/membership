@@ -47,12 +47,13 @@
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
 				<div class="cell">
-					<g:radioGroup 
-						values="${cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values}"
-						labels="${cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values}" 
-						name="parent.relationship">
-						${it.radio} <g:message code="${it.label}" />
-					</g:radioGroup>
+					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort() %>
+						<g:radioGroup 
+							values="${reltypes}"
+							labels="${reltypes}" 
+							name="parent.relationship">
+							${it.radio} <g:message code="${it.label}" />
+						</g:radioGroup>
 				</div>			
 			</div>
 		
@@ -73,7 +74,10 @@
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date1" class="datepick_single_past" value=""/>
 					<g:textField name="child.person.gender" placeholder="Gender"  value=""/>
 				</div>
-				<div class="cell">Attach Photo:<input type="file" name="child.photo"/></div>			
+				<div class="cell">
+					Head Shot Photo:<input type="file" name="child.headphoto"/><br/>
+					Full Body Photo:<input type="file" name="child.bodyphoto"/>
+				</div>			
 			</div>
 			<div class="row"><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
 			<div class="row">
@@ -88,7 +92,10 @@
 					<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date2" class="datepick_single_past" value=""/>
 					<g:textField name="child.person.gender" placeholder="Gender" value=""/>
 				</div>
-				<div class="cell">Attach Photo:<input type="file" name="child.photo"/></div>			
+				<div class="cell">
+					Head Shot Photo:<input type="file" name="child.headphoto"/><br/>
+					Full Body Photo:<input type="file" name="child.bodyphoto"/>
+				</div>			
 			</div>	
 		</div>
 	</fieldset>

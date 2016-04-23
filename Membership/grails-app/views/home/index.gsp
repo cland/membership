@@ -418,6 +418,23 @@ var cbc_params = {
 		  function getMillis(minutes){
 			  return (minutes * 60000);
 			  }
+
+		  function onSuccessBookingCallbackHander(data,textStatus){
+				//append any new visits to the live panel
+				$("#newgroup_form").trigger("reset").hide();
+				$("#booking-message").addClass("message").removeClass("error");
+			}
+		function onBookingLoading(){
+			$(".bookingwait").show()
+		}
+		function onBookingComplete(){
+			$(".bookingwait").hide()
+		}
+		function onBookingFailure(data,textStatus){
+			$(".bookingwait").hide()
+			$("#booking-message").html("Operation failed with status '" + textStatus + "'")
+			$("#booking-message").removeClass("message").addClass("error");
+		}
 	</script>		
 	</body>
 </html>

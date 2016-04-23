@@ -2,6 +2,7 @@ package cland.membership
 
 import java.util.Date;
 
+import cland.membership.lookup.Keywords;
 import cland.membership.security.Person
 
 class Parent {
@@ -11,7 +12,7 @@ class Parent {
 	Person person1
 	Person person2
 	String membershipNo
-	String clientType
+	Keywords clientType
 	String comments
 	String relationship
 	/** Admin Tracking Information **/
@@ -21,7 +22,7 @@ class Parent {
 	Date lastUpdated
 	String history
 	static transients = ["createdByName","lastUpdatedByName"]
-	static hasMany = [children:Child] 
+	static hasMany = [children:Child, contracts:Contract] 
     static constraints = {
 		person2 nullable: true
 		comments nullable: true

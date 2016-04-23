@@ -1,13 +1,18 @@
 package cland.membership
 
-
-
 import static org.springframework.http.HttpStatus.*
+import cland.membership.security.Person
+import cland.membership.lookup.*
+import grails.converters.JSON
 import grails.transaction.Transactional
+import java.text.SimpleDateFormat
 
 @Transactional(readOnly = true)
 class BookingController {
-
+	def springSecurityService
+	def cbcApiService
+	def emailService
+	def nexmoService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -100,5 +105,30 @@ class BookingController {
             }
             '*'{ render status: NOT_FOUND }
         }
-    }
-}
+    } //end notFound
+	
+	@Transactional
+	def newbooking(){
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+		Office office = Office.list().first()
+		def bookingInstance = new Booking()
+		
+		//contact/parent
+		Parent parentInstance = new Parent(params.parent)
+		parentInstance.clientType = Keywords.findByName("Standard")
+		def num = cbcApiService.generateIdNumber(new Date(),5)
+		parentInstance.membershipNo = num
+		Person person1 = new Person(params.person)
+		person1.office = office
+		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.password = person1.username
+		person1.enabled = false
+		
+		if(!person1.save(flush:true)){
+			println person1.errors
+			render person1.errors as JSON
+			return
+		}
+		bookingInstance.person = person1
+	}
+} //end class
