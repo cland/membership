@@ -420,12 +420,24 @@ var cbc_params = {
 			  }
 
 		  function onSuccessBookingCallbackHander(data,textStatus){
+			  $(".bookingwait").hide()
+			  $("#booking-message").show()
+			  $("#newgroup_form").show()
 				//append any new visits to the live panel
-				$("#newgroup_form").trigger("reset").hide();
-				$("#booking-message").addClass("message").removeClass("error");
+				if(data.result == "success"){
+					$("#newgroup_form").trigger("reset").hide();
+					$("#booking-message").addClass("message").removeClass("errors");
+					$("#booking-message").html("Booking saved successfully!")
+				}else{
+					$("#booking-message").addClass("errors").removeClass("message");
+					$("#booking-message").html("Error: " + data.message)					
+				}
+				
 			}
 		function onBookingLoading(){
 			$(".bookingwait").show()
+			$("#booking-message").hide()
+			$("#newgroup_form").hide()
 		}
 		function onBookingComplete(){
 			$(".bookingwait").hide()
@@ -433,7 +445,7 @@ var cbc_params = {
 		function onBookingFailure(data,textStatus){
 			$(".bookingwait").hide()
 			$("#booking-message").html("Operation failed with status '" + textStatus + "'")
-			$("#booking-message").removeClass("message").addClass("error");
+			$("#booking-message").removeClass("message").addClass("errors");
 		}
 	</script>		
 	</body>

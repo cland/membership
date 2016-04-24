@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<a href="#list-booking" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav navpage" role="navigation">
+		<div class="nav navpage" style="display:none" role="navigation">
 			<ul>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
@@ -23,8 +23,9 @@
 			<thead>
 					<tr>
 						<th><g:message code="booking.person.label" default="Contact Person" /></th>
-						<th><g:message code="booking.date.label" default="Date" />		
-						<th><g:message code="booking.mobile.label" default="Contact No." />					
+						<th><g:message code="booking.date.label" default="Date" />	
+						<th><g:message code="booking.timeslot.label" default="Time" />	
+						<th><g:message code="booking.mobile.label" default="Contact No." />												
 						<g:sortableColumn property="numKids" title="${message(code: 'booking.numKids.label', default: 'No. of Kids')}" />					
 						<g:sortableColumn property="numAduls" title="${message(code: 'booking.numAdults.label', default: 'No. of Adults')}" />					
 						<th><g:message code="booking.person.label" default="Birthday Child" /></th>
@@ -34,9 +35,10 @@
 				<tbody>
 				<g:each in="${bookingInstanceList}" status="i" var="bookingInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						<td><g:link action="show" id="${bookingInstance.id}">${fieldValue(bean: bookingInstance, field: "person")}</g:link></td>
-						<td>${bookingInstance?.bookingDate?.format("dd MMM yyyy HH:mm") }</td>
-						<td>${fieldValue(bean: bookingInstance, field: "person.mobileNo")}</td>	
+						<td><g:link action="show" id="${bookingInstance.id}">${fieldValue(bean: bookingInstance, field: "parent")}</g:link></td>
+						<td>${bookingInstance?.bookingDate?.format("dd MMM yyyy") }</td>
+						<td>${bookingInstance?.timeslot?.label}</td>
+						<td>${bookingInstance?.parent?.person1?.mobileNo}</td>							
 						<td>${fieldValue(bean: bookingInstance, field: "numKids")}</td>					
 						<td>${fieldValue(bean: bookingInstance, field: "numAdults")}</td>
 						<td>${fieldValue(bean: bookingInstance, field: "birthdayChild")}</td>									

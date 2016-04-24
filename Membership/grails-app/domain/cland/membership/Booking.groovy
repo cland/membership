@@ -11,17 +11,21 @@ class Booking {
 	transient groupManagerService
 	transient cbcApiService
 	static attachmentable = true
-	Person person
+	//Person person
+	Parent parent
 	Child birthdayChild
-	DateTime bookingDate
-	Keywords timeslot  		// [PartyTimeSlots] 10:00 - 11:30  |  11:30 - 13:00 | 13:00 - 14:30		
+	Date bookingDate
+		
 	Integer numKids
 	Integer numAdults
 	String comments
+	
+	Keywords timeslot  		// [PartyTimeSlots] 10:00 - 11:30  |  11:30 - 13:00 | 13:00 - 14:30
 	Keywords bookingType  	// [BookingType]	birthday | group
 	Keywords room			// [Room]			red | yellow
 	Keywords partyPackage 	// [PartyPackage]	STANDARD | Wiggly Party
 	Keywords partyTheme		// [PartyTheme]		Fairy | Children's Jungle | Happy Birthday | Princess | Under The Sea
+	
 	/** Admin Tracking Information **/
 	long createdBy
 	long lastUpdatedBy
@@ -61,7 +65,7 @@ class Booking {
 	}
 	def toMap(){
 		return [id:id,
-			person:person.toMap(),
+			parent:parent.toMap(),
 			birthdaychild:birthdayChild.toMap(),
 			bookingdate:bookingDate,
 			timeslot:timeslot?.toMap(),

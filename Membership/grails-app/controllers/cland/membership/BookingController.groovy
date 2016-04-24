@@ -1,7 +1,7 @@
 package cland.membership
 
 import static org.springframework.http.HttpStatus.*
-import cland.membership.security.Person
+import cland.membership.security.*
 import cland.membership.lookup.*
 import grails.converters.JSON
 import grails.transaction.Transactional
@@ -109,26 +109,110 @@ class BookingController {
 	
 	@Transactional
 	def newbooking(){
-		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
-		def bookingInstance = new Booking()
-		
-		//contact/parent
-		Parent parentInstance = new Parent(params.parent)
-		parentInstance.clientType = Keywords.findByName("Standard")
-		def num = cbcApiService.generateIdNumber(new Date(),5)
-		parentInstance.membershipNo = num
-		Person person1 = new Person(params.person)
-		person1.office = office
-		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
-		person1.password = person1.username
-		person1.enabled = false
-		
-		if(!person1.save(flush:true)){
-			println person1.errors
-			render person1.errors as JSON
+		println params
+		def result = []
+		try{
+			def dfmt = new SimpleDateFormat("dd-MMM-yyyy")
+			Office office = Office.list().first()
+			def bookingInstance = new Booking()
+			
+			bookingInstance.bookingDate = dfmt.parse(params.booking.date) 
+			bookingInstance.timeslot = Keywords.get(params?.booking.timeslot)
+			bookingInstance.numKids = Integer.parseInt(params?.booking.totalkidcount)
+			bookingInstance.numAdults = Integer.parseInt(params?.booking.totaladultcount)
+			bookingInstance.comments = params?.booking.comments
+			bookingInstance.bookingType = Keywords.get(params?.booking.bookingtype)
+			bookingInstance.room = Keywords.get(params?.booking.room)
+			bookingInstance.partyPackage = Keywords.get(params?.booking.partyPackage)
+			bookingInstance.partyTheme = Keywords.get(params?.booking.partyTheme)
+			
+			
+			// contact/parent
+			Parent parentInstance = new Parent(params.parent)
+			parentInstance.clientType = Keywords.findByName("Standard")
+			def num = cbcApiService.generateIdNumber(new Date(),5)
+			parentInstance.membershipNo = num
+			
+			Person person1 = new Person(params.parent.person1)
+			person1.office = office
+			person1.username = person1?.firstName?.toLowerCase() + "." + person1?.lastName?.toLowerCase()
+			person1.password = person1.username
+			person1.enabled = false
+			
+			if(!person1.save(flush: true)){
+				println person1.errors
+				result = [result:"failure",message:"Failed to contact details"]
+				render result as JSON
+				return
+			}
+			parentInstance.person1 = person1
+			
+			//save the birthday child
+			def child = new Child()
+			def p = new Person()
+			p.firstName = params.child.person.lastname
+			p.lastName = params.child.person.lastname
+			p.dateOfBirth = new Date(params.child.person.dateOfBirth)
+			p.gender = params.child.person.gender
+			p.office = office
+			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+			p.password = p.username
+			p.enabled = false
+			p.mobileNo = "-1"
+			if(!p.save(flush: true)){
+				println p.errors
+				result = [result:"failure",message:"Failed to save child details"]
+				render result as JSON
+				return
+			}
+			child.person = p
+			if(parentInstance.children){
+				child.accessNumber = parentInstance.children.size() + 1
+			}else{
+				child.accessNumber = 1
+			}
+			parentInstance.addToChildren(child)
+			
+			if(!parentInstance.save(flush: true)){
+				println parentInstance.errors
+				result = [result:"failure",message:"failed to save parent details."]
+				render result as JSON
+				return
+			}
+			
+			println "Success"
+			
+			bookingInstance.parent = parentInstance
+			bookingInstance.birthdayChild = child					
+			
+			//childlead
+			params.childlead.firstname.eachWithIndex { value, index ->
+				def childlead = new ChildLead()
+				childlead.firstName = value 
+				childlead.lastName = params.childlead.lastname[index]
+				childlead.mobileNo = params.childlead.mobileno[index]
+				
+				bookingInstance.addToChildren(childlead)				
+			}
+			
+			//save the booking
+			if(!bookingInstance.save(flush:true)){
+				println bookingInstance.errors
+				result = [result:"failure",message:"Failed to save BOOKING details. "]
+				render result as JSON
+				return
+			}
+			
+			result = [result:"success"]
+			result.putAll(bookingInstance.toMap())
+			render result as JSON
+		}catch(Exception e){
+			println(e.printStackTrace())
+			result = [result:"failure",message:"Error saving booking. [" + e.getMessage() + "]"]
+			render result as JSON
 			return
 		}
-		bookingInstance.person = person1
-	}
+		
+		
+	} //end function newbooking
 } //end class

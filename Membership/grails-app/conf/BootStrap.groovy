@@ -285,7 +285,7 @@ class BootStrap {
 		//Party Theme: Fairy | Children's Jungle | Happy Birthday | Princess | Under The Sea
 		keyword = new Keywords(name: "PartyTheme",label:"Party Themes",category:"system_keywords")
 		keyword.addToValues(new Keywords(name:"Theme1",label:"Fairy",category:"Party Themes")	)
-		keyword.addToValues(new Keywords(name:"Theme2",label:"Childres's Jungle",category:"Party Themes")	)
+		keyword.addToValues(new Keywords(name:"Theme2",label:"Children's Jungle",category:"Party Themes")	)
 		keyword.addToValues(new Keywords(name:"Theme3",label:"Happy Birthday",category:"Party Themes")	)
 		keyword.addToValues(new Keywords(name:"Theme4",label:"Princess",category:"Party Themes")	)
 		keyword.addToValues(new Keywords(name:"Theme5",label:"Under The Sea",category:"Party Themes")	)

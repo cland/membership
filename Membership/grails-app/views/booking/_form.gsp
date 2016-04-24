@@ -13,19 +13,19 @@
 
 <div class="fieldcontain ${hasErrors(bean: bookingInstance, field: 'numAduls', 'error')} ">
 	<label for="numAduls">
-		<g:message code="booking.numAduls.label" default="Num Aduls" />
+		<g:message code="booking.numAdults.label" default="Num Adults" />
 		
 	</label>
-	<g:field name="numAduls" type="number" value="${bookingInstance.numAduls}"/>
+	<g:field name="numAduls" type="number" value="${bookingInstance.numAdults}"/>
 
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: bookingInstance, field: 'person', 'error')} required">
-	<label for="person">
-		<g:message code="booking.person.label" default="Person" />
+	<label for="parent">
+		<g:message code="booking.parent.label" default="Contact parent" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="person" name="person.id" from="${cland.membership.security.Person.list()}" optionKey="id" required="" value="${bookingInstance?.person?.id}" class="many-to-one"/>
+	<g:select id="parent" name="parent.id" from="${cland.membership.Parent.list()}" optionKey="id" required="" value="${bookingInstance?.parent?.id}" class="many-to-one"/>
 
 </div>
 

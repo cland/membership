@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<a href="#show-booking" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav navpage" role="navigation">
+		<div class="nav navpage"  style="display:none" role="navigation">
 			<ul>
 				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
@@ -31,20 +31,20 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${bookingInstance?.numAduls}">
+				<g:if test="${bookingInstance?.numAdults}">
 				<li class="fieldcontain">
 					<span id="numAduls-label" class="property-label"><g:message code="booking.numAduls.label" default="Num Aduls" /></span>
 					
-						<span class="property-value" aria-labelledby="numAduls-label"><g:fieldValue bean="${bookingInstance}" field="numAduls"/></span>
+						<span class="property-value" aria-labelledby="numAduls-label"><g:fieldValue bean="${bookingInstance}" field="numAdults"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${bookingInstance?.person}">
+				<g:if test="${bookingInstance?.parent}">
 				<li class="fieldcontain">
-					<span id="person-label" class="property-label"><g:message code="booking.person.label" default="Person" /></span>
+					<span id="person-label" class="property-label"><g:message code="booking.person.label" default="Contact person" /></span>
 					
-						<span class="property-value" aria-labelledby="person-label"><g:link controller="person" action="show" id="${bookingInstance?.person?.id}">${bookingInstance?.person?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="person-label"><g:link controller="person" action="show" id="${bookingInstance?.parent?.id}">${bookingInstance?.parent?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
