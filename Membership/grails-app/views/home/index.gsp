@@ -100,7 +100,7 @@ var cbc_params = {
 						<li><a href="#tab-3">Group/Birthday Booking</a></li>									
 					</ul>
 					<div id="tab-1">
-						<form action="">
+						<form id="search_form" name="search_form" action="${request.contextPath}/parent/checkin" enctype="multipart/form-data">
 							<g:render template="searchform"></g:render>
 							<div id="searchform-actions" style="display:none">
 								<g:textField name="child.searchvisit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time_search" class="datetime-picker"/>
@@ -110,7 +110,13 @@ var cbc_params = {
 						</form>
 					</div>
 					<div id="tab-2">
-						<g:render template="newclient"></g:render>
+						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']">
+							<g:render template="newclient"></g:render>
+							<fieldset class="buttons">
+								<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
+								<input type="button" name="cancel" onclick="document.location='${request.contextPath}/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
+							</fieldset>
+						</g:uploadForm>
 					</div>
 					<div id="tab-3">
 						<g:render template="groupclient"></g:render>

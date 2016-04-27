@@ -6,6 +6,8 @@ import java.util.Date;
 class Contract {
 	transient groupManagerService
 	transient cbcApiService
+	static attachmentable = true
+	
 	String contractNo
 	String status
 	/** Admin Tracking Information **/

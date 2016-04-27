@@ -9,11 +9,14 @@ class Visit {
 	transient cbcApiService
 	transient springSecurityService
 	transient groupManagerService
+	static attachmentable = true
 	//Date visitDate
 	Date starttime
 	Date endtime
 	Date timerCheckPoint
 	String status
+	String contactNo
+	String photoKey
 	static belongsTo = [child:Child]
 	long createdBy
 	long lastUpdatedBy
@@ -23,13 +26,18 @@ class Visit {
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
+		contactNo nullable:true
 		endtime nullable:true
+		photoKey nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
 		lastUpdatedBy = curId	
 		timerCheckPoint = starttime	
+		if(contactNo == null || contactNo == ""){
+			contactNo = child?.parent?.person1?.mobileNo
+		}
 	}
 
 	def beforeUpdate() {
@@ -57,8 +65,10 @@ class Visit {
 			endtime:endtime?.format("dd MMM yyyy HH:mm"),
 			enddatetime:endtime,
 			status:status,
+			contactno:contactNo,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
+			photokey:photoKey,
 			params:params]
 	}
 	def toAutoCompleteMap(){		
@@ -66,6 +76,7 @@ class Visit {
 		label:starttime?.format("dd-MMM-yyyy") + " " + starttime?.format("HH:mm") + " to " + endtime?.format("HH:mm") + " | " + status,
 		value:id,
 		child:(this==null?Child.get(id):this),
+		photokey:photoKey,
 		category:(status==null?"Unknown":status)]
 	}
 	String toString(){
@@ -79,4 +90,12 @@ class Visit {
 		Person user = Person.get(lastUpdatedBy)
 		return (user==null?"unknown":user?.toString())
 	}
+	/**
+	 * To ensure that all attachments are removed when the "owner" domain is deleted.
+	 */
+	transient def beforeDelete = {
+		withNewSession{
+		  removeAttachments()
+		}
+	 }
 } //end class

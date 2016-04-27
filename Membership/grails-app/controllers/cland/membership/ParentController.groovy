@@ -6,10 +6,14 @@ import cland.membership.lookup.*
 import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+
+import com.macrobit.grails.plugins.attachmentable.domains.Attachment;
 
 @Transactional(readOnly = true)
 class ParentController {
@@ -18,7 +22,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST",newclient:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -204,6 +208,7 @@ class ParentController {
 	
 	@Transactional
 	def newclient(){
+		
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
 		
@@ -223,51 +228,98 @@ class ParentController {
 			return
 		}
 		parentInstance.person1 = person1
-
+		
+		//Emergency person
+		Person person2 = new Person(params.parent.person2)
+		person2.office = office
+		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.password = person2.username
+		person2.enabled = false
+		
+		if(!person2.save(flush:true)){
+			println person2.errors			
+		}else{
+			parentInstance.person2 = person2
+		}
+		
+		def newvisits = []
+		// save the children
 		params.child.person.firstname.eachWithIndex { value, index ->
-			def child = new Child()
-			def p = new Person()
-			p.firstName = value
-			p.lastName = params.child.person.lastname[index]
-			p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
-			p.gender = params.child.person.gender[index]
-			p.office = office
-			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
-			p.password = p.username
-			p.enabled = false
-			p.mobileNo = "-1"
-			if(!p.save(flush:true)){
-				println p.errors
-				render p.errors as JSON
-				return
+			if(value != "" & !value.isEmpty()){
+				def child = new Child()
+				def p = new Person()
+				p.firstName = value
+				p.lastName = params.child.person.lastname[index]
+				p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
+				p.gender =  Keywords.get(params.get("child.person.gender" + index))
+				p.office = office
+				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+				p.password = p.username
+				p.enabled = false
+				p.mobileNo = "-1"
+				if(!p.save(flush:true)){
+					println p.errors
+					request.withFormat {
+			            form multipartForm {
+			                flash.message = "Error!"
+			                redirect controller:"home", action: "index", method: "GET"
+			            }
+			            '*'{ render status: OK }
+			        }
+					return
+				}
+				child.person = p
+				attachUploadedFilesTo(p,["profilephoto" + index])
+				if(parentInstance.children){
+					child.accessNumber = parentInstance.children.size() + 1
+				}else{
+					child.accessNumber = 1
+				}
+				//is checkin required now?
+				println "Processing checkin..."
+				if( params.child.checkin[index] == "Yes" ){
+					//println ".. creating a visit now."
+					//println "time: " + params.child.visit.time[index]
+					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+					Date timein = dfmt.parse(params.child.visit.time[index]) 
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + (index + 1))									
+					child.addToVisits(visit)
+					
+					//attachUploadedFilesTo(visit,["visitphoto" + index])
+					newvisits.add("visitphoto" + (index + 1))
+				}
+								
+				parentInstance.addToChildren(child)			
 			}
-			child.person = p
-			if(parentInstance.children){
-				child.accessNumber = parentInstance.children.size() + 1
-			}else{
-				child.accessNumber = 1
-			}
-			//is checkin required now?
-			println "Processing checkin..."
-			if( params.child.checkin[index] == "Yes" ){
-				//println ".. creating a visit now."
-				//println "time: " + params.child.visit.time[index]
-				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
-				Date timein = dfmt.parse(params.child.visit.time[index]) 
-				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
-			//	visit.save()
-				child.addToVisits(visit)				
-			}
-			//child.save()
-			parentInstance.addToChildren(child)
 		}
 		if(!parentInstance.save(flush: true)){
 			println parentInstance.errors
-			render parentInstance.errors as JSON
+			request.withFormat {
+		            form multipartForm {
+		                flash.message = "Error!"
+		                redirect controller:"home", action: "index", method: "GET"
+		            }
+		            '*'{ render status: OK }
+		        }
 			return
 		}
+		
+		//attachUploadedFilesTo(parentInstance,["profilephoto1","profilephoto2"])
+		newvisits.each {
+			println(". Visit file key: " + it)		
+			def v = Visit.findByPhotoKey(it)
+			if(v != null){
+				attachUploadedFilesTo(v,[it.toString()])
+			}
+		}
 		println "Success"
-		render parentInstance.toMap() as JSON
+		request.withFormat {
+		            form multipartForm {
+		                flash.message = "Client create Successfully!"
+		                redirect controller:"home", action: "index", method: "GET"
+		            }
+		            '*'{ render status: OK }
+		        }
 	}
 	def search(){		
 		//def test = Child.get(1)
@@ -289,8 +341,12 @@ class ParentController {
 			}
 		}
 		def selectList = []
-		results.each {
-			selectList.add(it.toAutoCompleteMap())
+		if(results.size()>0){
+			results.each {
+				selectList.add(it.toAutoCompleteMap())
+			}
+		}else{
+			selectList = [id:-1,label:"No results found!",value:"",	childlist:null,category:"No Result"]
 		}
 
 		render selectList as JSON
@@ -328,14 +384,15 @@ class ParentController {
 		def result = []
 		def msg = ""		
 		Map<String, String[]> vars = request.getParameterMap()
+		println(vars)
 		def _starttime = vars?.starttime[0]
 		def _children = vars?.values[0]?.split(",")
-	
+		def _contactno = vars?.contactno[0]
 		_children.eachWithIndex { value, index ->
 			def child = Child.get(value)
 			if(child != null){
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
-				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno)
 				child.addToVisits(visit)
 				if(!child.save(flush:true)){
 					println(child.errors)
@@ -346,5 +403,97 @@ class ParentController {
 
 		result = [result:"success",message:msg]
 		render result as JSON
+	}
+	
+	@Transactional
+	def newclientajax(){
+		println ("======================================")
+		println("PARAMS")
+		println(params)
+		
+		println("REQUEST MAP")
+		Map<String, String[]> vars = request.getParameterMap()
+		println(vars)
+		println ("======================================")
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+		Office office = Office.list().first()
+		
+		Parent parentInstance = new Parent(params.parent)
+		parentInstance.clientType = Keywords.findByName("Standard")
+		def num = cbcApiService.generateIdNumber(new Date(),5)
+		parentInstance.membershipNo = num
+		Person person1 = new Person(params.parent.person1)
+		person1.office = office
+		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.password = person1.username
+		person1.enabled = false
+		
+		if(!person1.save(flush:true)){
+			println person1.errors
+			render person1.errors as JSON
+			return
+		}
+		parentInstance.person1 = person1
+		
+		//Emergency person
+		Person person2 = new Person(params.parent.person2)
+		person2.office = office
+		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.password = person2.username
+		person2.enabled = false
+		
+		if(!person2.save(flush:true)){
+			println person2.errors
+		}else{
+			parentInstance.person2 = person2
+		}
+		
+		// save the children
+		params.child.person.firstname.eachWithIndex { value, index ->
+			def child = new Child()
+			def p = new Person()
+			p.firstName = value
+			p.lastName = params.child.person.lastname[index]
+			p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
+			p.gender = Keywords.get(params.child.person.gender[index])
+			p.office = office
+			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+			p.password = p.username
+			p.enabled = false
+			p.mobileNo = "-1"
+			if(!p.save(flush:true)){
+				println p.errors
+				render p.errors as JSON
+				return
+			}
+			child.person = p
+			if(parentInstance.children){
+				child.accessNumber = parentInstance.children.size() + 1
+			}else{
+				child.accessNumber = 1
+			}
+			//is checkin required now?
+			println "Processing checkin..."
+			if( params.child.checkin[index] == "Yes" ){
+				//println ".. creating a visit now."
+				//println "time: " + params.child.visit.time[index]
+				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+				Date timein = dfmt.parse(params.child.visit.time[index])
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
+				attachUploadedFilesTo(visit,["visitphoto" + index])
+			//	visit.save()
+				child.addToVisits(visit)
+			}
+			//child.save()
+			attachUploadedFilesTo(child,["profilephoto" + index])  //TODO: Add attachment to child
+			parentInstance.addToChildren(child)
+		}
+		if(!parentInstance.save(flush: true)){
+			println parentInstance.errors
+			render parentInstance.errors as JSON
+			return
+		}
+		println "Success"
+		render parentInstance.toMap() as JSON
 	}
 } //end class

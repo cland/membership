@@ -62,7 +62,7 @@ class BootStrap {
 		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
 		//if(!race.save(flush: true)){
 			println "Race saved " + race
-			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", gender:Gender.MALE.toString(),	idNumber :"10101010101", dateOfBirth:(new Date() - 365*30),mobileNo:"+621859123")
+			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", idNumber :"10101010101", dateOfBirth:(new Date() - 365*30),mobileNo:"+621859123")
 			 
 		//	if(!personAdmin.save(flush: true)){
 		//		println("personAdmin error...")
@@ -71,7 +71,7 @@ class BootStrap {
 		//		println "Admin person saved!" //  + personAdmin.toString()
 		//	}
 			
-			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", gender:Gender.FEMALE.toString(),	idNumber :"156456556551", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
+			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", idNumber :"156456556551", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
 		//	if(!personDev.save(flush: true)){
 		//		println("personDev error...")
 		//		personDev.errors
@@ -250,6 +250,13 @@ class BootStrap {
 		keyword.addToValues(new Keywords(name:"Standard",label:"Standard",category:"System")	)
 		keyword.addToValues(new Keywords(name:"Member",label:"Member",category:"System")	)
 		keyword.addToValues(new Keywords(name:"Contract",label:"Premium Contract",category:"System")	)
+		keyword.save()
+		if(keyword.hasErrors()){ println keyword.errors }
+		
+		//Gender
+		keyword = new Keywords(name: "Gender",label:"Gender",category:"system_keywords")
+		keyword.addToValues(new Keywords(name:"Male",label:"Male",category:"System")	)
+		keyword.addToValues(new Keywords(name:"Female",label:"Female",category:"System")	)
 		keyword.save()
 		if(keyword.hasErrors()){ println keyword.errors }
 		

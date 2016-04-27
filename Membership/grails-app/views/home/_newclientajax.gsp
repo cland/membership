@@ -1,7 +1,12 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="cland.membership.lookup.*" %>
 <% def childcount=2 %>
-
+<g:formRemote id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']" 
+			update="livepanel" 
+			onSuccess="onSuccessNewClientCallbackHander(data,textStatus)"
+			onLoading="onLoading()"
+			onComplete="onComplete()"
+			onFailure="onFailure(data,textStatus)">
 	<g:set var="isEditMode" value="true"/>
 	<fieldset>
 	<legend >Parent/Guardian</legend>
@@ -44,7 +49,7 @@
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
 				<div class="cell">
-					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.id} %>
+					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort() %>
 						<g:radioGroup 
 							values="${reltypes?.id}"
 							labels="${reltypes}" 
@@ -96,7 +101,7 @@
 						<br/><g:radioGroup style="margin-top:15px;" 
 							values="${gender?.id}"
 							labels="${gender}" 
-							name="child.person.gender${index }">
+							name="child.person.gender">
 							${it.radio} <g:message code="${it.label}" />
 						</g:radioGroup>
 					</div>
@@ -108,4 +113,8 @@
 			</g:each>				
 		</div>
 	</fieldset>
-	
+	<fieldset class="buttons">
+		<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
+		<input type="button" name="cancel" onclick="document.location='${request.contextPath}/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
+	</fieldset>
+</g:formRemote>

@@ -8,7 +8,7 @@ class Child {
 	transient cbcApiService
 	transient springSecurityService
 	transient groupManagerService
-	
+	static attachmentable = true
 	Person person
 	BigInteger accessNumber
 	String comments
@@ -80,4 +80,12 @@ class Child {
 		def _list = visits.findAll {it.status == "Active"}
 		return (_list?.size() > 0)
 	}
+	/**
+	 * To ensure that all attachments are removed when the "owner" domain is deleted.
+	 */
+	transient def beforeDelete = {
+		withNewSession{
+		  removeAttachments()
+		}
+	 }
 }//end class

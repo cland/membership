@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import cland.membership.*
+import cland.membership.lookup.*
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 //import org.apache.commons.collections.list.LazyList;
@@ -15,6 +16,8 @@ class Person implements Serializable {
 	transient cbcApiService
 	transient springSecurityService
 	def groupManagerService
+	static attachmentable = true
+	
 	/** FROM SPRING SECURITY **/
 	private static final long serialVersionUID = 1
 	String username
@@ -30,7 +33,7 @@ class Person implements Serializable {
 	String knownAs
 	String title
 	String email
-	String gender
+	Keywords gender
 	Race race
 	String idNumber
 	String mobileNo
@@ -56,7 +59,7 @@ class Person implements Serializable {
 		knownAs nullable: true
 		title nullable: true
 		email nullable: true
-		gender inList: Gender.list(), nullable: true		
+		gender nullable: true		
 		accountExpired nullable: true
 		accountLocked nullable: true
 		passwordExpired nullable: true
@@ -181,4 +184,12 @@ class Person implements Serializable {
 		FactoryUtils.instantiateFactory(Phone.class))
 	}
 	*/
+	/**
+	 * To ensure that all attachments are removed when the "owner" domain is deleted.
+	 */
+	transient def beforeDelete = {
+		withNewSession{
+		  removeAttachments()
+		}
+	 }
 } //end class

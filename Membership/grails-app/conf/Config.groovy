@@ -167,3 +167,4 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 
 grails.plugin.springsecurity.logout.postOnly = false
+grails.attachmentable.poster.evaluator = { getPrincipal() }

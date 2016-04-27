@@ -14,7 +14,7 @@ class ChildLead {
 	transient cbcApiService
 	transient springSecurityService
 	transient groupManagerService
-	
+	static attachmentable = true
 	String firstName
 	String lastName
 	String email
@@ -96,4 +96,12 @@ class ChildLead {
 				birthDate)
 		return (yearNow - birthYear - (offset > now ? 1 : 0))
 	}
+	/**
+	 * To ensure that all attachments are removed when the "owner" domain is deleted.
+	 */
+	transient def beforeDelete = {
+		withNewSession{
+		  removeAttachments()
+		}
+	 }
 }//end class

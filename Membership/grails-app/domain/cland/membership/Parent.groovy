@@ -65,8 +65,9 @@ class Parent {
 	}
 	def toAutoCompleteMap(){
 		return [id:id,
-		label:person1.toString() + " (" + relationship + ") | " + person1?.mobileNo + " | " + person1?.email,
+		label:person1.toString() + " (" + relationship + ") | " + person1?.email,
 		value:id,
+		contactno:person1?.mobileNo,
 		childlist:children*.toMap(),
 		office:[name: person1?.office?.name,id:person1?.office?.id],
 		category:(relationship != "" ? relationship : "Client")]
