@@ -18,7 +18,7 @@ class Child {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
-	static transients = ['visitCount',"createdByName","lastUpdatedByName"]
+	static transients = ['visitCount',"createdByName","lastUpdatedByName","activeVisit"]
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
     static constraints = {
@@ -77,8 +77,14 @@ class Child {
 		return visits?.size()
 	}
 	boolean isActive(){
-		def _list = visits.findAll {it.status == "Active"}
-		return (_list?.size() > 0)
+		return (getActiveVisit() == null?false:true)
+		
+		//def _list = visits.findAll {it.status == "Active"}
+		//return (_list?.size() > 0)
+	}
+	Visit getActiveVisit(){
+		def v = visits.find {it.status == "Active"}
+		return v
 	}
 	/**
 	 * To ensure that all attachments are removed when the "owner" domain is deleted.

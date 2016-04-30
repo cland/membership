@@ -1,6 +1,7 @@
 package cland.membership
 
 import cland.membership.security.Person
+
 import java.util.Date;
 
 import org.joda.time.DateTime
@@ -22,7 +23,7 @@ class Visit {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
-	static transients = ["createdByName","lastUpdatedByName"]
+	static transients = ["createdByName","lastUpdatedByName","visitPhotoId"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
@@ -69,6 +70,7 @@ class Visit {
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			photokey:photoKey,
+			visitphotoid:visitPhotoId,
 			params:params]
 	}
 	def toAutoCompleteMap(){		
@@ -98,4 +100,12 @@ class Visit {
 		  removeAttachments()
 		}
 	 }
+	Long getVisitPhotoId(String key=null){
+		Long pid = null
+		if(this.attachments?.size() > 0){
+			def tmp = this.attachments[0]
+			pid = tmp?.id
+		}
+		return pid
+	}
 } //end class

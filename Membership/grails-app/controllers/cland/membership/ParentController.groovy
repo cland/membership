@@ -22,7 +22,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST",newclient:"POST"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -208,7 +208,7 @@ class ParentController {
 	
 	@Transactional
 	def newclient(){
-		
+		println(params)
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
 		
@@ -244,14 +244,63 @@ class ParentController {
 		
 		def newvisits = []
 		// save the children
+		def i = 1
+		while(params.get("child.person.lastname" + i)){
+			def child = new Child()
+			def p = new Person()
+			p.firstName = params.get("child.person.firstname" + i)
+			p.lastName = params.get("child.person.lastname" + i)
+			p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
+			p.gender =  Keywords.get(params.get("child.person.gender" + i))
+			p.office = office
+			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+			p.password = p.username
+			p.enabled = false
+			p.mobileNo = "-1"
+			if(!p.save(flush:true)){
+				println p.errors
+				request.withFormat {
+					form multipartForm {
+						flash.message = "Error!"
+						redirect controller:"home", action: "index", method: "GET"
+					}
+					'*'{ render status: OK }
+				}
+				return
+			}
+			child.person = p
+			attachUploadedFilesTo(p,["profilephoto" + i])
+			if(parentInstance.children){
+				child.accessNumber = parentInstance.children.size() + 1
+			}else{
+				child.accessNumber = 1
+			}
+			// is checkin required now? IF NOT ARRAY NOT WORKING:
+			println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
+			if( params.get("child.checkin" + i) == "Yes" ){
+				//println ".. creating a visit now."
+				//println "time: " + params.child.visit.time[index]
+				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+				Date timein = dfmt.parse(params.get("child.visit.time"+ i))
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + i)
+				child.addToVisits(visit)
+				
+				//attachUploadedFilesTo(visit,["visitphoto" + index])
+				newvisits.add("visitphoto" + i)
+			}
+							
+			parentInstance.addToChildren(child)
+			i++
+		}
+		/**
 		params.child.person.firstname.eachWithIndex { value, index ->
 			if(value != "" & !value.isEmpty()){
 				def child = new Child()
 				def p = new Person()
 				p.firstName = value
-				p.lastName = params.child.person.lastname[index]
-				p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
-				p.gender =  Keywords.get(params.get("child.person.gender" + index))
+				p.lastName = params.get("child.person.lastname" + (index+1))
+				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + (index+1)))
+				p.gender =  Keywords.get(params.get("child.person.gender" + (index+1)))
 				p.office = office
 				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
 				p.password = p.username
@@ -269,19 +318,19 @@ class ParentController {
 					return
 				}
 				child.person = p
-				attachUploadedFilesTo(p,["profilephoto" + index])
+				attachUploadedFilesTo(p,["profilephoto" + (index + 1)])
 				if(parentInstance.children){
 					child.accessNumber = parentInstance.children.size() + 1
 				}else{
 					child.accessNumber = 1
 				}
-				//is checkin required now?
-				println "Processing checkin..."
-				if( params.child.checkin[index] == "Yes" ){
+				//TODO: is checkin required now? IF NOT ARRAY NOT WORKING: 
+				println "Processing checkin...'" + params.get("child.checkin" + (index+1)) + "'"
+				if( params.get("child.checkin" + (index+1)) == "Yes" ){
 					//println ".. creating a visit now."
 					//println "time: " + params.child.visit.time[index]
 					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
-					Date timein = dfmt.parse(params.child.visit.time[index]) 
+					Date timein = dfmt.parse(params.get("child.visit.time"+ (index+1))) 
 					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + (index + 1))									
 					child.addToVisits(visit)
 					
@@ -292,6 +341,8 @@ class ParentController {
 				parentInstance.addToChildren(child)			
 			}
 		}
+		*/
+		
 		if(!parentInstance.save(flush: true)){
 			println parentInstance.errors
 			request.withFormat {
@@ -385,6 +436,9 @@ class ParentController {
 		def msg = ""		
 		Map<String, String[]> vars = request.getParameterMap()
 		println(vars)
+		println ("=======")
+		println (params)
+		/*
 		def _starttime = vars?.starttime[0]
 		def _children = vars?.values[0]?.split(",")
 		def _contactno = vars?.contactno[0]
@@ -400,10 +454,11 @@ class ParentController {
 				}
 			}
 		}
+		*/
 
 		result = [result:"success",message:msg]
 		render result as JSON
-	}
+	} //end function checkin
 	
 	@Transactional
 	def newclientajax(){

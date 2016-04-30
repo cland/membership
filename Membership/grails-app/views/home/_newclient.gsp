@@ -85,13 +85,13 @@
 				<div class="row">
 					<div class="cell" style="width:20px;"><h1>${index }.</h1></div>
 					<div class="cell border-bottom">
-						<g:textField name="child.person.firstname" placeholder="First Name"  value="" id="child-firstname-${index }"/><br/>
-						<g:textField name="child.person.lastname" placeholder="Last Name"  value="" id="child-lastname-${index }"/><br/>
-						Check-in now: <g:checkBox name="child.checkin" value="Yes" />
-						<g:textField name="child.visit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
+						<g:textField name="child.person.firstname${index }" placeholder="First Name"  value="" id="child-firstname-${index }"/><br/>
+						<g:textField name="child.person.lastname${index }" placeholder="Last Name"  value="" id="child-lastname-${index }"/><br/>
+						Check-in now: <g:checkBox name="child.checkin${index }" value="Yes" />
+						<g:textField name="child.visit.time${index }" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
 					</div>
 					<div class="cell border-bottom">
-						<g:textField name="child.person.dateOfBirth" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
+						<g:textField name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
 						<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
 						<br/><g:radioGroup style="margin-top:15px;" 
 							values="${gender?.id}"

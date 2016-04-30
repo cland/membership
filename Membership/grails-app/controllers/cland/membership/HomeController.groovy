@@ -6,11 +6,6 @@ class HomeController {
 	def cbcApiService
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def index = {
-//		if (!isLoggedIn()) {
-//			redirect(controller:"Login")
-//			return false;
-//		}
-		//redirect(action: "inde", params: params)
 		
 	}
 	def index1 = {}

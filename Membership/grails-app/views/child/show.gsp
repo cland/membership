@@ -91,6 +91,19 @@
 			</div>
 			<div id="tab-2">
 			<p>===PERSON DETAIS===</p>
+			<attachments:each bean="${childInstance?.person}">
+    <attachments:icon attachment="${attachment}"/>
+    <attachments:deleteLink
+                         attachment="${attachment}"
+                         label="${'[X]'}"
+                         returnPageURI="${createLink(action: 'actionName', id: childInstance?.person.id)}"/>
+    <attachments:downloadLink
+                         attachment="${attachment}"/>
+                   
+    ${attachment.niceLength}<br/>
+    <img src="/wiggly/attachmentable/show/${attachment?.id }"/>
+    
+</attachments:each>
 			</div>
 			<div id="tab-3">
 			<p>====OFFICE DETAILS</p>

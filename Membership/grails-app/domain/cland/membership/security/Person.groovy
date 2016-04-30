@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import cland.membership.*
-import cland.membership.lookup.*
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 //import org.apache.commons.collections.list.LazyList;
@@ -17,7 +16,6 @@ class Person implements Serializable {
 	transient springSecurityService
 	def groupManagerService
 	static attachmentable = true
-	
 	/** FROM SPRING SECURITY **/
 	private static final long serialVersionUID = 1
 	String username
@@ -33,7 +31,7 @@ class Person implements Serializable {
 	String knownAs
 	String title
 	String email
-	Keywords gender
+	String gender
 	Race race
 	String idNumber
 	String mobileNo
@@ -47,7 +45,8 @@ class Person implements Serializable {
 	Date lastUpdated
 	String history
 	static belongsTo = [office:Office]
-	
+	static transients = ['springSecurityService','authorities',"createdByName","lastUpdatedByName","fullname",
+		'age','staffMemberStatus','profilePhotoId']
 	//static hasMany = [phones:Phone]
 	static constraints = {		
 		username blank: false,nullable: false, unique: true
@@ -59,7 +58,7 @@ class Person implements Serializable {
 		knownAs nullable: true
 		title nullable: true
 		email nullable: true
-		gender nullable: true		
+		gender inList: Gender.list(), nullable: true		
 		accountExpired nullable: true
 		accountLocked nullable: true
 		passwordExpired nullable: true
@@ -101,8 +100,7 @@ class Person implements Serializable {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
 	}
 
-	static transients = ['springSecurityService','authorities',"createdByName","lastUpdatedByName","fullname",
-		'age','staffMemberStatus']
+	
 
 	static mapping = {
 		password column: '`password`'
@@ -146,6 +144,7 @@ class Person implements Serializable {
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			isstaff:staffMemberStatus,
+			photoid:getProfilePhotoId(),
 			params:params]
 	}
 	public getAge(){
@@ -192,4 +191,12 @@ class Person implements Serializable {
 		  removeAttachments()
 		}
 	 }
+	Long getProfilePhotoId(String key=null){
+		Long pid = null
+		if(this.attachments?.size() > 0){
+			def tmp = this.attachments[0]
+			pid = tmp?.id
+		}
+		return pid
+	}
 } //end class

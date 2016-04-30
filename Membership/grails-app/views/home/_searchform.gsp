@@ -8,13 +8,7 @@
 		
 			<table id="child-table" style="display:none">
 			<thead>
-				<tr>
-					<th></th>
-					<g:sortableColumn property="name" title="${message(code: 'roleGroup.name.label', default: 'Name')}" />					
-					<g:sortableColumn property="Membership No." title="${message(code: 'roleGroup.description.label', default: 'Age')}" />			
-					<g:sortableColumn property="Membership No." title="${message(code: 'roleGroup.description.label', default: 'Gender')}" />
-					<th>Visit Photo</th>		
-				</tr>
+				
 			</thead>
 			<tbody id="child-list">
 			
@@ -25,11 +19,13 @@
 		
 		<script type="text/javascript">
 <!--  
-function checkInForm(thisform){
-	var _action = thisform.prop("action"); //search_form
-	var formData = new FormData(thisform);
+function checkInForm(formid){
+	var _action = $("#" + formid).prop("action"); //search_form
+	var formdata = new FormData($("#" + formid)[0]);
 	var jqxhr = $.ajax({ 
 		url: _action,
+		processData: false,
+		contentType: false,
 		data:formdata,		
 		method:"POST",
 		cache: false
@@ -113,7 +109,7 @@ $(document).ready(function() {
 			}).get();
 	
 			//checkIn(checkin_time,checkin_contactno,checkedValues);
-			checkInForm($("#search_form"))
+			checkInForm("search_form")
 		});
 
 	$(document).on("click","#clear_btn",function(){
@@ -170,12 +166,13 @@ $(document).ready(function() {
 			if(_childlist != null){
 				$("#child-table").show();
 				var _tbody = $("#child-list");				
-				_tbody.html("<tr><td colspan='2'>Parent/Gardian: <a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td>Today's visit contact number: <input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/>" );
+				_tbody.html("<tr><td colspan='3'>Parent/Gardian: <a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'>Today's visit contact number: <input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/>" );
+				_tbody.append("<tr><td class='thead'></td><td class='thead'>Name</td><td class='thead'>Age</td><td class='thead'>Gender</td><td class='thead'>Today's Photo</td>");
 				$.each(_childlist,function(item){
 					var _sel = '';
 					
 					var _chbox = "<input type='checkbox' name='search_children' value='" + this.id + "' " +_sel+ "/>";
-					var _photoinput = "<input type='file_" + this.id + "' name='visitphoto'/>";
+					var _photoinput = "<input type='file' id='file_" + this.id + "' name='visitphoto" + this.id + "'/>";
 					if(this.isactive){
 						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
 						_photoinput = "";

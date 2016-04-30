@@ -14,7 +14,7 @@ class Parent {
 	String membershipNo
 	Keywords clientType
 	String comments
-	String relationship
+	Keywords relationship
 	/** Admin Tracking Information **/
 	long createdBy
 	long lastUpdatedBy
@@ -58,7 +58,7 @@ class Parent {
 			membershipno:membershipNo,
 			clienttype:clientType,
 			comments:comments,
-			relationship:relationship,
+			relationship:relationship?.toString(),
 			childlist:children*.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
@@ -70,7 +70,7 @@ class Parent {
 		contactno:person1?.mobileNo,
 		childlist:children*.toMap(),
 		office:[name: person1?.office?.name,id:person1?.office?.id],
-		category:(relationship != "" ? relationship : "Client")]
+		category:(relationship != null ? relationship?.toString() : "Client")]
 	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)

@@ -90,7 +90,8 @@ var cbc_params = {
 	</head>
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
-		<div id="page-body" role="main">			
+		<div id="page-body" role="main">
+			<div class="message" role="status">${flash.message}</div>			
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
@@ -306,11 +307,12 @@ var cbc_params = {
 					  var email = el.child.parent.person1.email
 					  var parent_name = el.child.parent.person1.firstname + " " + el.child.parent.person1.lastname
 					  var timein = el.starttime
-					
+					  var photoid = el.child.person.photoid
 					  var deadline = new Date(Date.parse(timein));
 					 // deadline.setHours(deadline.getHours() + 2)
-					  
-					  addActiveVisit(livepanel, "" + id,visit_id,name,"assets/kidface.png",tel,timein,"--","clock-normal")
+					  var photolink = "${request.contextPath}/attachmentable/show/" + photoid;
+					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
+					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal")
 					  var countup =  true;
 					  var warning_limit = getMillis(45); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
 					  var done_limit = getMillis(60); //just over 2 hours
