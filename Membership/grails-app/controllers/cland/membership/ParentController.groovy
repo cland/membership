@@ -250,46 +250,49 @@ class ParentController {
 			def p = new Person()
 			p.firstName = params.get("child.person.firstname" + i)
 			p.lastName = params.get("child.person.lastname" + i)
-			p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
-			p.gender =  Keywords.get(params.get("child.person.gender" + i))
-			p.office = office
-			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
-			p.password = p.username
-			p.enabled = false
-			p.mobileNo = "-1"
-			if(!p.save(flush:true)){
-				println p.errors
-				request.withFormat {
-					form multipartForm {
-						flash.message = "Error!"
-						redirect controller:"home", action: "index", method: "GET"
+			if(p.firstName != "" & p.lastName != ""){
+				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
+				p.gender =  Keywords.get(params.get("child.person.gender" + i))
+				p.office = office
+				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+				p.password = p.username
+				p.enabled = false
+				p.mobileNo = "-1"
+				if(!p.save(flush:true)){
+					println p.errors
+					request.withFormat {
+						form multipartForm {
+							flash.message = "Error!"
+							redirect controller:"home", action: "index", method: "GET"
+						}
+						'*'{ render status: OK }
 					}
-					'*'{ render status: OK }
+					return
 				}
-				return
-			}
-			child.person = p
-			attachUploadedFilesTo(p,["profilephoto" + i])
-			if(parentInstance.children){
-				child.accessNumber = parentInstance.children.size() + 1
-			}else{
-				child.accessNumber = 1
-			}
-			// is checkin required now? IF NOT ARRAY NOT WORKING:
-			println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
-			if( params.get("child.checkin" + i) == "Yes" ){
-				//println ".. creating a visit now."
-				//println "time: " + params.child.visit.time[index]
-				//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
-				Date timein = dfmt.parse(params.get("child.visit.time"+ i))
-				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + i)
-				child.addToVisits(visit)
-				
-				//attachUploadedFilesTo(visit,["visitphoto" + index])
-				newvisits.add("visitphoto" + i)
-			}
-							
-			parentInstance.addToChildren(child)
+				child.person = p
+				attachUploadedFilesTo(p,["profilephoto" + i])
+				if(parentInstance.children){
+					child.accessNumber = parentInstance.children.size() + 1
+				}else{
+					child.accessNumber = 1
+				}
+				// is checkin required now? IF NOT ARRAY NOT WORKING:
+				println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
+				if( params.get("child.checkin" + i) == "Yes" ){
+					//println ".. creating a visit now."
+					//println "time: " + params.child.visit.time[index]
+					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + i)
+					child.addToVisits(visit)
+					
+					//attachUploadedFilesTo(visit,["visitphoto" + index])
+					newvisits.add("visitphoto" + i)
+				}
+								
+				parentInstance.addToChildren(child)
+			}// end first check for firstname and lastname
+			
 			i++
 		}
 		/**
@@ -434,27 +437,26 @@ class ParentController {
 	def checkin(params){
 		def result = []
 		def msg = ""		
-		Map<String, String[]> vars = request.getParameterMap()
-		println(vars)
-		println ("=======")
-		println (params)
-		/*
-		def _starttime = vars?.starttime[0]
-		def _children = vars?.values[0]?.split(",")
-		def _contactno = vars?.contactno[0]
-		_children.eachWithIndex { value, index ->
-			def child = Child.get(value)
-			if(child != null){
+	
+		def _contactno = params?.get("contactno")
+		def _starttime = params?.get("child.searchvisit.time")
+		def _children = params?.list("search_children")
+		
+		_children.each{
+			def childInstance = Child.get(Long.parseLong(it))
+			if(childInstance){
+				println(childInstance)
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno)
-				child.addToVisits(visit)
-				if(!child.save(flush:true)){
-					println(child.errors)
+				childInstance.addToVisits(visit)
+				if(!childInstance.save(flush:true)){
+					println(childInstance.errors)
 					msg = msg + "Child '" + value + "' failed to save! "
 				}
+				attachUploadedFilesTo(visit,["visitphoto" + childInstance?.id])
 			}
-		}
-		*/
+		}//end looping through all the children id list
+				
 
 		result = [result:"success",message:msg]
 		render result as JSON

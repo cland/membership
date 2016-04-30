@@ -91,7 +91,9 @@ var cbc_params = {
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">
-			<div class="message" role="status">${flash.message}</div>			
+			<g:if test="${flash.message}">
+				<div class="message" role="status">${flash.message}</div>
+			</g:if>			
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
@@ -303,7 +305,7 @@ var cbc_params = {
 					  var visit_id = el.id;
 					  var name = el.child.person.firstname + " " + el.child.person.lastname
 					  var id = el.child.id
-					  var tel = el.child.parent.person1.mobileno
+					  var tel = el.contactno; //el.child.parent.person1.mobileno
 					  var email = el.child.parent.person1.email
 					  var parent_name = el.child.parent.person1.firstname + " " + el.child.parent.person1.lastname
 					  var timein = el.starttime
@@ -330,11 +332,12 @@ var cbc_params = {
 		}
 
 		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus){
+			var lnk = "${request.contextPath}/child/show/" + divid;
 			var html = '<div id="person_' + visit_id + '" class="person-card float-left">' +
 			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
 			  '<div class="person-info">' +
 				'<div class="details-title">' +
-				  '<span>' + name + '</span><br/>' +
+				  '<span><a style="color:#fff;" href="' +lnk + '">' + name + '</a></span><br/>' +
 				  '<small>Tel: ' + tel + '</small>' +
 				  '<div id="clockdiv_' + divid + '" class="clock ' + clockstatus +'">' +
 					  '<div style="display:none;">' +
