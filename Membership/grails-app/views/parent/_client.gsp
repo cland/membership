@@ -1,8 +1,10 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="cland.membership.lookup.*" %>
-<% def childcount=settings?.newchildcount %>
-
-	<g:set var="isEditMode" value="true"/>
+<g:set var="person1" value="${parentInstance?.person1}"/>
+<g:set var="person2" value="${parentInstance?.person1}"/>
+<g:set var="isEditMode" value="${mode?.equals("edit") }"/>
+<g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
+<% def childcount=settingsInstance?.newchildcount %>
 	<fieldset>
 	<legend >Parent/Guardian</legend>
 		<div class="table">
@@ -10,13 +12,19 @@
 				<div class="cell"><label id="">First name:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.firstName" required="" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person1.firstName" required="" value="${person1?.firstName }"/>
+						</g:if>
+						<g:else>${person1?.firstName }</g:else>
 					</span>
 				</div>	
 				<div class="cell"><label id="">Cell number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.mobileNo" value=""/>
+						<g:if test="${isEditMode }">
+						<g:textField name="person1.mobileNo" value="${person1?.mobileNo }"/>
+						</g:if>
+						<g:else>${person1?.mobileNo }</g:else>
 					</span>
 				</div>			
 			</div>
@@ -24,13 +32,17 @@
 				<div class="cell"><label id="">Surname:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.lastName" required="" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person1.lastName" required="" value="${person1?.lastName }"/>
+						</g:if><g:else>${person1?.lastName }</g:else>
 					</span>
 				</div>
 				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.email" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person1.email" value="${person1?.email }"/>
+						</g:if><g:else>${person1?.email }</g:else>
 					</span>
 				</div>			
 			</div>
@@ -39,18 +51,22 @@
 				<div class="cell"><label id="">Id number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.idNumber" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person1.idNumber" value="${person1?.idNumber }"/>
+						</g:if><g:else>${person1?.idNumber }</g:else>
 					</span>
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
 				<div class="cell">
+					<g:if test="${isEditMode }">
 					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.id} %>
 						<g:radioGroup 
 							values="${reltypes?.id}"
 							labels="${reltypes}" 
-							name="parent.relationship">
+							name="relationship">
 							${it.radio} <g:message code="${it.label}" />
 						</g:radioGroup>
+					</g:if><g:else>${parentInstance?.relationship?.toString() }</g:else>
 				</div>			
 			</div>	
 		</div>	
@@ -61,25 +77,59 @@
 				<div class="cell"><label id="">First name:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person2.firstName" required="" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person2.firstName" required="" value="${person2?.firstName }"/>
+						</g:if><g:else>${person2?.firstName }</g:else>
 					</span>
 				</div>	
 				<div class="cell"><label id="">Last name:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person2.lastName" required="" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person2.lastName" required="" value="${person2?.lastName }"/>
+						</g:if><g:else>${person2?.lastName }</g:else>
 					</span>
 				</div>	
 				<div class="cell"><label id="">Cell number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person2.mobileNo" value=""/>
+						<g:if test="${isEditMode }">
+							<g:textField name="person2.mobileNo" value="${person2?.mobileNo }"/>
+						</g:if><g:else>${person2?.mobileNo }</g:else>
 					</span>
 				</div>			
 			</div>
 		</div>		
 	</fieldset>
 	<fieldset><legend>Children</legend>
+		<g:if test="${parentInstance.children}">
+		<table>
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Date Of Birth</th>
+					<th>Gender</th>
+					<th>Total Visits</th>
+					<th>Checked-In?</th>
+				</tr>
+			</thead>
+			<g:each in="${parentInstance.children}" var="c">
+				<tr>
+					<td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.person?.firstName}</g:link></span>
+					</td>
+					<td>${c?.person?.lastName}</td>
+					<td>${c?.person?.dateOfBirth?.format("dd MMM yyyy")}</td>
+					<td>${c?.person?.gender}</td>
+					<td>${c?.getVisitCount()}</td>
+					<td><g:formatBoolean boolean="${c?.isActive() }" false="No" true="Yes"/></td>
+				</tr>
+			</g:each>
+		</table>
+		
+		<hr/><br/>
+		<h3>Add New</h3>
+		</g:if>
 		<div class="table">
 			<g:each in="${(1..childcount).toList()}" var="index">
 				<div class="row">

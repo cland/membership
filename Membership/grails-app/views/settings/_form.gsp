@@ -60,7 +60,22 @@
 
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'newchildcount', 'error')} ">
+	<label for="newchildcount">
+		<g:message code="settings.newchildcount.label" default="Default number of fields open to create children under the 'New Client' tab." />
+		
+	</label>
+	<g:field name="newchildcount" type="number" value="${settingsInstance.newchildcount}"/>
 
+</div>
+<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'maxbooking', 'error')} ">
+	<label for="maxbooking">
+		<g:message code="settings.maxbooking.label" default="Maximum number of children allowed for a birthday booking" />
+		
+	</label>
+	<g:field name="maxbooking" type="number" value="${settingsInstance.maxbooking}"/>
+
+</div>
 
 
 

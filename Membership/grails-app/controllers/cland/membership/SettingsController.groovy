@@ -73,7 +73,7 @@ class SettingsController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Settings.label', default: 'Settings'), settingsInstance.id])
-                redirect settingsInstance
+                redirect (uri:'/') //settingsInstance
             }
             '*'{ respond settingsInstance, [status: OK] }
         }

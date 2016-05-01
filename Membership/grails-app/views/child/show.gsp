@@ -1,4 +1,6 @@
-
+<g:set var="activeVisit" value="${childInstance?.activeVisit }"/>
+<g:set var="parent" value="${childInstance?.parent }"/>
+<g:set var="visits" value="${childInstance.visits?.sort{it.starttime}.reverse() }"/>
 <%@ page import="cland.membership.Child" %>
 <!DOCTYPE html>
 <html>
@@ -13,101 +15,121 @@
 		<a href="#show-child" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
 			<ul>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li><g:link class="create" controller="parent" action="show" id="${parent?.id }">Parent: ${parent }</g:link></li>				
 			</ul>
 		</div>
 		<div id="show-child" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+			<h1 class="hide">Child: ${childInstance } (${parent?.membershipNo +"-" + childInstance?.accessNumber})</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			<fieldset>
+				<legend>Child's Profile</legend>
+				<div class="table">
+					<div class="row">
+						<div class="cell">
+							<div class="table">
+								<div class="row">
+									<div class="cell"><label id="">First name:</label></div>
+									<div class="cell">${childInstance?.person?.firstName }</div>
+									<div class="cell"><label id="">Last name:</label></div>
+									<div class="cell">${childInstance?.person?.lastName }</div>
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Gender:</label></div>
+									<div class="cell">${childInstance?.person?.gender }</div>
+									<div class="cell"><label id="">D.O.B:</label></div>
+									<div class="cell">${childInstance?.person?.dateOfBirth?.format("dd-MMM-yyyy")} (${childInstance?.person?.age } yrs)</div>
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Parent:</label></div>
+									<div class="cell"><a href="${request.contextPath}/parent/show/${parent?.id}">${parent }</a></div>
+									<div class="cell"><label id="">Membership No.:</label></div>
+									<div class="cell">${parent?.membershipNo}</div>
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Contact No.:</label></div>
+									<div class="cell">${parent?.person1?.mobileNo }</div>
+									<div class="cell"><label id="">Email:</label></div>
+									<div class="cell">${parent?.person1?.email}</div>
+								</div>
+								<div class="row">
+									<div class="cell"><label id="">Emergency contact:</label></div>
+									<div class="cell">${parent?.person2 }</div>
+									<div class="cell"><label id="">Contact No:</label></div>
+									<div class="cell">${parent?.person2?.mobileNo}</div>
+								</div>
+							</div>
+						</div>					
+						<div class="cell">				
+							<attachments:each bean="${childInstance?.person}">
+								<img src="${request.contextPath}/attachmentable/show/${attachment?.id }" style="width:150px;vertical-align:top;"/><br/>		
+								<g:if test="${isEditMode }">			    
+								    <attachments:deleteLink
+								                         attachment="${attachment}"
+								                         label="${'[X]'}"
+								                         returnPageURI="${createLink(action: 'actionName', id: childInstance?.id)}"/>
+								    <attachments:downloadLink attachment="${attachment}"/>			                   
+								    ${attachment.niceLength}
+							   	</g:if>    
+							</attachments:each>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset><legend>Emergency Contact</legend>
+				<div class="table">
+					<div class="row">
+						<div class="cell"><label id="">Contact:</label></div>
+						<div class="cell">${parent?.person2 }</div>
+						<div class="cell"><label id="">Contact No:</label></div>
+						<div class="cell">${parent?.person2?.mobileNo}</div>
+						
+					</div>
+				</div>
+			</fieldset>
 			<div id="tabs" style="display: none;">
-					<ul>
-						<li><a href="#tab-1">Child Details</a></li>
-						<li><a href="#tab-2">Person Details</a></li>
-						<li><a href="#tab-3">Office Details</a></li>
-					</ul>
-					<div id="tab-1">
-			<ol class="property-list child">
-			
-				<g:if test="${childInstance?.parent}">
-				<li class="fieldcontain">
-					<span id="parent-label" class="property-label"><g:message code="child.parent.label" default="Parent" /></span>
-					
-						<span class="property-value" aria-labelledby="parent-label"><g:link controller="parent" action="show" id="${childInstance?.parent?.id}">${childInstance?.parent?.encodeAsHTML()}</g:link></span>
-					
-				</li>
+				<ul>
+					<li><a href="#tab-1">Visits</a></li>
+				</ul>
+				<div id="tab-1">
+				<g:if test="${activeVisit}">	
+					<fieldset style="text-align:center;"><legend>Current Visit Photo</legend>
+						<attachments:each bean="${activeVisit}">
+							<img src="${request.contextPath}/attachmentable/show/${attachment?.id }" style="width:300px;"/><br/>
+						</attachments:each>
+						<label>Check-in date-time: </label> ${activeVisit?.starttime?.format("dd MMM yyyy HH:mm")}<br/>
+						<input type="submit" class="button" id="btn_notify" onclick="sendNotification()" name="btn_notify" value="Notify" />
+					 	<input type="submit" class="button" id="btn_checkout" onclick="checkOut()" name="btn_checkout" value="Check-Out" />
+					 	<input type="submit" class="button" id="btn_view" onclick="checkOut()" name="btn_view" value="Cancel" />
+					</fieldset>		
 				</g:if>
-			
-				<g:if test="${childInstance?.person}">
-				<li class="fieldcontain">
-					<span id="person-label" class="property-label"><g:message code="child.person.label" default="Person" /></span>
-					
-						<span class="property-value" aria-labelledby="person-label"><g:link controller="person" action="show" id="${childInstance?.person?.id}">${childInstance?.person?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-				
-				<g:if test="${childInstance?.accessNumber}">
-				<li class="fieldcontain">
-					<span id="accessNumber-label" class="property-label"><g:message code="parent.accessNumber.label" default="Access Number" /></span>
-					
-						<span class="property-value" aria-labelledby="accessNumber-label"><g:fieldValue bean="${childInstance}" field="accessNumber"/></span>
-					
-				</li>
-				</g:if>
-				
-				<g:if test="${childInstance?.comments}">
-				<li class="fieldcontain">
-					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="Comments" /></span>
-					
-						<span class="property-value" aria-labelledby="comments-label"><g:fieldValue bean="${childInstance}" field="comments"/></span>
-					
-				</li>
-				</g:if>
-				
-				<g:if test="${childInstance?.medicalComments}">
-				<li class="fieldcontain">
-					<span id="medicalComments-label" class="property-label"><g:message code="parent.medicalComments.label" default="Medical Comments" /></span>
-					
-						<span class="property-value" aria-labelledby="medicalComments-label"><g:fieldValue bean="${childInstance}" field="medicalComments"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${childInstance?.visits}">
-				<li class="fieldcontain">
-					<span id="visits-label" class="property-label"><g:message code="child.visits.label" default="Visits" /></span>
-					
-						<g:each in="${childInstance.visits}" var="v">
-						<span class="property-value" aria-labelledby="visits-label"><g:link controller="visit" action="show" id="${v.id}">${v?.encodeAsHTML()}</g:link></span>
+				<g:if test="${childInstance.visits}">
+					<table>
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Time-in</th>
+								<th>Time-out</th>
+								<th>Contact No.</th>
+								<th>Status</th>								
+							</tr>
+						</thead>
+						<g:each in="${visits}" var="c">
+							<tr>								
+								<td>${c?.starttime?.format("dd MMM yyyy")}</td>
+								<td>${c?.starttime?.format("hh:mm")}</td>
+								<td>${c?.endtime?.format("HH:mm")}</td>
+								<td>${c?.contactNo}</td>
+								<td>${c?.status}</td>
+								
+							</tr>
 						</g:each>
-					
-				</li>
+					</table>
 				</g:if>
+				
+				</div>
 			
-			</ol>
-			</div>
-			<div id="tab-2">
-			<p>===PERSON DETAIS===</p>
-			<attachments:each bean="${childInstance?.person}">
-    <attachments:icon attachment="${attachment}"/>
-    <attachments:deleteLink
-                         attachment="${attachment}"
-                         label="${'[X]'}"
-                         returnPageURI="${createLink(action: 'actionName', id: childInstance?.person.id)}"/>
-    <attachments:downloadLink
-                         attachment="${attachment}"/>
-                   
-    ${attachment.niceLength}<br/>
-    <img src="/wiggly/attachmentable/show/${attachment?.id }"/>
-    
-</attachments:each>
-			</div>
-			<div id="tab-3">
-			<p>====OFFICE DETAILS</p>
-			</div>
 			<g:form url="[resource:childInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${childInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>

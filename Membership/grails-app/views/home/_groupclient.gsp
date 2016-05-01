@@ -1,5 +1,5 @@
 <%@ page import="cland.membership.lookup.*" %>
-<% def grpchildcount=2 %>
+<% def grpchildcount=settings?.maxbooking %>
 <div class="bookingwait">Saving booking, please wait...</div>
 <div id="booking-message"></div>
 <g:formRemote name="newgroup_form" url="[controller:'booking',action:'newbooking']" 

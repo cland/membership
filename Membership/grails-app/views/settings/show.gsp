@@ -16,7 +16,31 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list settings">
-			
+				<g:if test="${settingsInstance?.name}">
+				<li class="fieldcontain">
+					<span id="name-label" class="property-label"><g:message code="settings.name.label" default="Name" /></span>
+					
+						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${settingsInstance}" field="name"/></span>
+					
+				</li>
+				</g:if>
+			<g:if test="${settingsInstance?.title}">
+				<li class="fieldcontain">
+					<span id="title-label" class="property-label"><g:message code="settings.title.label" default="Title" /></span>
+					
+						<span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${settingsInstance}" field="title"/></span>
+					
+				</li>
+				</g:if>
+			<g:if test="${settingsInstance?.subtitle}">
+				<li class="fieldcontain">
+					<span id="subtitle-label" class="property-label"><g:message code="settings.subtitle.label" default="Subtitle" /></span>
+					
+						<span class="property-value" aria-labelledby="subtitle-label"><g:fieldValue bean="${settingsInstance}" field="subtitle"/></span>
+					
+				</li>
+				</g:if>
+							
 				<g:if test="${settingsInstance?.description}">
 				<li class="fieldcontain">
 					<span id="description-label" class="property-label"><g:message code="settings.description.label" default="Description" /></span>
@@ -42,61 +66,8 @@
 						<span class="property-value" aria-labelledby="notifytime-label"><g:fieldValue bean="${settingsInstance}" field="notifytime"/></span>
 					
 				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.timereminder}">
-				<li class="fieldcontain">
-					<span id="timereminder-label" class="property-label"><g:message code="settings.timereminder.label" default="Timereminder" /></span>
-					
-						<span class="property-value" aria-labelledby="timereminder-label"><g:fieldValue bean="${settingsInstance}" field="timereminder"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.sickchild}">
-				<li class="fieldcontain">
-					<span id="sickchild-label" class="property-label"><g:message code="settings.sickchild.label" default="Sickchild" /></span>
-					
-						<span class="property-value" aria-labelledby="sickchild-label"><g:fieldValue bean="${settingsInstance}" field="sickchild"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.problemchild}">
-				<li class="fieldcontain">
-					<span id="problemchild-label" class="property-label"><g:message code="settings.problemchild.label" default="Problemchild" /></span>
-					
-						<span class="property-value" aria-labelledby="problemchild-label"><g:fieldValue bean="${settingsInstance}" field="problemchild"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.name}">
-				<li class="fieldcontain">
-					<span id="name-label" class="property-label"><g:message code="settings.name.label" default="Name" /></span>
-					
-						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${settingsInstance}" field="name"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.subtitle}">
-				<li class="fieldcontain">
-					<span id="subtitle-label" class="property-label"><g:message code="settings.subtitle.label" default="Subtitle" /></span>
-					
-						<span class="property-value" aria-labelledby="subtitle-label"><g:fieldValue bean="${settingsInstance}" field="subtitle"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${settingsInstance?.title}">
-				<li class="fieldcontain">
-					<span id="title-label" class="property-label"><g:message code="settings.title.label" default="Title" /></span>
-					
-						<span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${settingsInstance}" field="title"/></span>
-					
-				</li>
-				</g:if>
+				</g:if>													
+							
 			
 			</ol>
 			<g:form url="[resource:settingsInstance, action:'delete']" method="DELETE">

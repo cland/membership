@@ -34,117 +34,35 @@ class ParentController {
     }
 
     def create() {
-		println "These are the parameters: " + params
         respond new Parent(params)
     }
 
     @Transactional
     def save(Parent parentInstance) {
-		def smsResult
-		println "This is the username: " +params.username
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+		Office office = Office.list().first()
+		
         if (parentInstance == null) {
             notFound()
             return
         }
-		Person person = new Person() 
-		person.username = params.username
-		person.password = params.password
-		person.enabled = true
-		person.firstName = params.firstName
-		person.lastName = params.lastName
-		person.knownAs = params.knownAs
-		person.title = params.title
-		person.email = params.email
-		person.gender = params.gender
-		person.idNumber = params.idNumber
-		person.dateOfBirth = params.dateOfBirth
-		person.createdBy = springSecurityService.currentUser.id
+		Person person1 = new Person(params?.person1) 
+		person1.office = office
 		
-		Office office = Office.get(Office.list().first().id)
-		
-		//TODO: add the items below as template
-		/*office.name = params.name
-		office.code = params.code
-		office.status = params.status */
-		
-		if (office.hasErrors()) {
-			println office.errors
-			respond office.errors, view:'create'
-			return
+		if (person1.save(flush:true)) {
+			println person1.errors
+			
 		}
-		
-		if (person.hasErrors()) {
-			println person.errors
-			respond parentInstance.errors, view:'create'
-			return
-		}
-		
-		if(office.save(flush:true)){
-			println person
-		   }else{
-		   	println office.errors
-			   render(contentType: "text/json"){
-				   office.errors
-			   }
-		   }
-		
-		person.office = office
-		println person
-		
-		if(person.save(flush:true)){
-			println "Person saved"
-			parentInstance.person1 = person
-			/*sendMail {
-				to "ndabantethelelo@gmail.com"
-				subject "Notification"
-				body "Hello " + person.firstName +" this is to verify that your account has been created"
-			  }*/
-			/*try{
-				smsResult = nexmoService.sendSms("0621347734", "Hello Bo, This is a notification of a new person in " +
-					"Membership call Lungelo Ndaba when you get this sms", "0791623651")
-			}catch(e){
-				println e
-				render(contentType: "text/json"){
-					e
-				}
-			}*/
-			
-			
-			//send query to fetch children
-			
-		}else{
-			println person.errors
-			render(contentType: "text/json"){
-				person.errors
-			}
-		}
-		
-		println "This is the person: " + person
-		
-        parentInstance.save flush:true
-		if(parentInstance.save(flush:true)){
-			println "parent saved"
-			parentInstance.person1 = person
-			
-			
-		}else{
-			println person.errors
-			render(contentType: "text/json"){
-				person.errors
-			}
-		}
-		/*if (parentInstance.hasErrors()) {
+					
+		parentInstance.person1 = person1
+		if(!parentInstance.save(flush:true)){			
 			println parentInstance.errors
-			println "This is the person: " + parentInstance.person1
-			respond parentInstance.errors, view:'create'
-			return
-		}*/
-
+		}
+		
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-                //redirect parentInstance
-				redirect(uri:'/')
+                redirect parentInstance
             }
             '*' { respond parentInstance, [status: CREATED] }
         }
@@ -295,56 +213,6 @@ class ParentController {
 			
 			i++
 		}
-		/**
-		params.child.person.firstname.eachWithIndex { value, index ->
-			if(value != "" & !value.isEmpty()){
-				def child = new Child()
-				def p = new Person()
-				p.firstName = value
-				p.lastName = params.get("child.person.lastname" + (index+1))
-				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + (index+1)))
-				p.gender =  Keywords.get(params.get("child.person.gender" + (index+1)))
-				p.office = office
-				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
-				p.password = p.username
-				p.enabled = false
-				p.mobileNo = "-1"
-				if(!p.save(flush:true)){
-					println p.errors
-					request.withFormat {
-			            form multipartForm {
-			                flash.message = "Error!"
-			                redirect controller:"home", action: "index", method: "GET"
-			            }
-			            '*'{ render status: OK }
-			        }
-					return
-				}
-				child.person = p
-				attachUploadedFilesTo(p,["profilephoto" + (index + 1)])
-				if(parentInstance.children){
-					child.accessNumber = parentInstance.children.size() + 1
-				}else{
-					child.accessNumber = 1
-				}
-				//TODO: is checkin required now? IF NOT ARRAY NOT WORKING: 
-				println "Processing checkin...'" + params.get("child.checkin" + (index+1)) + "'"
-				if( params.get("child.checkin" + (index+1)) == "Yes" ){
-					//println ".. creating a visit now."
-					//println "time: " + params.child.visit.time[index]
-					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
-					Date timein = dfmt.parse(params.get("child.visit.time"+ (index+1))) 
-					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + (index + 1))									
-					child.addToVisits(visit)
-					
-					//attachUploadedFilesTo(visit,["visitphoto" + index])
-					newvisits.add("visitphoto" + (index + 1))
-				}
-								
-				parentInstance.addToChildren(child)			
-			}
-		}
-		*/
 		
 		if(!parentInstance.save(flush: true)){
 			println parentInstance.errors
@@ -369,7 +237,7 @@ class ParentController {
 		println "Success"
 		request.withFormat {
 		            form multipartForm {
-		                flash.message = "Client create Successfully!"
+		                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
 		                redirect controller:"home", action: "index", method: "GET"
 		            }
 		            '*'{ render status: OK }

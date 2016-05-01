@@ -97,8 +97,7 @@ img {
 .content {
 }
 
-.content h1 {
-	border-bottom: 1px solid #CCCCCC;
+.content h1 {	
 	margin: 0.8em 1em 0.3em;
 	padding: 0 0.25em;
 }
@@ -231,7 +230,7 @@ fieldset {margin:0.3em; padding: 0.3em;border: solid 1px #aea9a9}
 
 .fieldcontain label,
 .fieldcontain .property-label {
-	color: #666666;
+	color: RGBA(79, 102, 17, 0.8);
 	text-align: right;
 	width: 25%;
 }
@@ -249,7 +248,7 @@ label {
 	cursor: pointer;
 	display: inline-block;
 	margin: 0 0.25em 0 0;
-	color: #666666;
+	color: RGBA(79, 102, 17, 0.8);
 	font-weight:bold;
 }
 
@@ -427,7 +426,7 @@ tr>td:last-child, tr>th:last-child {
 
 td, th {
 	line-height: 1.5em;
-	padding: 0.5em 0.6em;
+	padding: 0.2em 0.6em;
 	text-align: left;
 	vertical-align: top;
 }

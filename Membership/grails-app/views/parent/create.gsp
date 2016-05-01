@@ -29,26 +29,20 @@
 			<g:form url="[resource:parentInstance, action:'save']" >
 				<div id="tabs" style="display: none;">
 					<ul>
-						<li><a href="#tab-1">Parent Details</a></li>
-						<li><a href="#tab-2">Person Details</a></li>
+						<li><a href="#tab-1">Details</a></li>
+						<li><a href="#tab-2">Supporting Documents</a></li>
 					</ul>
 					<div id="tab-1">
-						<tmpl:form/>
-						
+						<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'edit']"></g:render>						
 					</div>
 					<div id="tab-2">
-						<fieldset class="form">
-							<tmpl:/person/list/>
-						</fieldset>
+						
 					</div>
-					<%-- div id="tab-3">
-						<fieldset class="form">
-							<tmpl:/office/form/>
-						</fieldset>
-					</div --%>
+					
 				</div>
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/parent/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
 			</g:form>
 			</div>

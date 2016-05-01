@@ -12,6 +12,8 @@ class Settings {
 	Integer visitcount	//The number of visits that allows for discount
 	Integer notifytime	//minutes after which warning indicator appears
 	Integer donetime	//minutes when standard time is up
+	Integer newchildcount //when adding children inline, the default number of fields to display
+	Integer maxbooking //maximum number of kids to be included in a book
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -21,11 +23,15 @@ class Settings {
 		visitcount nullable:true
 		notifytime nullable:true
 		donetime nullable:true		
+		newchildcount nullable:true
+		maxbooking nullable:true
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
+		if(newchildcount == null) newchildcount = 3
+		if(maxbooking == null) maxbooking = 12
 		createdBy = curId
 		lastUpdatedBy = curId		
 	}

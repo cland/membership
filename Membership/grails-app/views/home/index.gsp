@@ -1,3 +1,4 @@
+<g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -104,7 +105,7 @@ var cbc_params = {
 					</ul>
 					<div id="tab-1">
 						<form id="search_form" name="search_form" action="${request.contextPath}/parent/checkin" enctype="multipart/form-data">
-							<g:render template="searchform"></g:render>
+							<g:render template="searchform" model="[settings:settingsInstance]"></g:render>
 							<div id="searchform-actions" style="display:none">
 								<g:textField name="child.searchvisit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time_search" class="datetime-picker"/>
 								<input type="button" name="quick_checkin" id="checkin_btn" value="Check-In Selected"/>
@@ -114,7 +115,7 @@ var cbc_params = {
 					</div>
 					<div id="tab-2">
 						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']">
-							<g:render template="newclient"></g:render>
+							<g:render template="newclient" model="[settings:settingsInstance]"></g:render>
 							<fieldset class="buttons">
 								<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
 								<input type="button" name="cancel" onclick="document.location='${request.contextPath}/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
@@ -122,12 +123,12 @@ var cbc_params = {
 						</g:uploadForm>
 					</div>
 					<div id="tab-3">
-						<g:render template="groupclient"></g:render>
+						<g:render template="groupclient" model="[settings:settingsInstance]"></g:render>
 					</div>
 				</div>
 			</fieldset>
 			<div class="wait">Loading, please wait...</div>
-			<g:render template="liveform" var="thisInstance" bean="${parentInstance }" model="[mode:'edit']"></g:render>
+			<g:render template="liveform" var="thisInstance" bean="${parentInstance }" model="[mode:'edit',settings:settingsInstance]"></g:render>
 			
 		</div>
 

@@ -13,88 +13,54 @@
 		<div class="nav navpage" role="navigation">
 			<ul>
 				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				
 			</ul>
 		</div>
 		<div id="show-parent" class="content scaffold-show" role="main">
-			<h1>Client: ${parentInstance }</h1>
+			<h1>Client: ${parentInstance } (${parentInstance?.membershipNo })</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<div id="tabs" style="display: none;">
 					<ul>
-						<li><a href="#tab-1">Parent Details</a></li>
-						<li><a href="#tab-2">Children Details</a></li>
-						<li><a href="#tab-3">All Visits</a></li>
+						<li><a href="#tab-1">Details</a></li>
+						<li><a href="#tab-2">All Visits</a></li>
+						<li><a href="#tab-3">Supporting Documents</a></li>
 					</ul>
-					<div id="tab-1">
-			<ol class="property-list parent">		
-			
-				<g:if test="${parentInstance?.person1}">
-				<li class="fieldcontain">
-					<span id="person1-label" class="property-label"><g:message code="parent.person1.label" default="Parent/Guardian" /></span>
-					
-						<span class="property-value" aria-labelledby="person1-label"><g:link controller="person" action="show" id="${parentInstance?.person1?.id}">${parentInstance?.person1?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-							
-				<g:if test="${parentInstance?.person2}">
-				<li class="fieldcontain">
-					<span id="person2-label" class="property-label"><g:message code="parent.person2.label" default="Person2" /></span>
-					
-						<span class="property-value" aria-labelledby="person2-label"><g:link controller="person" action="show" id="${parentInstance?.person2?.id}">${parentInstance?.person2?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-				<g:if test="${parentInstance?.membershipNo}">
-				<li class="fieldcontain">
-					<span id="membershipNo-label" class="property-label"><g:message code="parent.membershipNo.label" default="Membership Number" /></span>
-					
-						<span class="property-value" aria-labelledby="membershipNo-label"><g:fieldValue bean="${parentInstance}" field="membershipNo"/></span>
-					
-				</li>
-				</g:if>
-				<g:if test="${parentInstance?.clientType}">
-				<li class="fieldcontain">
-					<span id="clientType-label" class="property-label"><g:message code="parent.clientType.label" default="Client Type" /></span>
-					
-						<span class="property-value" aria-labelledby="clientType-label"><g:fieldValue bean="${parentInstance}" field="clientType"/></span>
-					
-				</li>
-				</g:if>
-				<g:if test="${parentInstance?.comments}">
-				<li class="fieldcontain">
-					<span id="comments-label" class="property-label"><g:message code="parent.comments.label" default="Comments" /></span>
-					
-						<span class="property-value" aria-labelledby="comments-label"><g:fieldValue bean="${parentInstance}" field="comments"/></span>
-					
-				</li>
-				</g:if>
-				
-			
-			</ol>
-			</div>
+				<div id="tab-1">
+					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>
+				</div>
 			<div id="tab-2">
-			<table>
-					<thead>
-					<tr><th>ID</th>
-					<th>First Name</th>
-					<th>Date Of Birth</th>
-					<th>Gender</th></tr>
-					</thead>
-						<g:each in="${parentInstance.children}" var="c">
-						<tr><td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
-						</td>
-						<td>${c?.person?.firstName}</td>
-						<td>${c?.person?.dateOfBirth?.format("dd MMM yyyy")}</td>
-						<td>${c?.person?.gender}</td>
-						</tr>
+				<g:if test="${parentInstance.children}">
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Date</th>
+								<th>Time-in</th>
+								<th>Time-out</th>
+								<th>Contact No.</th>
+								<th>Status</th>								
+							</tr>
+						</thead>
+						<g:each in="${parentInstance?.children }" var="child" status="i">
+							<g:each in="${child?.visits.sort{it.starttime}.reverse()}" var="c">
+								<tr>
+									<td>${child?.person }								
+									<td>${c?.starttime?.format("dd MMM yyyy")}</td>
+									<td>${c?.starttime?.format("hh:mm")}</td>
+									<td>${c?.endtime?.format("HH:mm")}</td>
+									<td>${c?.contactNo}</td>
+									<td>${c?.status}</td>
+									
+								</tr>
+							</g:each>
 						</g:each>
-						</table>
+					</table>
+				</g:if>
 			</div>
 			<div id="tab-3">
-			<p>List of all the children's visits</p>
+			<p>Documents</p>
 			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

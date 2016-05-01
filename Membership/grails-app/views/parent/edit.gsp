@@ -16,7 +16,7 @@
 			</ul>
 		</div>
 		<div id="edit-parent" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
+			<h1>Client: ${parentInstance } (${parentInstance?.membershipNo })</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -29,31 +29,26 @@
 			</g:hasErrors>
 			<g:form url="[resource:parentInstance, action:'update']" method="PUT" >
 				<g:hiddenField name="version" value="${parentInstance?.version}" />
-				<%--fieldset class="form">
-					<g:render template="form"/>
-				</fieldset--%>
+				
 				<div id="tabs" style="display: none;">
 					<ul>
-						<li><a href="#tab-1">Parent Details</a></li>
-						<li><a href="#tab-2">Person Details</a></li>
-						<li><a href="#tab-3">Office Details</a></li>
+						<li><a href="#tab-1">Details</a></li>
+						<li><a href="#tab-2">Visits</a></li>
+						<li><a href="#tab-3">Supporting Documents</a></li>
 					</ul>
 					<div id="tab-1">
-						<g:render template="form"/>
+						<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'edit']"></g:render>
 					</div>
 					<div id="tab-2">
-						<fieldset class="form">
-							<tmpl:/person/list/>
-						</fieldset>
+						
 					</div>
 					<div id="tab-3">
-						<fieldset class="form">
-							<tmpl:/office/form/>
-						</fieldset>
+						
 					</div>
 				</div>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/parent/show/${parentInstance?.id }'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
 			</g:form>
 		</div>
