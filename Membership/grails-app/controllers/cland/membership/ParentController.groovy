@@ -22,7 +22,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -83,12 +83,72 @@ class ParentController {
             respond parentInstance.errors, view:'edit'
             return
         }
-
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+		Office office = Office.list().first()
+		
+		//need to add the children 
+		def newvisits = [:]
+		// save the children
+		def i = 1
+		while(params.get("child.person.lastname" + i)){
+			def child = new Child()
+			def p = new Person()
+			p.firstName = params.get("child.person.firstname" + i)
+			p.lastName = params.get("child.person.lastname" + i)
+			if(p.firstName != "" & p.lastName != ""){
+				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
+				p.gender =  Keywords.get(params.get("child.person.gender" + i))
+				p.office = office
+				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+				p.password = p.username
+				p.enabled = false
+				p.mobileNo = "-1"
+				if(!p.save(flush:true)){
+					println p.errors
+					 respond parentInstance.errors, view:'edit'            
+					return
+				}
+				child.person = p
+				attachUploadedFilesTo(p,["profilephoto" + i])
+				if(parentInstance.children){
+					child.accessNumber = parentInstance.children.size() + 1
+				}else{
+					child.accessNumber = 1
+				}
+				// is checkin required now? IF NOT ARRAY NOT WORKING:
+				println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
+				if( params.get("child.checkin" + i) == "Yes" ){
+					//println ".. creating a visit now."
+					//println "time: " + params.child.visit.time[index]
+					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
+					def _photokey = "visitphoto" + i
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
+					child.addToVisits(visit)
+					
+					//attachUploadedFilesTo(visit,["visitphoto" + index])
+					newvisits.put(p?.id , _photokey)
+				}
+								
+				parentInstance.addToChildren(child)
+			}// end first check for firstname and lastname
+			
+			i++
+		}
         parentInstance.save flush:true
-
+		newvisits.each {cid,key ->
+			println(". Visit file for child: '" + cid + "' photo key: " + key)
+			def c = Child.findByPerson(Person?.get(cid))
+			if(c != null){
+				def v = c.visits.find{ it?.photoKey == key }
+				if(v != null){
+					attachUploadedFilesTo(v,[key])
+				}
+			}
+		}
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Parent.label', default: 'Parent'), parentInstance.id])
+                flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
                 redirect parentInstance
             }
             '*'{ respond parentInstance, [status: OK] }
@@ -160,7 +220,7 @@ class ParentController {
 			parentInstance.person2 = person2
 		}
 		
-		def newvisits = []
+		def newvisits = [:]
 		// save the children
 		def i = 1
 		while(params.get("child.person.lastname" + i)){
@@ -201,11 +261,12 @@ class ParentController {
 					//println "time: " + params.child.visit.time[index]
 					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
-					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:"visitphoto" + i)
+					def _photokey = "visitphoto" + i
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
 					child.addToVisits(visit)
 					
 					//attachUploadedFilesTo(visit,["visitphoto" + index])
-					newvisits.add("visitphoto" + i)
+					newvisits.put(p?.id , _photokey)
 				}
 								
 				parentInstance.addToChildren(child)
@@ -227,11 +288,14 @@ class ParentController {
 		}
 		
 		//attachUploadedFilesTo(parentInstance,["profilephoto1","profilephoto2"])
-		newvisits.each {
-			println(". Visit file key: " + it)		
-			def v = Visit.findByPhotoKey(it)
-			if(v != null){
-				attachUploadedFilesTo(v,[it.toString()])
+		newvisits.each {cid,key ->
+			println(". Visit file for child: '" + cid + "' photo key: " + key)
+			def c = Child.findByPerson(Person?.get(cid))
+			if(c != null){
+				def v = c.visits.find{ it?.photoKey == key }
+				if(v != null){
+					attachUploadedFilesTo(v,[key])
+				}
 			}
 		}
 		println "Success"

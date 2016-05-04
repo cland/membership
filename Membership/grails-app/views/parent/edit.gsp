@@ -27,7 +27,7 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:parentInstance, action:'update']" method="PUT" >
+			<g:uploadForm url="[resource:parentInstance, action:'update']" method="PUT" >
 				<g:hiddenField name="version" value="${parentInstance?.version}" />
 				
 				<div id="tabs" style="display: none;">
@@ -50,7 +50,7 @@
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/parent/show/${parentInstance?.id }'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
-			</g:form>
+			</g:uploadForm>
 		</div>
 		<script>
 		$(document).ready(function() {		

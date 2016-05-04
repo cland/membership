@@ -1,7 +1,7 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="cland.membership.lookup.*" %>
 <g:set var="person1" value="${parentInstance?.person1}"/>
-<g:set var="person2" value="${parentInstance?.person1}"/>
+<g:set var="person2" value="${parentInstance?.person2}"/>
 <g:set var="isEditMode" value="${mode?.equals("edit") }"/>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <% def childcount=settingsInstance?.newchildcount %>
@@ -61,6 +61,7 @@
 					<g:if test="${isEditMode }">
 					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.id} %>
 						<g:radioGroup 
+							value="${parentInstance?.relationship?.id }"
 							values="${reltypes?.id}"
 							labels="${reltypes}" 
 							name="relationship">
@@ -128,34 +129,37 @@
 		</table>
 		
 		<hr/><br/>
-		<h3>Add New</h3>
 		</g:if>
-		<div class="table">
-			<g:each in="${(1..childcount).toList()}" var="index">
-				<div class="row">
-					<div class="cell" style="width:20px;"><h1>${index }.</h1></div>
-					<div class="cell border-bottom">
-						<g:textField name="child.person.firstname${index }" placeholder="First Name"  value="" id="child-firstname-${index }"/><br/>
-						<g:textField name="child.person.lastname${index }" placeholder="Last Name"  value="" id="child-lastname-${index }"/><br/>
-						Check-in now: <g:checkBox name="child.checkin${index }" value="Yes" />
-						<g:textField name="child.visit.time${index }" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
+		<g:if test="${isEditMode }">
+			<h3>Add New</h3>
+			
+			<div class="table">
+				<g:each in="${(1..childcount).toList()}" var="index">
+					<div class="row">
+						<div class="cell" style="width:20px;"><h1>${index }.</h1></div>
+						<div class="cell border-bottom">
+							<g:textField name="child.person.firstname${index }" placeholder="First Name"  value="" id="child-firstname-${index }"/><br/>
+							<g:textField name="child.person.lastname${index }" placeholder="Last Name"  value="" id="child-lastname-${index }"/><br/>
+							Check-in now: <g:checkBox name="child.checkin${index }" value="Yes" />
+							<g:textField name="child.visit.time${index }" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
+						</div>
+						<div class="cell border-bottom">
+							<g:textField name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
+							<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
+							<br/><g:radioGroup style="margin-top:15px;" 
+								values="${gender?.id}"
+								labels="${gender}" 
+								name="child.person.gender${index }">
+								${it.radio} <g:message code="${it.label}" />
+							</g:radioGroup>
+						</div>
+						<div class="cell border-bottom">
+							Profile Photo:<input type="file" name="profilephoto${index }"/><br/>
+							Full Body Photo:<input type="file" name="visitphoto${index }"/>
+						</div>			
 					</div>
-					<div class="cell border-bottom">
-						<g:textField name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
-						<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
-						<br/><g:radioGroup style="margin-top:15px;" 
-							values="${gender?.id}"
-							labels="${gender}" 
-							name="child.person.gender${index }">
-							${it.radio} <g:message code="${it.label}" />
-						</g:radioGroup>
-					</div>
-					<div class="cell border-bottom">
-						Profile Photo:<input type="file" name="profilephoto${index }"/><br/>
-						Full Body Photo:<input type="file" name="visitphoto${index }"/>
-					</div>			
-				</div>
-			</g:each>				
-		</div>
+				</g:each>				
+			</div>
+		</g:if>
 	</fieldset>
 	
