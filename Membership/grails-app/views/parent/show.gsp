@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'parent.label', default: 'Parent')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<title><g:message code="default.show.label" args="[entityName]" />: ${parentInstance }</title>
 		<g:render template="head" var="thisInstance" bean="${parentInstance }" model="[sidenav:page_nav]"></g:render>
 	</head>
 	<body>
@@ -25,7 +25,8 @@
 					<ul>
 						<li><a href="#tab-1">Details</a></li>
 						<li><a href="#tab-2">All Visits</a></li>
-						<li><a href="#tab-3">Supporting Documents</a></li>
+						<li style="display:none;"><a href="#tab-3">Supporting Documents</a></li>
+						<li><a href="#tab-4">Notifications</a></li>
 					</ul>
 				<div id="tab-1">
 					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>
@@ -46,7 +47,7 @@
 						<g:each in="${parentInstance?.children }" var="child" status="i">
 							<g:each in="${child?.visits.sort{it.starttime}.reverse()}" var="c">
 								<tr>
-									<td>${child?.person }								
+									<td><g:link controller="child" action="show" id="${child?.id}">${child?.person }</g:link></td>						
 									<td>${c?.starttime?.format("dd MMM yyyy")}</td>
 									<td>${c?.starttime?.format("hh:mm")}</td>
 									<td>${c?.endtime?.format("HH:mm")}</td>
@@ -59,8 +60,35 @@
 					</table>
 				</g:if>
 			</div>
-			<div id="tab-3">
-			<p>Documents</p>
+			<div id="tab-3" style="display:none">
+				<p>Documents</p>
+			</div>
+			<div id="tab-4">
+				<g:if test="${parentInstance.notifications}">
+					<table>
+						<thead>
+							<tr>
+								<th>Date Sent</th>
+								<th>Child's Name</th>																
+								<th>Sent To</th>
+								<th>Status</th>								
+							</tr>
+						</thead>
+						<g:each in="${parentInstance?.notifications }" var="note" status="i">
+							
+								<tr>
+									<td>${note?.dateCreated?.format("dd MMM yyyy")}</td>
+									<td><g:link controller="child" action="show" id="${note?.child?.id}">${note?.child?.person }</g:link>	</td>							
+									<td>${note?.sendTo}</td>
+									<td>${note?.responseCode}</td>
+								</tr>
+								<tr>
+									<td colspan="4" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">${note?.body}</td>									
+								</tr>
+							
+						</g:each>
+					</table>
+				</g:if>
 			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
@@ -91,6 +119,7 @@
 								}
 					});		                
 		});  
+		
 		</script>
 	</body>
 </html>

@@ -148,7 +148,7 @@
 							<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
 							<br/><g:radioGroup style="margin-top:15px;" 
 								values="${gender?.id}"
-								labels="${gender}" 
+								labels="${gender}"								
 								name="child.person.gender${index }">
 								${it.radio} <g:message code="${it.label}" />
 							</g:radioGroup>

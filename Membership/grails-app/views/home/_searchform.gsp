@@ -177,7 +177,7 @@ $(document).ready(function() {
 						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
 						_photoinput = "";
 					} 											
-					_tbody.append("<tr><td>" + _chbox + "</td><td>" + this.person.firstname + " " + this.person.lastname + "</td><td>" + this.person.age + "</td><td>" + this.person.gender + "</td><td>" + _photoinput + "</td>");	
+					_tbody.append("<tr><td>" + _chbox + "</td><td>" + this.person.firstname + " " + this.person.lastname + "</td><td>" + this.person.age + "</td><td>" + this.person.gender.label + "</td><td>" + _photoinput + "</td>");	
 				})
 				initTimePicker($("#visit_time_search"),"")
 				$("#searchform-actions").show()					

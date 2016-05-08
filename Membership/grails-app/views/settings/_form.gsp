@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Settings" %>
 
 <div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'Application name', 'error')} required">
@@ -36,8 +37,7 @@
 
 <div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'visitcount', 'error')} ">
 	<label for="visitcount">
-		<g:message code="settings.visitcount.label" default="Discount after how many visits? If say 5 then the 6th visit will be discounted." />
-		
+		<g:message code="settings.visitcount.label" default="Discount after how many visits? If say 5 then the 6th visit will be discounted." />		
 	</label>
 	<g:field name="visitcount" type="number" value="${settingsInstance.visitcount}"/>
 
@@ -45,8 +45,7 @@
 
 <div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'notifytime', 'error')} ">
 	<label for="notifytime">
-		<g:message code="settings.notifytime.label" default="Minutes after which to send reminder message (Warning/Orange)" />
-		
+		<g:message code="settings.notifytime.label" default="Minutes after which to send reminder message (Warning/Orange)" />		
 	</label>
 	<g:field name="notifytime" type="number" value="${settingsInstance.notifytime}"/>
 
@@ -60,23 +59,38 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'newchildcount', 'error')} ">
-	<label for="newchildcount">
-		<g:message code="settings.newchildcount.label" default="Default number of fields open to create children under the 'New Client' tab." />
-		
-	</label>
-	<g:field name="newchildcount" type="number" value="${settingsInstance.newchildcount}"/>
-
-</div>
-<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'maxbooking', 'error')} ">
-	<label for="maxbooking">
-		<g:message code="settings.maxbooking.label" default="Maximum number of children allowed for a birthday booking" />
-		
-	</label>
-	<g:field name="maxbooking" type="number" value="${settingsInstance.maxbooking}"/>
-
-</div>
 
 
+
+<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'newchildcount', 'error')} ">
+		<label for="newchildcount">
+			<g:message code="settings.newchildcount.label" default="Default number of fields open to create children under the 'New Client' tab." />
+			
+		</label>
+		<g:field name="newchildcount" type="number" value="${settingsInstance.newchildcount}"/>
+	
+	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'maxbooking', 'error')} ">
+		<label for="maxbooking">
+			<g:message code="settings.maxbooking.label" default="Maximum number of children allowed for a birthday booking" />
+			
+		</label>
+		<g:field name="maxbooking" type="number" value="${settingsInstance.maxbooking}"/>
+	</div>
+	
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'debug', 'error')} ">
+		<label for="debug">
+			<g:message code="settings.debug.label" default="Debug on (1)/off (0)" />			
+		</label>
+		<g:field name="debug" type="text" value="${settingsInstance.debug}"/>	
+	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'smsTestNumber', 'error')} ">
+		<label for="smsTestNumber">
+			<g:message code="settings.smstestnumber.label" default="SMS Test number" />			
+		</label>
+		<g:field name="smsTestNumber" type="text" value="${settingsInstance.smsTestNumber}"/>	
+	</div>
+</sec:ifAnyGranted>
 
 

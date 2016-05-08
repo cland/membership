@@ -41,7 +41,7 @@ function sendToStown(msg,callback){
 	    alert( "error" );
 	  })
 	  .always(function() {
-	    console.log( "complete!" );
+	    console.log( "sendToStown complete!" );
 	  });
 }
 

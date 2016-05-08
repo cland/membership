@@ -111,17 +111,17 @@ class GroupManagerService {
 		def _tmp = getGroupNamePrefix(office) //"GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
 		roles.each{role ->
 			def group = RoleGroup.findByName(_tmp + "_" +role.getKey())
-			if(group)UserRoleGroup.create user, group
+			if(group)PersonRoleGroup.create user, group
 		}		
 	}
 	def addUserToGroup(Person userInstance, def groupIdList){
 		groupIdList?.each{_id ->
 			RoleGroup rolegroup = RoleGroup.get(_id)
-			if(rolegroup) UserRoleGroup.create userInstance, rolegroup
+			if(rolegroup) PersonRoleGroup.create userInstance, rolegroup
 		}
 	}
 //	def getUserGroups(Person user){
-//		return user?.getAuthorieties() //returns a set //UserRoleGroup.findAllByUser(user)
+//		return user?.getAuthorieties() //returns a set //PersonRoleGroup.findAllByUser(user)
 //	}
 //	def getUserRoles(Person user){
 ////		Set<RoleGroup> grps = user.getAuthorities() //getUserGroups(user)

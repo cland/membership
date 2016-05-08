@@ -4,8 +4,9 @@
 <sec:ifNotLoggedIn>
 <g:link controller="login" action="index" >Login</g:link> |
 </sec:ifNotLoggedIn>
-
-<g:link url="${resource(dir:'admin', file:'technical')}">Technical</g:link>  |
+<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+	<g:link url="${resource(dir:'admin', file:'technical')}">Technical</g:link>  |
+</sec:ifAnyGranted>
 <sec:ifLoggedIn>
 
 <sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN }">

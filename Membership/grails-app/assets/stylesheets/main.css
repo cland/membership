@@ -453,11 +453,11 @@ th a, td.thead a {
 }
 
 th a:link, th a:visited {
-	color: #666666;
+	color: #801687 !important;
 }
 
 th a:hover, th a:focus, td.thead a:hover,td.thead a:focus {
-	color: #333333;
+	color: #0080c0;
 }
 
 th.sortable a,  {

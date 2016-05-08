@@ -13,6 +13,7 @@ import org.joda.time.Period
 class PersonController {
 	def autoCompleteService
 	def cbcApiService
+	def groupManagerService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -44,6 +45,11 @@ class PersonController {
 
         if(!personInstance.save(flush:true)){
 			println personInstance.errors
+		}else{
+			//Add user to access groups
+			def officegroups = (params.list("officegroups")*.toLong())
+			println(officegroups)
+			groupManagerService.addUserToGroup(personInstance,officegroups)
 		}
 
         request.withFormat {
@@ -74,7 +80,11 @@ class PersonController {
         }
 
         personInstance.save flush:true
-
+		//Add user to access groups - we clear all his groups first in this instance
+		PersonRoleGroup.removeAll(personInstance, true)
+		def officegroups = (params.list("officegroups")*.toLong())
+		groupManagerService.addUserToGroup(personInstance,officegroups)
+		
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.id])

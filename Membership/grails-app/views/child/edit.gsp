@@ -4,7 +4,8 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'child.label', default: 'Child')}" />
-		<title><g:message code="default.edit.label" args="[entityName]" /></title>
+		<title><g:message code="default.edit.label" args="[entityName]" />: ${childInstance }</title>
+		<g:render template="head" var="thisInstance" bean="${parentInstance }" model="[sidenav:page_nav]"></g:render>
 	</head>
 	<body>
 		<a href="#edit-child" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -26,15 +27,55 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:childInstance, action:'update']" method="PUT" >
+			<g:uploadForm url="[resource:childInstance, action:'update']" method="POST" >
 				<g:hiddenField name="version" value="${childInstance?.version}" />
 				<fieldset class="form">
-					<g:render template="form"/>
+					<g:render template="childform" var="childInstance" bean="${childInstance }" model="[mode:'edit',settings:settingsInstance]"></g:render>
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/child/show/${childInstance?.id }'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
-			</g:form>
+			</g:uploadForm>
 		</div>
+		<script>
+		$(document).ready(function() {		
+			initBirthDatePicker($( "#birth-date"),"-2y");
+			$("#tabs").tabs(
+							{
+							active:cbc_params.active_tab(),
+							create: function (event,ui){	
+								//executed after is created								
+								$('#tabs').show()
+							},
+							show: function(event,ui){
+								//on every tabs clicked
+							},
+							beforeLoad : function(event, ui) {
+									ui.jqXHR.error(function() {
+										ui.panel
+										.html("Couldn't load this tab. We'll try to fix this as soon as possible. ");
+									});
+								}
+					});		                
+		});  
+		function initBirthDatePicker(el,def){
+			el.datepicker({
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd",
+				defaultDate : def,					
+				maxDate:"-0y",
+				minDate:"-90y"
+				});
+		}	
+		
+		function getAussieDate(fmt,datestring){
+			if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
+			if(datestring === undefined || datestring === "") 
+				return moment().tz("Australia/Perth").format(fmt);
+			else
+				return moment(datestring).tz("Australia/Perth").format(fmt);
+		}
+		</script>
 	</body>
 </html>

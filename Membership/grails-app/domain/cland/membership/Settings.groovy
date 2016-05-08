@@ -14,6 +14,8 @@ class Settings {
 	Integer donetime	//minutes when standard time is up
 	Integer newchildcount //when adding children inline, the default number of fields to display
 	Integer maxbooking //maximum number of kids to be included in a book
+	String debug
+	String smsTestNumber
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -27,11 +29,16 @@ class Settings {
 		maxbooking nullable:true
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
+		debug nullable:true
+		smsTestNumber nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		if(newchildcount == null) newchildcount = 3
 		if(maxbooking == null) maxbooking = 12
+		if(debug == null) debug = "0"
+		if(smsTestNumber == null) smsTestNumber="+61411111111"
+		
 		createdBy = curId
 		lastUpdatedBy = curId		
 	}

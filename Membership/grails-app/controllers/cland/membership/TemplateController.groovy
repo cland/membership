@@ -107,7 +107,6 @@ class TemplateController {
 	def newtemplate(){
 		def result = []
 		Map<String, String[]> vars = request.getParameterMap()
-		println(vars)
 		def _status = vars.status[0]
 		def _title = vars.title[0]
 		def _body = vars.body[0]

@@ -13,7 +13,7 @@ class HarareController {
 	def mailService //emailService
 	def nexmoService
 
-	static allowedMethods = [htown: "POST"]
+	static allowedMethods = [htown: "POST",savenote:"POST"]
     def htown(params) {
 		
 		println(params)
@@ -67,10 +67,67 @@ class HarareController {
 	
 	} */
 	
-	def smsdialogcreate() {
-		println(params)
-		def visit = Visit.get(params?.vid)
+	def savenote(){	
+		def result = ["response_code":"failure","response_msg":"Could not locate the CHILD/VISIT instances."]
+		boolean processed = false
+		try{
+			def jsonSlurper = new JsonSlurper()			
+			params.eachWithIndex { v,i ->								
+				def data = jsonSlurper.parseText(v.toString())				
+				if(data?.childid){					
+					if(!processed){
+						def child = Child.get(data?.childid)
+						def visit = Visit.get(data?.visitid)
+						if (child != null & visit != null){		
+							def _body = data?.body
+							def _sendto = data?.sendto
+							def _response_code = data?.response_code
+							def _response_msg = data?.response_msg
+							def _queued_count = data?.queued_count 
+							def _total_price = data?.total_price
+							def _total_count = data?.total_count
+							def _template = Template.get(data?.templateid)
+							
+							def notification = new Notification(
+									child:child,
+									visit:visit,
+									template:_template,
+									responseCode:_response_code,
+									responseMsg:_response_msg,
+									sendTo:_sendto,
+									body:_body,
+									totalPrice:_total_price,
+									totalCount:_total_count,
+									queuedCount:_queued_count
+								)																				
+							processed = true
+							if(!notification.save(flush:true)){
+								println(notification.errors)
+								result = ["response_code":"failure","response_msg":"Failed to save the notification"]
+							}else{
+								def parent = child?.parent
+								parent.addToNotifications(notification)
+								parent.save(flush:true)
+								result = ["response_code":"success","response_msg":"Message saved and queued for delivery."]
+							}
+							
+							render result as JSON
+							return
+						}
+					}
+				}
+				
+			} //end params
+			
+		}catch(Exception e){
+			//println (e.printStackTrace())
+		}
 		
+	
+		render result as JSON
+	}
+	def smsdialogcreate() {
+		def visit = Visit.get(params?.vid)	
 		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit,templateInstanceList:Template.list()]) //new Child(params)
 	}
 } //end class

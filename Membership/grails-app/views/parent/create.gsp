@@ -1,3 +1,6 @@
+<%@ page import="cland.membership.Parent" %>
+<g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
+<% def childcount=settingsInstance?.newchildcount %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -50,7 +53,12 @@
 		
 		<script>
 		$(document).ready(function() {		
-			
+			//setup the datepicker calendars
+			var newchildcount = ${childcount};
+			for(var i=0;i<newchildcount;i++){
+				initBirthDatePicker($( "#birth-date" + (i+1) ),"-2y");
+				initTimePicker($("#visit_time" + (i+1)),"")
+			}
 			$("#tabs").tabs(
 							{
 							active:cbc_params.active_tab(),
@@ -69,6 +77,33 @@
 								}
 					});		                
 		});  
+		function initBirthDatePicker(el,def){
+			el.datepicker({
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd",
+				defaultDate : def,					
+				maxDate:"-0y",
+				minDate:"-90y"
+				});
+		}	
+		function initTimePicker(el,def){			
+			el.datetimepicker({
+				controlType: 'select',
+				oneLine: true,
+				timeFormat: 'HH:mm', // 'hh:mm tt',
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd HH:mm",
+				stepMinute: 5
+			});
+			el.prop("value",getAussieDate("DD-MMM-YYYY HH:mm"))
+		}
+		function getAussieDate(fmt,datestring){
+			if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
+			if(datestring === undefined || datestring === "") 
+				return moment().tz("Australia/Perth").format(fmt);
+			else
+				return moment(datestring).tz("Australia/Perth").format(fmt);
+		}
 		</script>		
 	</body>
 </html>

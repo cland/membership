@@ -6,6 +6,7 @@ import java.util.Set;
 import cland.membership.*
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import cland.membership.lookup.*
 //import org.apache.commons.collections.list.LazyList;
 //import org.apache.commons.collections.FactoryUtils;
 
@@ -31,7 +32,7 @@ class Person implements Serializable {
 	String knownAs
 	String title
 	String email
-	String gender
+	Keywords gender
 	Race race
 	String idNumber
 	String mobileNo
@@ -58,7 +59,7 @@ class Person implements Serializable {
 		knownAs nullable: true
 		title nullable: true
 		email nullable: true
-		gender inList: Gender.list(), nullable: true		
+		gender nullable: true		
 		accountExpired nullable: true
 		accountLocked nullable: true
 		passwordExpired nullable: true

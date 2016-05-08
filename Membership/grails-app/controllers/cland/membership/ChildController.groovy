@@ -11,7 +11,7 @@ import grails.transaction.Transactional
 class ChildController {
 	def springSecurityService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -146,10 +146,10 @@ class ChildController {
         }
 
         childInstance.save flush:true
-
+		attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance.id])
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
                 redirect childInstance
             }
             '*'{ respond childInstance, [status: OK] }

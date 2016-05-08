@@ -294,7 +294,7 @@
 						  data: postdata
 						})
 					  .done(function(data) {
-							_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Template save successfully!</span>")
+							_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Template saved successfully!</span>")
 							_tbody.append("<tr><td>" + _title +" </td><td>" + _body +"</td></tr>")
 							_form.trigger('reset')
 					  })

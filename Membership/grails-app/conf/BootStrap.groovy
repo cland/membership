@@ -130,6 +130,7 @@ class BootStrap {
 			PersonRoleGroup.create personAdmin, adminGroup
 			println ">> padmin"
 			PersonRoleGroup.create personDev, devGroup
+			PersonRoleGroup.create personDev, adminGroup
 			println ">> pdev"
 			/*1.times {
 				long id = it + 1
@@ -201,6 +202,7 @@ class BootStrap {
 				   '/harare/smsdialogcreate/**',
 				   '/htown',
 				   '/harare/htown/**',
+				   '/harare/savenote/**',
 				   '*/child/*']) {
 				  new RequestMap( url: url, configAttribute:'isFullyAuthenticated()').save()
 			 }

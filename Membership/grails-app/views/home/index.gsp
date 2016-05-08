@@ -1,4 +1,5 @@
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
+<% def childcount=settingsInstance?.newchildcount %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -243,14 +244,16 @@ var cbc_params = {
 			});
 
 			//setup the datepicker calendars
-			initBirthDatePicker($( "#birth-date1" ),"-2y");
-			initBirthDatePicker($( "#birth-date2" ),"-2y");
+			var newchildcount = ${childcount};
+			for(var i=0;i<newchildcount;i++){
+				initBirthDatePicker($( "#birth-date" + (i+1) ),"-2y");
+				initTimePicker($("#visit_time" + (i+1)),"")
+			}
+			
 			initBirthDatePicker($( "#grp-birth-date1" ),"-2y");
 			initBirthDatePicker($( "#grp-bookingdate" ),"-2y");
 			
-			//setup the time pickers
-			initTimePicker($("#visit_time1"),"")
-			initTimePicker($("#visit_time2"),"")
+			//setup the time pickers			
 			initTimePicker($("#visit_time_search"),"")
 
 			//show datetime:
