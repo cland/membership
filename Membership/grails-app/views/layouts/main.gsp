@@ -34,7 +34,18 @@
 		<meta name="theme-color" content="#ffffff">
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><a href="${request.contextPath}"><asset:image src="logo.png" alt="Membership System"/></a></div>
+		<div id="grailsLogo" role="banner">
+			<a href="${request.contextPath}"><asset:image src="logo.png" alt="Membership System"/></a>
+			<div class="float-right">
+			
+			<div id="current-user"> <label><span class="r-arrow"></span> </label>
+				<sec:ifLoggedIn>
+					<span style="color:#000;">Logged in as:</span> <sec:loggedInUserInfo field="username" />					
+				</sec:ifLoggedIn> 
+				<sec:ifNotLoggedIn>Anonymous</sec:ifNotLoggedIn>
+			</div>
+		</div>	
+		</div>
 		<g:render template="/layouts/navbar"></g:render>
 		<g:layoutBody/>
 		<div class="footer" role="contentinfo"><g:render template="/layouts/footer"></g:render></div>

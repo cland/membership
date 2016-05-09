@@ -41,7 +41,8 @@
 								<th>Time-in</th>
 								<th>Time-out</th>
 								<th>Contact No.</th>
-								<th>Status</th>								
+								<th>Status</th>	
+								<th>Visit Photo</th>							
 							</tr>
 						</thead>
 						<g:each in="${parentInstance?.children }" var="child" status="i">
@@ -53,7 +54,11 @@
 									<td>${c?.endtime?.format("HH:mm")}</td>
 									<td>${c?.contactNo}</td>
 									<td>${c?.status}</td>
-									
+									<td>
+										<attachments:each bean="${c}">
+											<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>
+										</attachments:each>
+									</td>
 								</tr>
 							</g:each>
 						</g:each>
@@ -119,6 +124,33 @@
 								}
 					});		                
 		});  
+		function viewPhoto(_link){
+			var $dialog = $('<div style="text-align:center;"><img src="' + _link + '" style="width:300px;"/></div>')             
+            		                
+            .dialog({
+            	modal:true,
+                autoOpen: false,
+                dialogClass: 'no-close',
+                width:800,
+                beforeClose: function(event,ui){
+                	
+                },
+                buttons:{
+                    "Close":function(){			                      	 
+                     	// $dialog.dialog('close')
+                     	 $dialog.dialog('destroy').remove()
+                        }
+                    },
+                close: function(event,ui){
+              	  	$dialog.dialog('destroy').remove()
+              	
+                },
+                position: {my:"top",at:"top",of:window},
+                title: 'Photo of child on the day of visit'                         
+            });
+                
+            $dialog.dialog('open');
+		}
 		
 		</script>
 	</body>

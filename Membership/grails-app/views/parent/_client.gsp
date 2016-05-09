@@ -113,6 +113,7 @@
 					<th>Gender</th>
 					<th>Total Visits</th>
 					<th>Checked-In?</th>
+					
 				</tr>
 			</thead>
 			<g:each in="${parentInstance.children}" var="c">
@@ -124,6 +125,7 @@
 					<td>${c?.person?.gender}</td>
 					<td>${c?.getVisitCount()}</td>
 					<td><g:formatBoolean boolean="${c?.isActive() }" false="No" true="Yes"/></td>
+					
 				</tr>
 			</g:each>
 		</table>

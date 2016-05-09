@@ -738,3 +738,13 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 .border-bottom {
 	border-bottom: 1px solid rgb(245, 197, 127);
 }
+#current-user{
+	float:right; 
+	margin-top:8px;
+	padding:5px 10px;
+	text-transform:capitalize;
+	font-weight:bold;
+	color:yellow;
+	font-size:0.9em;
+}
+#current-user label{color:#000;font-weight:normal;text-transform:none;}

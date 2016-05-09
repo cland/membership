@@ -8,7 +8,7 @@ import cland.membership.security.*
 
 @Transactional(readOnly = true)
 class SettingsController {
-
+	def groupManagerService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -50,8 +50,8 @@ class SettingsController {
 
     def edit(Settings settingsInstance) {
 		def office = Office.get(1)
-		def staff = office?.staff //Person.list(params)
-		println (staff?.size())
+		def staff = office?.staff?.findAll{groupManagerService.isStaff(office,it) == true & !groupManagerService.isOfficeDeveloper(office, it)} //Person.list(params)
+		
 		def templates = Template.list(params)
         respond settingsInstance, model:[personInstanceList:staff,templateInstanceList:templates]
     }

@@ -49,6 +49,8 @@ class GroupManagerService {
 		//return grplist
 	}
 	private String getGroupNamePrefix(Object obj){
+		return "GROUP"
+		//TODO: activate once we implement the other offices
 		if(obj?.instanceOf(Office)){
 			Office office = (Office)obj
 			return "GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
@@ -166,92 +168,81 @@ class GroupManagerService {
 	
 	} //end list groups
 	
+	boolean isStaff(Office office,Person user){
+		
+		if(user == null){
+			return (SpringSecurityUtils.ifAnyGranted(
+				SystemRoles.ROLE_ADMIN.value + "," + 
+				SystemRoles.ROLE_MANAGER.value + "," +
+				SystemRoles.ROLE_ASSISTANT.value + "," +
+				SystemRoles.ROLE_DEVELOPER.value))
+		}
+		
+		return (
+				isOfficeAdmin(office,user) ||
+				isOfficeManager(office,user) ||
+				isOfficeAssistant(office,user) 
+			)
+	}
+	boolean isClient(){
+		return !isStaff();
+	}
 	boolean isAdmin(){
 		return (SpringSecurityUtils.ifAnyGranted(SystemRoles.ROLE_ADMIN.value + "," + SystemRoles.ROLE_DEVELOPER.value))
 	}
 	boolean isDeveloper(){
 		return (SpringSecurityUtils.ifAnyGranted(SystemRoles.ROLE_DEVELOPER.value))
 	}
-	/**
-	 * Can read statistical information at a national level
-	 * @return
-	 */
-	boolean isNCO(){
-		return true //return (SpringSecurityUtils.ifAnyGranted(SystemRoles.ROLE_NCO.value))
-	}
-	/**
-	 * Can read statistical information at a regional level for a given region
-	 * @param region
-	 * @return
-	 */
-	boolean isPCO(Region region){
-		//RoleGroup roleGroup = RoleGroup.findByName(_GroupName(region,SystemRoles.ROLE_PCO?.getKey()))		
-		return true //isMember(roleGroup)
-	}
+	
+	
 	/**
 	 * Can manage office users, office information, create/edit cases.
 	 * @param office
 	 * @return
 	 */
+	boolean isOfficeDeveloper(Office office, Person user){
+		if(!office) return false
+		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_DEVELOPER?.getKey()))
+		if(user == null) return isMember(roleGroup)
+					
+		List<RoleGroup> grps = user.getAuthorities() as List
+		return grps.contains(roleGroup)
+	}
 	boolean isOfficeAdmin(Office office){
-		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_OCO?.getKey()))		
-		return isMember(roleGroup)
+		isOfficeAdmin(office,null)
 	}
 	boolean isOfficeAdmin(Office office, Person user){
-		if(!office || !user) return false
-		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_OCO?.getKey()))
-		List<RoleGroup> grps = user.getAuthorities() as List
-		
-		if(grps.contains(roleGroup)) return true
-		
-		return false
-	}
-	/**
-	 * Can create/edit cases and actions only
-	 * @param office
-	 * @return
-	 */
-	boolean isOfficeWorker(Office office){
-		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_ADMIN?.getKey()))		
-		return isMember(roleGroup)
-	}
-	boolean isOfficeCaseWorker(Office office, Person user){
-		if(!office || !user) return false
+		if(!office) return false		
 		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_ADMIN?.getKey()))
+		if(user == null) return isMember(roleGroup)
+					
+		List<RoleGroup> grps = user.getAuthorities() as List				
+		return grps.contains(roleGroup)		
+	}
+	boolean isOfficeManager(Office office, Person user){
+		if(!office) return false
+		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_MANAGER?.getKey()))
+		if(user == null) return isMember(roleGroup)
+					
+		List<RoleGroup> grps = user.getAuthorities() as List				
+		return grps.contains(roleGroup)		
+	}
+	boolean isOfficeAssistant(Office office, Person user){
+		if(!office) return false
+		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_ASSISTANT?.getKey()))
+		if(user == null) return isMember(roleGroup)
+					
+		List<RoleGroup> grps = user.getAuthorities() as List				
+		return grps.contains(roleGroup)		
+	}
+	boolean isOfficerReviewer(Office office, Person user){
+		if(!office) return false
+		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_REVIEWER?.getKey()))
+		if(user == null) return isMember(roleGroup)
+					
 		List<RoleGroup> grps = user.getAuthorities() as List
-		
-		if(grps.contains(roleGroup)) return true
-		
-		return false
-	}
-	/**
-	 * Can read and edit certain cases that are marked as private
-	 * @param office
-	 * @return
-	 */
-	boolean isOfficeSpecialWorker(Office office){
-		return false
-	}
-	
-	/**
-	 * Can read only - full information i.e. including personal information like firstname, surname
-	 * @param office
-	 * @return
-	 */
-	boolean isOfficeReviewer(Office office){
-		RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_REVIEWER?.getKey()))		
-		return isMember(roleGroup)
-	}
-	/**
-	 * Can read only - limited information i.e. NO personal information such as surname or first name
-	 * @param office
-	 * @return
-	 */
-	boolean isOfficeReader(Office office){
-		//RoleGroup roleGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_READER?.getKey()))	
-			
-		return true // isMember(roleGroup)
-	}
+		return grps.contains(roleGroup)
+	}	
 	
 	boolean isMember(RoleGroup roleGroup){		
 		return SpringSecurityUtils.ifAnyGranted(roleGroup.getAuthorities()*.authority?.join(","))		

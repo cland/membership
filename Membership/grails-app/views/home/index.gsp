@@ -1,5 +1,8 @@
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
+<g:set var="warn_minutes" value="${settingsInstance?.notifytime }"/>
+<g:set var="done_minutes" value="${settingsInstance?.donetime }"/>
 <% def childcount=settingsInstance?.newchildcount %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -320,8 +323,8 @@ var cbc_params = {
 					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
 					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal")
 					  var countup =  true;
-					  var warning_limit = getMillis(45); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
-					  var done_limit = getMillis(60); //just over 2 hours
+					  var warning_limit = getMillis(${warn_minutes}); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
+					  var done_limit = getMillis(${done_minutes}); //just over 2 hours
 					 
 					  initializeClock('clockdiv_' + id, deadline,countup,warning_limit,done_limit);
 				});

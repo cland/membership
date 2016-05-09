@@ -183,7 +183,8 @@ var cbc_params = {
 			var name = $("#inputName").val();
 			var num =  $("#inputTel").val();
 			var debug = "${isDebug}";
-			if(debug == "1") num = "${smsTestNumber}"
+			if(debug == "1") num = "${smsTestNumber}";
+			
 			var body = $("#inputMessage").val();	
 			if(name == ""){
 				alert("Please enter your name!"); return false;

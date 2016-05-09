@@ -7,7 +7,7 @@ import cland.membership.*
 class BootStrap {
 	def groupManagerService
     def init = { servletContext ->
-		TimeZone.setDefault(TimeZone.getTimeZone("Australia/Perth"))
+		//TimeZone.setDefault(TimeZone.getTimeZone("Australia/Perth"))
 		boolean doBootStrap = false
 		
 		def userlist = Person.list()
@@ -106,18 +106,21 @@ class BootStrap {
 			def devRole = Role.findByAuthority(SystemRoles.ROLE_DEVELOPER.value) //new Role(name: "GROUP_DEV").save(flush: true)
 			def managerRole = Role.findByAuthority(SystemRoles.ROLE_MANAGER.value)
 			def assistantRole = Role.findByAuthority(SystemRoles.ROLE_ASSISTANT.value)
+			def reviewerRole = Role.findByAuthority(SystemRoles.ROLE_REVIEWER.value)
 			
 			println ">> create groups"
-			def adminGroup = new RoleGroup(name:"GROUP_ADMIN",description:"Administrators Group").save(flush:true)
+			def adminGroup = new RoleGroup(name:"GROUP_ROLE_ADMIN",description:"Administrators Group").save(flush:true)
 			if(adminGroup.hasErrors()) adminGroup.errors
-			def userGroup = new RoleGroup(name:"GROUP_USER",description:"Users Group").save(flush:true)
+			def userGroup = new RoleGroup(name:"GROUP_ROLE_USER",description:"Users Group").save(flush:true)
 			if(userGroup.hasErrors()) userGroup.errors
-			def devGroup = new RoleGroup(name: "GROUP_DEVELOPER",description:"Developers Group").save(flush:true)
+			def devGroup = new RoleGroup(name: "GROUP_ROLE_DEVELOPER",description:"Developers Group").save(flush:true)
 			if(devGroup.hasErrors()) devGroup.errors
-			def managerGroup = new RoleGroup(name:"GROUP_MANAGER",description:"Manager Group").save(flush:true)
+			def managerGroup = new RoleGroup(name:"GROUP_ROLE_MANAGER",description:"Manager Group").save(flush:true)
 			if(managerGroup.hasErrors()) managerGroup.errors
-			def assistantGroup = new RoleGroup(name:"GROUP_ASSISTANT",description:"Assistant Group").save(flush:true)
+			def assistantGroup = new RoleGroup(name:"GROUP_ROLE_ASSISTANT",description:"Assistant Group").save(flush:true)
 			if(assistantGroup.hasErrors()) assistantGroup.errors
+			def reviewerGroup = new RoleGroup(name:"GROUP_ROLE_REVIEWER",description:"Reviewer or Read only Group").save(flush:true)
+			if(reviewerGroup.hasErrors()) reviewerGroup.errors
 			
 			println ">> creating RoleGroupRoles..."
 			RoleGroupRole.create adminGroup, adminRole
@@ -125,6 +128,7 @@ class BootStrap {
 			RoleGroupRole.create devGroup, devRole
 			RoleGroupRole.create managerGroup, managerRole
 			RoleGroupRole.create assistantGroup, assistantRole
+			RoleGroupRole.create reviewerGroup, reviewerRole
 			
 			println ">> adding person(s) to groups"
 			PersonRoleGroup.create personAdmin, adminGroup
