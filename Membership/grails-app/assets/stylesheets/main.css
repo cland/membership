@@ -748,3 +748,8 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 	font-size:0.9em;
 }
 #current-user label{color:#000;font-weight:normal;text-transform:none;}
+.dataTable tr td {
+	 border-bottom : solid 1px #FFDAB9;
+	 padding: 5px 0 5px 0;
+	 font-size:0.9em;
+}

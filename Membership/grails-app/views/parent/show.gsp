@@ -40,8 +40,10 @@
 								<th>Date</th>
 								<th>Time-in</th>
 								<th>Time-out</th>
+								<th>Duration</th>
 								<th>Contact No.</th>
 								<th>Status</th>	
+								<th>Selected Hours</th>
 								<th>Visit Photo</th>							
 							</tr>
 						</thead>
@@ -52,8 +54,10 @@
 									<td>${c?.starttime?.format("dd MMM yyyy")}</td>
 									<td>${c?.starttime?.format("hh:mm")}</td>
 									<td>${c?.endtime?.format("HH:mm")}</td>
+									<td>${c?.durationText}</td>
 									<td>${c?.contactNo}</td>
 									<td>${c?.status}</td>
+									<td>${c?.selectedHours}</td>
 									<td>
 										<attachments:each bean="${c}">
 											<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>

@@ -161,7 +161,7 @@ class BootStrap {
 	private void initRequestmap(){
 		
 		for (String url in [
-			'/',
+			'/',			
 			 '/**/favicon.ico',
 			 '/**/js/**',
 			 '/**/css/**',
@@ -176,70 +176,81 @@ class BootStrap {
 			 new RequestMap( url: url, configAttribute: 'permitAll').save()
 		}
 			 // show and lists/index
-			 for (String url in ['/',
+			 for (String url in [
 				 '/index',
-				 '/acl/**/**',
-				 '/person/personlist/**',
-				 '/office/jq_list_cases',
-				 '/office/jq_list_staff',
-				 '/organisation/orglist/**',				 
-				 '/country/**',
-				 '/region/**',
-				 '/report/**',
-				 '/category/**',
 				 '/**/show/**',
 				  '/**/index/**',
-				   '/Membership/*',
-				   '/Membership/assets/*',
 				   '/person/**',
 				   '/person/edit/**',
-				   '/person/create/**',
-				   '/person/delete/**',
-				   '/parent/delete/**',
+				   '/person/create/**',				   
 				   '/parent/',
 				   '/parent/*',
 				   '/parent/edit/**',
 				   '/parent/create/**',
 				   '/parent/**',
 				   '/booking/**',
-				   '/child/*',
-				   '/harare/smsdialogcreate/**',
-				   '/htown',
-				   '/harare/htown/**',
-				   '/harare/savenote/**',
-				   '*/child/*']) {
+				   '/child/*']) {
 				  new RequestMap( url: url, configAttribute:'isFullyAuthenticated()').save()
 			 }
 		
-			 //editing for office admin
-			 for (String url in [
-				 '/**/create/**',
-				 '/**/dialogcreate/**',
-				 '/**/dialogsave/**',
-				 '/**/save/**',
-				 '/**/update/**',
-				 '/**/edit/**',
-				 '/parent/search/**',
+			 //ASSISTANT, MANAGER, ADMIN, DEVELOPER (Basically Staff)
+			   for (String url in [
+				   '/**/create/**',
+				   '/**/dialogcreate/**',
+				   '/**/dialogsave/**',
+				   '/**/save/**',
+				   '/**/update/**',
+				   '/**/edit/**',
+				   '/country/**',
+					'/region/**',
+					'/category/**',
+				   '/person/delete/**',
+					'/parent/delete/**',
+				   '/harare/smsdialogcreate/**',
+					'/htown',
+					'/harare/htown/**',
+					'/harare/savenote/**',
+				   '/person/personlist/**',
+					'/office/jq_list_cases',
+					'/office/jq_list_staff',
+					'/organisation/orglist/**',
+				   '/reports/**',
+				   '/reports/officeSummaryStats/**',
+				   '/parent/search/**']) {
+					new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ','
+						+ SystemRoles.ROLE_DEVELOPER.value + ','
+						+ SystemRoles.ROLE_MANAGER.value + ','
+						+ SystemRoles.ROLE_ASSISTANT.value).save()
+			   }
+				   
+			 //ADMIN, MANAGER
+			 for (String url in [				 
+				 '/reports/**',
+				 '/reports/officeSummaryStats/**',
+				 '/settings/**',
+				  '/settings/edit/**']) {
+				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ',' 
+					  + SystemRoles.ROLE_DEVELOPER.value + ',' 
+					  + SystemRoles.ROLE_MANAGER.value).save()
+			 }
+			  
+			
+			 //strictly ADMIN, DEVELOPER
+			 for (String url in [ 
+				 '/acl/grouplist/**',
+				 '/acl/office_groups/**',
+				 '/admin/**',
+				 '/**/delete/**',
+				 '/office/delete/**',
+				 '/role/**',
+				 '/roleGroup/**',				 
 				 '/template/newtemplate/**',
+				 '/requestMap/**',
 				 '/requestMap/delete/**',
 				 '/requestMap/update/**',
 				 '/requestMap/show/**',
 				 '/requestMap/edit/**',				 
 				 '/requestMap/create/**']) {
-				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value).save()
-			 }
-			  
-			
-			 //strictly admin
-			 for (String url in [ '/requestMap/**',
-				 '/admin/**',
-				 '/**/delete/**',
-				 '/office/delete/**',
-				 '/role/**',
-				 '/roleGroup/**',
-				 '/settings/**',	
-				 '/reports/**',
-				 '/settings/edit/**']) {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
 	} //end method

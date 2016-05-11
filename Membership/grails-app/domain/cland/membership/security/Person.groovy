@@ -112,6 +112,9 @@ class Person implements Serializable {
 	String toString(){
 		return firstName + " " + lastName
 	}
+	String getFullname(){
+		return this.toString()
+	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)
 		return (user==null?"unknown":user?.toString())
