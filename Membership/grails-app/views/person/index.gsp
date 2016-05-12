@@ -21,17 +21,12 @@
 			</g:if>
 			<table>
 			<thead>
-					<tr>
-					
-						<g:sortableColumn property="username" title="${message(code: 'person.username.label', default: 'Username')}" />
-					
+					<tr>					
+						<g:sortableColumn property="username" title="${message(code: 'person.username.label', default: 'Username')}" />					
 						<g:sortableColumn property="firstName" title="${message(code: 'person.firstName.label', default: 'First Name')}" />
-					
-						<th><g:message code="person.race.label" default="Race" /></th>
-					
-						<g:sortableColumn property="accountExpired" title="${message(code: 'person.accountExpired.label', default: 'Account Expired')}" />
-					
-						<g:sortableColumn property="knownAs" title="${message(code: 'person.knownAs.label', default: 'Known As')}" />
+						<g:sortableColumn property="lastName" title="${message(code: 'person.lastName.label', default: 'Last Name')}" />
+						<g:sortableColumn property="mobileNo" title="${message(code: 'person.mobileno.label', default: 'Contact No.')}" />					
+						<g:sortableColumn property="enabled" title="${message(code: 'person.enabled.label', default: 'Account Active')}" />												
 					
 					</tr>
 				</thead>
@@ -40,15 +35,10 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${personInstance.id}">${fieldValue(bean: personInstance, field: "username")}</g:link></td>
-					
 						<td>${fieldValue(bean: personInstance, field: "firstName")}</td>
-					
-						<td>${fieldValue(bean: personInstance, field: "race")}</td>
-					
-						<td><g:formatBoolean boolean="${personInstance.accountExpired}" /></td>
-					
-						<td>${fieldValue(bean: personInstance, field: "knownAs")}</td>
-					
+						<td>${fieldValue(bean: personInstance, field: "lastName")}</td>	
+						<td>${personInstance?.mobileNo }</td>					
+						<td><g:formatBoolean boolean="${personInstance.enabled}" yes="Yes" no="No" /></td>										
 					</tr>
 				</g:each>
 				</tbody>

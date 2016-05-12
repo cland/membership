@@ -48,7 +48,8 @@
 								<g:sortableColumn property="username" title="${message(code: 'person.username.label', default: 'Username')}" />							
 								<g:sortableColumn property="firstName" title="${message(code: 'person.firstName.label', default: 'First Name')}" />							
 								<th><g:message code="person.lastName.label" default="Last Name" /></th>							
-								<g:sortableColumn property="accountExpired" title="${message(code: 'person.accountExpired.label', default: 'Account Expired')}" />							
+								<g:sortableColumn property="accountExpired" title="${message(code: 'person.accountExpired.label', default: 'Account Expired')}" />
+								<th>Roles</th>							
 							</tr>
 						</thead>
 						<tbody >
@@ -58,9 +59,11 @@
 								<td><g:link action="show" controller="person" id="${personInstance.id}">${fieldValue(bean: personInstance, field: "username")}</g:link></td>							
 								<td>${fieldValue(bean: personInstance, field: "firstName")}</td>
 								<td>${fieldValue(bean: personInstance, field: "lastName")}</td>							
-								<td>${fieldValue(bean: personInstance, field: "accountExpired")}</td>							
+								<td>${fieldValue(bean: personInstance, field: "accountExpired")}</td>
+								<td>${personInstance?.authorities?.join(",") }</td>					
 							</tr>
 						</g:each>
+						<tr><td colspan="6"><input type="button" name="addstaff" onclick="document.location='${request.contextPath}/person/create'" class="add" value="Add Staff" /></td></tr>
 						</tbody>
 					</table>
 					<fieldset style="display:none;">

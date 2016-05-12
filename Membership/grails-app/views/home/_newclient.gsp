@@ -44,7 +44,7 @@
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
 				<div class="cell">
-					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.id} %>
+					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.label} %>
 						<g:radioGroup 
 							values="${reltypes?.id}"
 							labels="${reltypes}" 
@@ -92,7 +92,7 @@
 					</div>
 					<div class="cell border-bottom">
 						<g:textField name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
-						<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
+						<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort{it?.label} %>
 						<br/><g:radioGroup style="margin-top:15px;" 
 							values="${gender?.id}"
 							labels="${gender}" 

@@ -39,4 +39,7 @@ class RoleGroup implements Serializable {
 			value:id,
 			category:"Group",rolegroup:this]
 	}
+	String toString(){
+		return name
+	}
 }

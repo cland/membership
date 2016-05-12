@@ -23,11 +23,8 @@
 			</g:if>
 			<div id="tabs" style="display: none;">
 				<ul>
-					<li><a href="#tab-1">Details</a></li>
-					<li><a href="#tab-2">Other</a></li>
-					<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_MANAGER }">
-						<li><a href="#tab-2">Admin</a></li>	
-					</sec:ifAnyGranted>
+					<li><a href="#tab-1">Personal Details</a></li>
+					<li><a href="#tab-2">Security Details</a></li>					
 				
 				</ul>
 				<div id="tab-1">
@@ -145,7 +142,53 @@
 			</ol>
 			</div>
 			<div id="tab-2">
-				<p>== TAB2 == </p>
+					<fieldset><legend>Login Details</legend>
+	<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'username', 'error')} required">
+			<label for="username">
+				<g:message code="user.username.label" default="Username" />
+				<span class="required-indicator">*</span>
+			</label>
+			${personInstance?.username}
+		</div>
+
+		
+		<div class="fieldcontain">
+			<label for="isStaff">
+				<g:message code="user.isstaff.label" default="Is Staff?" />				
+			</label>
+			${personInstance?.staffMemberStatus}
+		</div>	
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'enabled', 'error')} ">
+			<label for="enabled">
+				<g:message code="user.enabled.label" default="Enabled" />				
+			</label>
+			${personInstance?.enabled}
+		</div>
+		
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'accountExpired', 'error')} ">
+			<label for="accountExpired">
+				<g:message code="user.accountExpired.label" default="Account Expired" />
+				
+			</label>
+			${personInstance?.accountExpired}
+		</div>
+		
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'accountLocked', 'error')} ">
+			<label for="accountLocked">
+				<g:message code="user.accountLocked.label" default="Account Locked" />
+				
+			</label>
+			${personInstance?.accountLocked}
+		</div>
+		
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'passwordExpired', 'error')} ">
+			<label for="passwordExpired">
+				<g:message code="user.passwordExpired.label" default="Password Expired" />
+				
+			</label>
+			${personInstance?.passwordExpired}
+		</div>
+	</fieldset>
 			</div>
 			</div>
 			<g:form url="[resource:personInstance, action:'delete']" method="DELETE">

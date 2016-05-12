@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="warn_minutes" value="${settingsInstance?.notifytime }"/>
 <g:set var="done_minutes" value="${settingsInstance?.donetime }"/>
@@ -105,7 +106,9 @@ var cbc_params = {
 					<ul>
 						<li><a href="#tab-1">Search Existing</a></li>
 						<li><a href="#tab-2">New Client</a></li>
-						<li><a href="#tab-3">Group/Birthday Booking</a></li>									
+						<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+							<li><a href="#tab-3">Group/Birthday Booking</a></li>	
+						</sec:ifAnyGranted>								
 					</ul>
 					<div id="tab-1">
 						<form id="search_form" name="search_form" action="${request.contextPath}/parent/checkin" enctype="multipart/form-data">
@@ -126,9 +129,11 @@ var cbc_params = {
 							</fieldset>
 						</g:uploadForm>
 					</div>
-					<div id="tab-3">
-						<g:render template="groupclient" model="[settings:settingsInstance]"></g:render>
-					</div>
+					<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+						<div id="tab-3">
+							<g:render template="groupclient" model="[settings:settingsInstance]"></g:render>
+						</div>
+					</sec:ifAnyGranted>
 				</div>
 			</fieldset>
 			<div class="wait">Loading, please wait...</div>
@@ -366,8 +371,8 @@ var cbc_params = {
 					'</div>' +
 				'</div>' +
 				'<br/><div class="details-body">' +
-				  '<span><b>Time in:</b> ' + timein + '</span><br/>' +
-				  '<span><b>Extra:</b> ' + extratime + '</span><br/>' +
+				  '<span><b>Time in:</b> <br/>' + timein + '</span><br/>' +
+				  '<span class="hide"><b>Extra:</b> ' + extratime + '</span><br/>' +
 				  '<br/><span>' +
 					'<input type="submit" class="button" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
 					 '<input type="submit" class="button" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\',\'Complete\')" name="btn_' + divid + '" value="Check-Out" />' +

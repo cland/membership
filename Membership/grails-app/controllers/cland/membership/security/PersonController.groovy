@@ -3,6 +3,7 @@ package cland.membership.security
 
 
 import static org.springframework.http.HttpStatus.*
+import cland.membership.Office
 import grails.converters.JSON
 import grails.transaction.Transactional
 import org.joda.time.DateTime
@@ -18,7 +19,21 @@ class PersonController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Person.list(params), model:[personInstanceCount: Person.count()]
+		Office office = Office.list().first()
+		def personList = null
+		
+		if(groupManagerService.isAdmin()){
+			personList = Person.list()
+		}else{
+			personList = Person.createCriteria().list(params) {
+				and{
+					not{'in'("lastName",["Administrator","Devuser"])}
+					not{'in'("username",["dev","admin"])}
+				}		
+			}
+		}
+		
+        respond personList, model:[personInstanceCount: personList?.size()]
     }
 
     def show(Person personInstance) {
@@ -71,6 +86,7 @@ class PersonController {
             notFound()
             return
         }
+		
 		bindData(personInstance, params, [exclude: 'dateOfBirth'])
 		bindData(personInstance, ['dateOfBirth': params.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
 		

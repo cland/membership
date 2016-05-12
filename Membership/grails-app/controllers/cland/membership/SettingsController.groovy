@@ -50,7 +50,15 @@ class SettingsController {
 
     def edit(Settings settingsInstance) {
 		def office = Office.get(1)
-		def staff = office?.staff?.findAll{groupManagerService.isStaff(office,it) == true & !groupManagerService.isOfficeDeveloper(office, it)} //Person.list(params)
+		def staff = null
+		if(groupManagerService.isDeveloper()){
+			staff = office?.staff?.findAll{groupManagerService.isStaff(office,it) == true }
+		}else{
+			staff = office?.staff?.findAll{
+				groupManagerService.isStaff(office,it) == true &
+				!groupManagerService.isOfficeDeveloper(office, it) &
+				!groupManagerService.isOfficeAdmin(office, it)}
+		}
 		
 		def templates = Template.list(params)
         respond settingsInstance, model:[personInstanceList:staff,templateInstanceList:templates]

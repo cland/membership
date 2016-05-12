@@ -12,6 +12,10 @@ public class StatsData {
 	//** VISITS
 	public int num_new_visits =0;
 	public int num_visits =0;
+	
+	//** Notifications
+	public int num_notifications =0
+	
 	//** BOOKINGS
 	public int num_bookings = 0;
 

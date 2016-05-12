@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -99,9 +100,9 @@ var cbc_params = {
 					<tbody>
 						<tr valign="top">
 							<td bgcolor="#000000" width="122">&nbsp;</td>
-							<td style="color:white;font-weight:bold;font-size:9pt;white-space:nowrap" bgcolor="#000000" width="122">New</td>
-							<td style="color:white;font-weight:bold;font-size:9pt;white-space:nowrap" bgcolor="#000000" width="159">Active</td>							
-							<td bgcolor="#000000" width="35"><img src="/icons/ecblank.gif" alt="" border="0" height="1" width="1"></td>
+							<td style="color:white;font-weight:bold;font-size:9pt;white-space:nowrap" bgcolor="#000000" width="122">New This Month</td>
+							<td style="color:white;font-weight:bold;font-size:9pt;white-space:nowrap" bgcolor="#000000" width="159">Total</td>							
+							<td bgcolor="#000000" width="35"></td>
 						</tr>				
 						<tr valign="top">
 							<td width="122"><label>Clients</label></td>
@@ -125,34 +126,28 @@ var cbc_params = {
 				<div class="key"><div>
 				</div></div>
 			</fieldset>
-			
-			<fieldset><legend>Export to Excel</legend>
-				<div class="filter-div">
-				
-				<g:formRemote class="ExportForm" id="searchform" name="searchform"  url="[controller:'report',action:'export']" 				
-				onSuccess="onSuccess(data)"
-				onFailure="onFailure(data)">
-					<fieldset class="form">
-						<table class="dataTable">						
-						<tr>
-							<td>Date range:</td>
-							<td>
-								From: <g:textField name="startDate_open" class="datepick_single_future" id="start-date" value=""/> &nbsp;
-								To: <g:textField name="endDate_open" class="datepick_single_future" id="end-date" value=""/>	
-							</td>
-						</tr>						
-
-					</table>
-					
-
-					<g:submitButton id="export_btn" name="export" class="export" onclick="exportReport('export');return false" value="Search & Export" />
-					
-
-					</fieldset>
-
-				</g:formRemote>	
-			</div>
-			</fieldset>
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+				<fieldset><legend>Export to Excel</legend>
+					<div class="filter-div">				
+						<g:formRemote class="ExportForm" id="searchform" name="searchform"  url="[controller:'reports',action:'export']" 				
+						onSuccess="onSuccess(data)"
+						onFailure="onFailure(data)">
+							<fieldset class="form">
+								<table class="dataTable">						
+								<tr>
+									<td>Date range:</td>
+									<td>
+										From: <g:textField name="startDate_open" class="datepick_single_future" id="start-date" value=""/> &nbsp;
+										To: <g:textField name="endDate_open" class="datepick_single_future" id="end-date" value=""/>	
+									</td>
+								</tr>
+								</table>					
+								<g:submitButton id="export_btn" name="export" class="export" onclick="exportReport('export');return false" value="Search & Export" />					
+							</fieldset>
+						</g:formRemote>	
+					</div>
+				</fieldset>
+			</sec:ifAnyGranted>
 		</div>
 
 <br/><br/>

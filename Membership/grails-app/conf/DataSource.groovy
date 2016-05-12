@@ -22,7 +22,7 @@ environments {
 		dataSource {
 			username = "root"
 			password = "20gR@ils16"
-			dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+			dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
 			url = "jdbc:mysql://localhost:3306/membership?autoreconnect=true"
 		}        
     }
@@ -30,7 +30,7 @@ environments {
         dataSource {
            username = "root"
 			password = "20gR@ils16"
-			dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+			dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
 			url = "jdbc:mysql://localhost:3306/membership?autoreconnect=true"
         }
     }

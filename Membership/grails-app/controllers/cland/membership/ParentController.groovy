@@ -186,7 +186,6 @@ class ParentController {
 	
 	@Transactional
 	def newclient(){
-		println(params)
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
 		
@@ -289,7 +288,6 @@ class ParentController {
 		
 		//attachUploadedFilesTo(parentInstance,["profilephoto1","profilephoto2"])
 		newvisits.each {cid,key ->
-			println(". Visit file for child: '" + cid + "' photo key: " + key)
 			def c = Child.findByPerson(Person?.get(cid))
 			if(c != null){
 				def v = c.visits.find{ it?.photoKey == key }

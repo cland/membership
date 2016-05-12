@@ -14,25 +14,44 @@ class ReportsController {
 	}		
 	def officeSummaryStats(){
 		Office o = Office.list().first()
+		//clients created this month
+		DateTime today = new DateTime()
+		Date startdate = parseDate("1-" + today.getMonthOfYear() + "-" + today.getYear(),"d-m-yyyy")
+		
+		def newclients = Parent.createCriteria().list  {
+			between('dateCreated',startdate, today.toDate() )
+		}
+
+		def newchildren = Child.createCriteria().list {
+			between('dateCreated',startdate, today.toDate() )
+		}
+		def newvisits = Visit.createCriteria().list {
+			between('dateCreated',startdate, today.toDate() )
+		}
+		def notifications = Notification.createCriteria().list {
+			between('dateCreated',startdate, today.toDate() )
+		}
 		OfficeSummaryStats ostats = new OfficeSummaryStats()
 		ostats.startdate=new Date()
 		ostats.enddate = new Date()
 		ostats.office_name = o?.name
 		ostats.office_id = o?.id
-		ostats.statsdata.num_new_clients = 1
-		ostats.statsdata.num_clients = 3
-		ostats.statsdata.num_new_children = 2
-		ostats.statsdata.num_children = 5
-		ostats.statsdata.num_new_visits = 8
-		ostats.statsdata.num_visits = 33
+		ostats.statsdata.num_new_clients = newclients?.size()
+		ostats.statsdata.num_clients = Parent?.list()?.size()
+		ostats.statsdata.num_new_children = newchildren?.size()
+		ostats.statsdata.num_children = Child?.list().size()
+		ostats.statsdata.num_new_visits = newvisits?.size()
+		ostats.statsdata.num_visits = Visit?.list().size()
+		ostats.statsdata.num_notifications = notifications?.size()
 		render ostats as JSON
 	}
+	
 	def export(params){
 		def startdate = params?.startDate_open
 		def enddate = params?.endDate_open
 		
-		if(startdate != null & startdate != "") startdate = parseDate(startdate) else startdate = new DateTime().minusMonths(24).toDate()
-		if(enddate != null  & startdate != "") enddate = parseDate(enddate) else enddate = (new Date())
+		if(startdate != null & startdate != "") startdate = parseDate(startdate,"dd-MMM-yyyy") else startdate = new DateTime().minusMonths(24).toDate()
+		if(enddate != null  & startdate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
 		
 		def visitList = Visit.createCriteria().list(params){
 			if(startdate != null & enddate != null){
@@ -70,12 +89,12 @@ class ReportsController {
 		new WebXlsxExporter().with {
 			setResponseHeaders(response)
 			sheet('Visits').with {
-				fillHeader(clientHeaders)
-				add(visitList*.toMap(), withCaseProperties)
+				fillHeader(visitHeaders)
+				add(visitList*.toMap(), withVisitProperties)
 			}
 			sheet('Child List').with{
-				fillHeader(visitHeaders)
-				add(childList,withVisitProperties)
+				fillHeader(childHeaders)
+				add(childList,withChildProperties)
 			}
 			sheet('Clients').with{
 				fillHeader(clientHeaders)
@@ -85,8 +104,8 @@ class ReportsController {
 		}
 	} //
 	
-	private parseDate(date) {
-		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+	private parseDate(date,fmt) {
+		SimpleDateFormat df = new SimpleDateFormat(fmt);
 		return (!date) ? new Date() : df.parse(date)
    }
 } //end of class

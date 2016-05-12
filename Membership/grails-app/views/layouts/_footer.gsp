@@ -9,8 +9,8 @@
 </sec:ifAnyGranted>
 <sec:ifLoggedIn>
 
-<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN }">
-
+<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER }">
+	<g:link url="${resource(dir:'person', file:'index')}">People</g:link>  |
 </sec:ifAnyGranted>
 
 

@@ -20,36 +20,12 @@ class BootStrap {
 		if(doBootStrap){
 			println "Doing Bootstrap"
 			println ("1. Create users ...")
-			createUsers("admin123")
-		//	println ("2. Login ...")
-		//	loginAsAdmin()
+			createUsers("admin123")		
 			println ("3. Initialize Request map ...")
 			initRequestmap()
 			
 			println("4. Creating other default records...")
-			createOther()
-			/*switch(Environment.getCurrent()){
-				case "DEVELOPMENT":
-				createLocations()
-					println ("1. Create users ...")
-					createUsers("admin123")
-				//	println ("2. Login ...")
-				//	loginAsAdmin()
-					println ("3. Initialize Request map ...")
-					initRequestmap()
-				//	println ("5. Logout ...")
-					// logout
-				//	SCH.clearContext()
-				break
-				case "PRODUCTION":
-					println ("1. Create users ...")
-					createUsers("admin123")
-				//	println ("2. Login ...")
-				//	loginAsAdmin()
-					println ("3. Initialize Request map ...")
-					initRequestmap()
-				break
-			} //end switch*/
+			createOther()			
 		} //end doBootStrap
     }
     def destroy = {
@@ -59,44 +35,30 @@ class BootStrap {
 		//Create office and person
 		def personDev
 		def personAdmin
+		def personManager
+		def personAssistant
 		def race = new Race(name: "African", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
+		new Race(name: "Caucasian", dateCreated: new Date(), lastUpdated: new Date()).save(flush: true)
 		//if(!race.save(flush: true)){
 			println "Race saved " + race
-			personAdmin = new Person(enabled: true,firstName:"Sys",lastName:"Sysuser",username: "admin", password: pwd, email: "email@doman.com", idNumber :"10101010101", dateOfBirth:(new Date() - 365*30),mobileNo:"+621859123")
-			 
-		//	if(!personAdmin.save(flush: true)){
-		//		println("personAdmin error...")
-		//		personAdmin.errors
-		//	}else{
-		//		println "Admin person saved!" //  + personAdmin.toString()
-		//	}
-			
-			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: pwd, email: "email@doman.com", idNumber :"156456556551", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
-		//	if(!personDev.save(flush: true)){
-		//		println("personDev error...")
-		//		personDev.errors
-		//	}else{
-		//		println "Dev person saved! " //+ personDev.toString()
-		//	}
+			personAdmin = new Person(enabled: true,firstName:"System",lastName:"Administrator",username: "admin", password: "2016Admin1", email: "email@doman.com", idNumber :"10101010101", dateOfBirth:(new Date() - 365*30),mobileNo:"+621859123")					
+			personDev = new Person( enabled: true,firstName:"Sys",lastName:"Devuser", username: "dev", password: "2016Dev1", email: "email@doman.com", idNumber :"15689", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
+			personManager = new Person( enabled: true,firstName:"Manager",lastName:"Wiggly", username: "manager", password: "16manager20", email: "email@doman.com", idNumber :"m005", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
+			personAssistant = new Person( enabled: true,firstName:"Assistant",lastName:"Wiggly", username: "assistant", password: "assistant1", email: "email@doman.com", idNumber :"a001", dateOfBirth:(new Date() - 365*30),mobileNo:"+62132123") //.save(flush: true)
 			
 			def mainOffice = new Office(name:"Main Office",code:"NHO",status:"Active")
 			mainOffice.addToStaff(personAdmin)
 			mainOffice.addToStaff(personDev)
+			mainOffice.addToStaff(personManager)
+			mainOffice.addToStaff(personAssistant)
 			mainOffice.save()
 			if(mainOffice.hasErrors()) {
 				println mainOffice.errors
 				return false;
 			}
-		/*}else{
-			println "Errors race"
-			println race.errors
-			race.errors.each {
-				println it
-			}
-		}*/
+		
 		try{
 			//create ROLES
-		//	new Role(authority:"ROLE_ADMINTEST",description:"test description").save(flush:true)
 			groupManagerService.generateRoles()
 			/*groupManagerService.generateOfficeGroups(mainOffice)*/
 			
@@ -132,23 +94,14 @@ class BootStrap {
 			
 			println ">> adding person(s) to groups"
 			PersonRoleGroup.create personAdmin, adminGroup
-			println ">> padmin"
+			println ">> padmin "
 			PersonRoleGroup.create personDev, devGroup
 			PersonRoleGroup.create personDev, adminGroup
-			println ">> pdev"
-			/*1.times {
-				long id = it + 1
-				def user = new Person(username: "dev$id", enabled: true, password: pwd,person:personDev).save(flush:true)
-				//UserRoleGroup.create user, devGroup
-				if(!user.hasErrors()){
-					println ">> Adding dev user to office groups"
-					groupManagerService.addUserToGroup(user, mainOffice, SystemRoles.list())
-				}else{
-					println(user.errors)
-				}
-				
-			}*/
-		
+			println ">> pdev"	
+			PersonRoleGroup.create personManager, managerGroup
+			println ">> manager "
+			PersonRoleGroup.create personAssistant, assistantGroup
+			println ">> assistant "
 			
 		}catch(Exception e){
 			println "Error " + e
@@ -160,8 +113,7 @@ class BootStrap {
 	
 	private void initRequestmap(){
 		
-		for (String url in [
-			'/',			
+		for (String url in [		
 			 '/**/favicon.ico',
 			 '/**/js/**',
 			 '/**/css/**',
@@ -177,6 +129,7 @@ class BootStrap {
 		}
 			 // show and lists/index
 			 for (String url in [
+				 '/',
 				 '/index',
 				 '/**/show/**',
 				  '/**/index/**',

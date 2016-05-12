@@ -27,16 +27,7 @@
 			<g:textField name="lastName" required="" value="${personInstance?.lastName}"/>
 		
 		</div>
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'dateOfBirth', 'error')} ">
-			<label for="dateOfBirth">
-				<g:message code="person.dateOfBirth.label" default="Date Of Birth"  />
-				
-			</label>
-		<%--	<g:datePicker required="" name="dateOfBirth" precision="day"  value="${personInstance?.dateOfBirth}" default="none" relativeYears="[-80..-2]" noSelection="['': '-choose-']" />--%>
-			<g:textField name="dateOfBirth" id="birth-date" class="datepick_single_past" value="${personInstance?.dateOfBirth?.format('dd-MMM-yyyy')}"/>
-		</div>
-		
-		
+	
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'mobileNo', 'error')} ">
 			<label for="mobileNo">
 				<g:message code="person.mobileNo.label" default="Mobile No." />
@@ -59,16 +50,22 @@
 				<g:message code="person.gender.label" default="Gender" />
 				
 			</label>
-			<g:select name="gender" from="${personInstance.constraints.gender.inList}" value="${personInstance?.gender}" valueMessagePrefix="gender" noSelection="['': '']"/>
-		
+			<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort{it?.label} %>
+						<g:radioGroup style="margin-top:15px;" 
+							values="${gender?.id}"
+							value="${personInstance?.gender?.id }"
+							labels="${gender}" 
+							name="gender">
+							${it.radio} <g:message code="${it.label}" />
+						</g:radioGroup>
 		</div>
-		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'race', 'error')} ">
-			<label for="race">
-				<g:message code="person.race.label" default="Race" />
+		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'dateOfBirth', 'error')} ">
+			<label for="dateOfBirth">
+				<g:message code="person.dateOfBirth.label" default="Date Of Birth"  />
 				
 			</label>
-			<g:select id="race" name="race.id" from="${cland.membership.Race.list()}" optionKey="id" value="${personInstance?.race?.id}" class="many-to-one" noSelection="['null': '']"/>
-		
+		<%--	<g:datePicker required="" name="dateOfBirth" precision="day"  value="${personInstance?.dateOfBirth}" default="none" relativeYears="[-80..-2]" noSelection="['': '-choose-']" />--%>
+			<g:textField name="dateOfBirth" id="birth-date" class="datepick_single_past" value="${personInstance?.dateOfBirth?.format('dd-MMM-yyyy')}"/>
 		</div>
 		<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'office', 'error')} ">
 			<label for="office">
