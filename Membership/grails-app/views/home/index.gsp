@@ -115,8 +115,8 @@ var cbc_params = {
 							<g:render template="searchform" model="[settings:settingsInstance]"></g:render>
 							<div id="searchform-actions" style="display:none">
 								<g:textField name="child.searchvisit.time" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time_search" class="datetime-picker"/>
-								<input type="button" name="quick_checkin" id="checkin_btn" value="Check-In Selected"/>
-								<input type="button" name="quick_clear" id="clear_btn" value="Clear"/>
+								<input type="button" class="button" name="quick_checkin" id="checkin_btn" value="Check-In Selected"/>
+								<input type="button" class="button" name="quick_clear" id="clear_btn" value="Clear"/>
 							</div>
 						</form>
 					</div>
@@ -328,8 +328,12 @@ var cbc_params = {
 					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
 					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal")
 					  var countup =  true;
-					  var warning_limit = getMillis(${warn_minutes}); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
-					  var done_limit = getMillis(${done_minutes}); //just over 2 hours
+					 
+					  var selected_hr = el.duration.selectedhours;
+					  var selected_min = (selected_hr * 60);
+					  var current_min = (el.duration.days * 24 * 60) + (el.duration.hours * 60) + el.duration.minutes;					
+					  var warning_limit = getMillis((selected_min - ${warn_minutes})); //3300000; //milliseconds = 55 min (45min = 2700000) (minutesx3600x100)
+					  var done_limit = getMillis(selected_min); //just over 2 hours
 					 
 					  initializeClock('clockdiv_' + id, deadline,countup,warning_limit,done_limit);
 				});
@@ -373,10 +377,10 @@ var cbc_params = {
 				'<br/><div class="details-body">' +
 				  '<span><b>Time in:</b> <br/>' + timein + '</span><br/>' +
 				  '<span class="hide"><b>Extra:</b> ' + extratime + '</span><br/>' +
-				  '<br/><span>' +
-					'<input type="submit" class="button" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
-					 '<input type="submit" class="button" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\',\'Complete\')" name="btn_' + divid + '" value="Check-Out" />' +
-					 '<input type="submit" class="button" id="btn_view_' + divid +'" onclick="checkOut(\'' + visit_id + '\',\'Cancelled\')" name="btn_' + divid + '" value="Cancel" />' +
+				  '<span>' +
+					'<input type="submit" class="button2" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
+					 '&nbsp;<input type="submit" class="button2" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\',\'Complete\')" name="btn_' + divid + '" value="Check-Out" />' +
+					 '&nbsp;<input type="submit" class="button2" id="btn_view_' + divid +'" onclick="checkOut(\'' + visit_id + '\',\'Cancelled\')" name="btn_' + divid + '" value="Cancel" />' +
 				  '</span>' +
 				'</div>' +
 			  '</div>' +

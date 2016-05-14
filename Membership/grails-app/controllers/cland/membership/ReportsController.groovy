@@ -14,6 +14,7 @@ class ReportsController {
 	}		
 	def officeSummaryStats(){
 		Office o = Office.list().first()
+	
 		//clients created this month
 		DateTime today = new DateTime()
 		Date startdate = parseDate("1-" + today.getMonthOfYear() + "-" + today.getYear(),"d-m-yyyy")
@@ -25,6 +26,11 @@ class ReportsController {
 		def newchildren = Child.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
 		}
+		Settings settings = Settings.list().first()
+		def promokids = Child.findAll {
+			(visits?.size() >= settings?.visitcount)
+		}
+		
 		def newvisits = Visit.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
 		}
@@ -43,6 +49,7 @@ class ReportsController {
 		ostats.statsdata.num_new_visits = newvisits?.size()
 		ostats.statsdata.num_visits = Visit?.list().size()
 		ostats.statsdata.num_notifications = notifications?.size()
+		ostats.statsdata.num_promo_children = promokids?.size()
 		render ostats as JSON
 	}
 	
@@ -54,37 +61,44 @@ class ReportsController {
 		if(enddate != null  & startdate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
 		
 		def visitList = Visit.createCriteria().list(params){
-			if(startdate != null & enddate != null){
-				between('starttime', startdate, enddate)
-			}
+			//if(startdate != null & enddate != null){
+			//	between('starttime', startdate, enddate)
+			//}
 		}
 		
 		def childList = []
-		def clientList = []
+		def clientList = Parent.list()
 	
 		visitList?.each {thisvisit ->
 			
 			childList.add(thisvisit?.child)					
-			clientList.add(thisvisit?.child?.parent)
+			//clientList.add(thisvisit?.child?.parent)
 		}
+		def visitHeaders = ['Child Name','Duration','Check-In','Check-Out','Age','Date of Birth','Gender','Status','Visit Contact No.',
+			'Selected Hours','Parent Name','Mobile No.','Membership No.','Parent Email','Current Total Visits','Access Number',
+			'Emergency Contact','Emergency Contact No.',
+			'Item Id','Child Id', 'Parent Id']
+		def withVisitProperties = ['child.person.fullname','durationText','starttime','endtime','child.person.age','child.person.dateOfBirth','child.person.gender','status','contactNo',
+			'selectedHours','child.parent.person1.fullname','child.parent.person1.mobileNo','child.parent.membershipNo','child.parent.person1.email','child.visitCount','child.fullAccessNumber',
+			'child.parent.person2.fullname','child.parent.person2.mobileNo',
+			'id','child.id','child.parent.id']
 
-
-		def clientHeaders = ['Name',
-			'Tel',
-			'Membership No',			
-			'Item Id']
-		
-		
-		def withClientProperties = ['person.fullname',
-			'person.mobileNo',
-			'membershipNo',			
+		def clientHeaders = ['Client Name',
+			'Mobile No.',
+			'Membership No',
+			'Emergency Contact','Emergency Contact No.',
+			'Item Id']			
+		def withClientProperties = ['person1.fullname',
+			'person1.mobileNo',
+			'membershipNo',
+			'person1.email',
+			'person2.fullname','person2.mobileNo',			
 			'id'
 			]
-		def visitHeaders = ['Check-In','Check-Out','Child Name','Item Id','Child Id']
-		def withVisitProperties = ['starttime','endtime','child.person.fullname','id','child.id']
 		
-		def childHeaders = ['Name','Age','Date Created','Item Id','Parent Id']
-		def withChildProperties = ['child.person.fullname','child.person.age','datecreated','id','child.parent.id']
+		
+		def childHeaders = ['Name','Age','Date Of Birth','Gender','Total Visits','Access Number','Date Created','Parent Name','Mobile No.','Membership No.','Parent Email','Item Id','Parent Id']
+		def withChildProperties = ['child.person.fullname','child.person.age','child.person.dateOfBirth','child.person.gender','Current Total Visits','Access Number','parent.person1.fullname','parent.person1.mobileNo','parent.membershipNo','parent.person1.email','dateCreated','id','child.parent.id']
 		
 		new WebXlsxExporter().with {
 			setResponseHeaders(response)

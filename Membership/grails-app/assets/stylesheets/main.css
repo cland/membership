@@ -528,6 +528,43 @@ th:hover, tr:hover {
 
 /* ACTION BUTTONS */
 
+
+.button {
+	display: inline-block;
+	padding: 5px 15px;
+	font-size: 16px;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	outline: none;
+	color: #fff;
+	background-color: #F5834F;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 1px #ccc;
+}
+.button2 {
+	display: inline-block;
+	padding: 1px 3px;
+	font-size: 14px;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	outline: none;
+	color: #fff;
+	background-color: #F5834F;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 0 1px #ccc;
+}
+.button:hover,.button2:hover {background-color: #EAAD91; color:#494949;}
+
+.button:active,.button2:active {
+  background-color: #EAAD91;
+  box-shadow: 0 5px #000000;
+  transform: translateY(4px);
+}
+
 .buttons {
 	background-color: #efefef;
 	overflow: hidden;
@@ -535,7 +572,7 @@ th:hover, tr:hover {
 	   -moz-box-shadow: 0 0 3px 1px #aaaaaa;
 	-webkit-box-shadow: 0 0 3px 1px #aaaaaa;
 	        box-shadow: 0 0 3px 1px #aaaaaa;
-	margin: 0.1em 0 0 0;
+	margin: 0.2em 0 0.3em 0;
 	border: none;
 }
 
@@ -599,6 +636,7 @@ th:hover, tr:hover {
 .buttons .cancel {
 	background-image: url(../images/skin/database_cancel.png);
 }
+
 
 a.skip {
 	position: absolute;
@@ -734,7 +772,7 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 .ui-timepicker-div.ui-timepicker-oneLine dl dd.ui_tpicker_microsec:before { content:'.'; display:inline-block; }
 .ui-timepicker-div.ui-timepicker-oneLine .ui_tpicker_unit_hide,
 .ui-timepicker-div.ui-timepicker-oneLine .ui_tpicker_unit_hide:before{ display: none; }
-.button{font-size:9pt;border:solid 1px #000;margin-right:1px;margin-top:5px;}
+
 .border-bottom {
 	border-bottom: 1px solid rgb(245, 197, 127);
 }

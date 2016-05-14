@@ -8,6 +8,7 @@ public class StatsData {
 	//** Children
 	public int num_new_children = 0;
 	public int num_children = 0;
+	public int num_promo_children=0
 	
 	//** VISITS
 	public int num_new_visits =0;

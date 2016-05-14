@@ -5,7 +5,7 @@
 		<meta name="layout" content="main"/>
 		<title>Reports</title>
 		<style type="text/css" media="screen">
-			
+			.wait{border:none};
 			#status {
 				background-color: #eee;
 				border: .2em solid #fff;
@@ -93,7 +93,7 @@ var cbc_params = {
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">	
 		<h1>Reports</h1>
-		<br/>		
+			
 			<fieldset><legend>MONTH-TO-DATE SUMMARY</legend>
 				<div id="statsmsg"></div>
 				<table class="dataTable" style="width:90%;padding-left:10px;border:none">
@@ -108,25 +108,27 @@ var cbc_params = {
 							<td width="122"><label>Clients</label></td>
 							<td width="122"><div id="new_clients">--</div></td>
 							<td width="159"><div id="total_clients">--</div></td>						
-							<td width="35"><img class="wait" id="wait_clients" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;">&nbsp;</td>
+							<td width="35"><img class="wait" id="wait_clients" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
 						</tr>				
 						<tr valign="top">
 							<td width="122"><label>Children</label></td>
 							<td width="122"><div id="new_children">--</div></td>
 							<td width="159"><div id="total_children">--</div></td>
-							<td width="35"><img class="wait" id="wait_children" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;">&nbsp;</td></tr>				
+							<td width="35"><img class="wait" id="wait_children" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td></tr>				
 						<tr valign="top">
 							<td width="122"><label>Visits</label></td>
-							<td width="122"><div id="new_visits">--</div></td>
+							<td width="122"><div id="new_visits">--</div></td>							
 							<td width="159"><div id="total_visits">--</div></td>
-							<td width="35"><img class="wait" id="wait_visits" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;">&nbsp;</td>
+							<td width="35"><img class="wait" id="wait_visits" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
 						</tr>				
 					</tbody>
 				</table>
-				<div class="key"><div>
-				</div></div>
+				<div class="info">Total number of children qualifying for discounted visit: <span id='promo_clients'>0</span></div>
+				<div class="key"></div>
+				
 			</fieldset>
-			<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+				<br/>
 				<fieldset><legend>Export to Excel</legend>
 					<div class="filter-div">				
 						<g:formRemote class="ExportForm" id="searchform" name="searchform"  url="[controller:'reports',action:'export']" 				
@@ -142,7 +144,7 @@ var cbc_params = {
 									</td>
 								</tr>
 								</table>					
-								<g:submitButton id="export_btn" name="export" class="export" onclick="exportReport('export');return false" value="Search & Export" />					
+								<g:submitButton id="export_btn" name="export" class="button export" onclick="exportReport('export');return false" value="Search & Export" />					
 							</fieldset>
 						</g:formRemote>	
 					</div>
@@ -254,7 +256,8 @@ var cbc_params = {
 					   	setDivValue("#new_children",data.statsdata.num_new_children)
 					   	setDivValue("#total_children",data.statsdata.num_children)
 					   	setDivValue("#total_visits",data.statsdata.num_visits)
-					   setDivValue("#new_visits",data.statsdata.num_new_visits)
+					   	setDivValue("#new_visits",data.statsdata.num_new_visits)
+					   	setDivValue("#promo_clients",data.statsdata.num_promo_children)
 				 		wait(false)
 						},
 					// callback handler that will be called on completion
