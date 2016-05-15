@@ -108,18 +108,18 @@ var cbc_params = {
 							<td width="122"><label>Clients</label></td>
 							<td width="122"><div id="new_clients">--</div></td>
 							<td width="159"><div id="total_clients">--</div></td>						
-							<td width="35"><img class="wait" id="wait_clients" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
+							<td width="35"><img class="wait" id="wait_clients" src="${assetPath(src: 'spinner.gif')}" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
 						</tr>				
 						<tr valign="top">
 							<td width="122"><label>Children</label></td>
 							<td width="122"><div id="new_children">--</div></td>
 							<td width="159"><div id="total_children">--</div></td>
-							<td width="35"><img class="wait" id="wait_children" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td></tr>				
+							<td width="35"><img class="wait" id="wait_children" src="${assetPath(src: 'spinner.gif')}" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td></tr>				
 						<tr valign="top">
 							<td width="122"><label>Visits</label></td>
 							<td width="122"><div id="new_visits">--</div></td>							
 							<td width="159"><div id="total_visits">--</div></td>
-							<td width="35"><img class="wait" id="wait_visits" src="${request.contextPath}/images/spinner.gif" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
+							<td width="35"><img class="wait" id="wait_visits" src="${assetPath(src: 'spinner.gif')}" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
 						</tr>				
 					</tbody>
 				</table>
