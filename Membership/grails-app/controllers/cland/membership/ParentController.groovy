@@ -18,6 +18,7 @@ import com.macrobit.grails.plugins.attachmentable.domains.Attachment;
 @Transactional(readOnly = true)
 class ParentController {
 	def springSecurityService
+	def groupManagerService
 	def cbcApiService
 	def emailService
 	def nexmoService
@@ -39,6 +40,7 @@ class ParentController {
 
     @Transactional
     def save(Parent parentInstance) {
+		
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
 		
@@ -46,26 +48,47 @@ class ParentController {
             notFound()
             return
         }
+		parentInstance.clientType = Keywords.findByName("Standard")
+		def num = cbcApiService.generateIdNumber(new Date(),5)
+		parentInstance.membershipNo = num
+		
 		Person person1 = new Person(params?.person1) 
 		person1.office = office
-		
+		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.password = person1.username
+		person1.enabled = false
 		if (person1.save(flush:true)) {
-			println person1.errors
-			
+			println person1.errors			
 		}
 					
 		parentInstance.person1 = person1
-		if(!parentInstance.save(flush:true)){			
-			println parentInstance.errors
+		
+		//Emergency person
+		Person person2 = new Person(params.person2)
+		person2.office = office
+		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.password = person2.username
+		person2.enabled = false
+		
+		if(!person2.save(flush:true)){
+			println person2.errors
+		}else{
+			parentInstance.person2 = person2
 		}
 		
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-                redirect parentInstance
-            }
-            '*' { respond parentInstance, [status: CREATED] }
-        }
+		if(!parentInstance.save(flush:true)){
+			println parentInstance.errors
+		}
+		flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
+		redirect(action: "show", id:parentInstance?.id)
+		
+       // request.withFormat {
+       //     form multipartForm {
+       //         flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
+       //         redirect parentInstance
+       //    }
+       //     '*' { respond parentInstance, [status: CREATED] }
+       // }
     }
 
     def edit(Parent parentInstance) {
@@ -109,6 +132,7 @@ class ParentController {
 					return
 				}
 				child.person = p
+				groupManagerService.addUserToGroup(p,office,"ROLE_USER")
 				attachUploadedFilesTo(p,["profilephoto" + i])
 				if(parentInstance.children){
 					child.accessNumber = parentInstance.children.size() + 1
@@ -136,8 +160,7 @@ class ParentController {
 			i++
 		}
         parentInstance.save flush:true
-		newvisits.each {cid,key ->
-			println(". Visit file for child: '" + cid + "' photo key: " + key)
+		newvisits.each {cid,key ->			
 			def c = Child.findByPerson(Person?.get(cid))
 			if(c != null){
 				def v = c.visits.find{ it?.photoKey == key }
@@ -146,13 +169,17 @@ class ParentController {
 				}
 			}
 		}
-        request.withFormat {
-            form multipartForm {
-                flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-                redirect parentInstance
-            }
-            '*'{ respond parentInstance, [status: OK] }
-        }
+		
+		flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+		redirect(action: "show", id:parentInstance?.id)
+		
+        //request.withFormat {
+        //    form multipartForm {
+        //        flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+        //        redirect parentInstance
+        //    }
+        //    '*'{ respond parentInstance, [status: OK] }
+        //}
     }
 
     @Transactional
@@ -164,7 +191,9 @@ class ParentController {
         }
 
         parentInstance.delete flush:true
-
+		flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+		redirect(action: "show", id:parentInstance?.id)
+		/*
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Parent.label', default: 'Parent'), parentInstance.id])
@@ -172,6 +201,7 @@ class ParentController {
             }
             '*'{ render status: NO_CONTENT }
         }
+        */
     }
 
     protected void notFound() {
@@ -204,6 +234,7 @@ class ParentController {
 			render person1.errors as JSON
 			return
 		}
+		groupManagerService.addUserToGroup(person1,office,"ROLE_USER")
 		parentInstance.person1 = person1
 		
 		//Emergency person
@@ -218,7 +249,7 @@ class ParentController {
 		}else{
 			parentInstance.person2 = person2
 		}
-		
+		groupManagerService.addUserToGroup(person2,office,"ROLE_USER")
 		def newvisits = [:]
 		// save the children
 		def i = 1
@@ -246,6 +277,7 @@ class ParentController {
 					}
 					return
 				}
+				groupManagerService.addUserToGroup(p,office,"ROLE_USER")
 				child.person = p
 				attachUploadedFilesTo(p,["profilephoto" + i])
 				if(parentInstance.children){
@@ -296,14 +328,17 @@ class ParentController {
 				}
 			}
 		}
-		println "Success"
-		request.withFormat {
-		            form multipartForm {
-		                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		                redirect controller:"home", action: "index", method: "GET"
-		            }
-		            '*'{ render status: OK }
-		        }
+
+		flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+		redirect (uri: "/home/index")
+		
+		//request.withFormat {
+		//            form multipartForm {
+		//                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+		//                redirect controller:"home", action: "index", method: "GET"
+		//            }
+		//            '*'{ render status: OK }
+		//        }
 	}
 	def search(){		
 		//def test = Child.get(1)

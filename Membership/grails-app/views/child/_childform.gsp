@@ -12,6 +12,8 @@
 							<div class="cell"><label id="">First name:</label></div>
 							<div class="cell">
 								<g:if test="${isEditMode }">
+									<g:hiddenField name="person.id" value="${childInstance?.person?.id}" />
+									<g:hiddenField name="person.version" value="${childInstance?.person?.version}" />
 									<g:textField name="person.firstName" value="${childInstance?.person?.firstName }"/>
 								</g:if>
 								<g:else>${childInstance?.person?.firstName }</g:else>								

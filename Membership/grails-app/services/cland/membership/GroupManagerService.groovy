@@ -109,6 +109,11 @@ class GroupManagerService {
 	 * @param roles
 	 * @return
 	 */
+	def addUserToGroup(Person user,Office office,role){
+		def _tmp = getGroupNamePrefix(office)
+		def group = RoleGroup.findByName(_tmp + "_" +role)
+		if(group)PersonRoleGroup.create user, group
+	}
 	def addUserToGroup(Person user,Office office,List roles){
 		def _tmp = getGroupNamePrefix(office) //"GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
 		roles.each{role ->

@@ -107,7 +107,7 @@ class CbcApiService {
 		
 		String randomString = RandomStringUtils.random(length, charset.toCharArray())
 		if(birthday == null) birthday = new Date();
-		return birthday?.format("yyyyMMdd") + randomString
+		return birthday?.format("yyMMdd") + randomString
 	}
 	private static int findUpperIndex(int offset, int max, int total) {
 		max = offset + max - 1

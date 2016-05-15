@@ -77,14 +77,17 @@ class SettingsController {
         }
 
         settingsInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Settings.label', default: 'Settings'), settingsInstance.id])
-                redirect (uri:'/') //settingsInstance
-            }
-            '*'{ respond settingsInstance, [status: OK] }
-        }
+		
+		flash.message = "Settings updated successfully!"
+		redirect (uri: "/home/index")
+		
+        //request.withFormat {
+        //    form multipartForm {
+        //        flash.message = message(code: 'default.updated.message', args: [message(code: 'Settings.label', default: 'Settings'), settingsInstance.id])
+        //        redirect (uri:'/') //settingsInstance
+        //    }
+        //    '*'{ respond settingsInstance, [status: OK] }
+        //}
     }
 
     @Transactional

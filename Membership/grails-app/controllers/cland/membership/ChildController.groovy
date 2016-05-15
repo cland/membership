@@ -28,18 +28,13 @@ class ChildController {
 
     @Transactional
     def save(Child childInstance) {
-		println "In the save controller"
 		Parent parent
-		println params
-		println "This is the username: " +params.username
 		if (childInstance == null) {
 			notFound()
 			return
 		}
 		try{
-			println params.child.id
 		    parent = Parent.get((params.child.id).toLong())
-			println "This is the parent: " + parent
 		}catch(e){
 			println e.message
 		}
@@ -120,13 +115,16 @@ class ChildController {
 			return
 		}*/
 
-        request.withFormat {
+		flash.message = message(code: 'default.created.message', args: [message(code: 'child.label', default: 'Child'), childInstance.toString()])
+		redirect(action: "show", id:childInstance?.id)
+        /*
+		request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'child.label', default: 'Child'), childInstance.id])
                 redirect childInstance
             }
             '*' { respond childInstance, [status: CREATED] }
-        }
+        } */
     }
 
     def edit(Child childInstance) {
@@ -144,9 +142,28 @@ class ChildController {
             respond childInstance.errors, view:'edit'
             return
         }
-
-        childInstance.save flush:true
-		attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
+		/*
+		Person p = Person.get(params?.person?.id)
+		bindData(p, params, [exclude: 'person.dateOfBirth'])
+		bindData(p, ['dateOfBirth': params.person?.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
+		p.properties = params?.person
+		if(!p.save(flush:true)){
+			println(p.errors)
+		}
+		*/
+        if(!childInstance.save(flush:true)){			
+			println(childInstance?.errors)
+			respond childInstance.errors, view:'edit'
+			return
+		}else{
+	
+			attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
+			
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
+			redirect(action: "show", id:childInstance?.id)
+		}
+		
+		/*
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
@@ -154,6 +171,7 @@ class ChildController {
             }
             '*'{ respond childInstance, [status: OK] }
         }
+        */
     }
 
     @Transactional
