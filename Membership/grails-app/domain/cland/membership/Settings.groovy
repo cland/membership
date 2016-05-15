@@ -16,6 +16,7 @@ class Settings {
 	Integer maxbooking //maximum number of kids to be included in a book
 	String debug
 	String smsTestNumber
+	String smsFrom
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -31,6 +32,7 @@ class Settings {
 		createdBy nullable:true, editable:false
 		debug nullable:true
 		smsTestNumber nullable:true
+		smsFrom nullable:true, maxSize: 11
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
@@ -38,7 +40,7 @@ class Settings {
 		if(maxbooking == null) maxbooking = 12
 		if(debug == null) debug = "0"
 		if(smsTestNumber == null) smsTestNumber="+61411111111"
-		
+		if(smsFrom == null) smsFrom = "WigglyToesI" //Max length from API is 11 characters
 		createdBy = curId
 		lastUpdatedBy = curId		
 	}

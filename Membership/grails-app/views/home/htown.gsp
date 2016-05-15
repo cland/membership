@@ -1,6 +1,7 @@
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="isDebug" value="${settingsInstance?.debug }"/>
 <g:set var="smsTestNumber" value="${settingsInstance?.smsTestNumber }"/>
+<g:set var="smsFrom" value="${settingsInstance?.smsFrom }"/>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -199,7 +200,7 @@ var cbc_params = {
 			var msg = {'messages': [
 					{
 					  'source': 'html',
-					  'from': 'WigglyToesIPC',
+					  'from': '${smsFrom}',
 					  'body': body,
 					  'to': num,
 					  'schedule': 1436874701,

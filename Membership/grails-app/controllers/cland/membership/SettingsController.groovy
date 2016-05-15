@@ -79,8 +79,8 @@ class SettingsController {
         settingsInstance.save flush:true
 		
 		flash.message = "Settings updated successfully!"
-		redirect (uri: "/home/index")
-		
+		//redirect (uri: "/home/index")
+		render(view: "/home/index")
         //request.withFormat {
         //    form multipartForm {
         //        flash.message = message(code: 'default.updated.message', args: [message(code: 'Settings.label', default: 'Settings'), settingsInstance.id])

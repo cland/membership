@@ -80,8 +80,8 @@ class ParentController {
 			println parentInstance.errors
 		}
 		flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-		redirect(action: "show", id:parentInstance?.id)
-		
+		//redirect(action: "show", id:parentInstance?.id)
+		render(view:"/parent/show/" + parentInstance?.id)
        // request.withFormat {
        //     form multipartForm {
        //         flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
@@ -171,7 +171,8 @@ class ParentController {
 		}
 		
 		flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		redirect(action: "show", id:parentInstance?.id)
+		//redirect(action: "show", id:parentInstance?.id)
+		render(view:"/parent/show/" + parentInstance?.id)
 		
         //request.withFormat {
         //    form multipartForm {
@@ -330,7 +331,8 @@ class ParentController {
 		}
 
 		flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		redirect (uri: "/home/index")
+		//redirect (uri: "/home/index")
+		render(view:"/home/index")
 		
 		//request.withFormat {
 		//            form multipartForm {
@@ -503,10 +505,10 @@ class ParentController {
 				Date timein = dfmt.parse(params.child.visit.time[index])
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein)
 				attachUploadedFilesTo(visit,["visitphoto" + index])
-			//	visit.save()
+			
 				child.addToVisits(visit)
 			}
-			//child.save()
+			
 			attachUploadedFilesTo(child,["profilephoto" + index])  //TODO: Add attachment to child
 			parentInstance.addToChildren(child)
 		}
@@ -515,7 +517,7 @@ class ParentController {
 			render parentInstance.errors as JSON
 			return
 		}
-		println "Success"
+		
 		render parentInstance.toMap() as JSON
 	}
 } //end class

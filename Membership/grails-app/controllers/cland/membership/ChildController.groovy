@@ -116,7 +116,8 @@ class ChildController {
 		}*/
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'child.label', default: 'Child'), childInstance.toString()])
-		redirect(action: "show", id:childInstance?.id)
+		//redirect(action: "show", id:childInstance?.id)
+		render(view:"/child/show/" + childInstance?.id)
         /*
 		request.withFormat {
             form multipartForm {
@@ -161,6 +162,7 @@ class ChildController {
 			
 			flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
 			redirect(action: "show", id:childInstance?.id)
+			render(view:"/child/show/" + childInstance?.id)
 		}
 		
 		/*
