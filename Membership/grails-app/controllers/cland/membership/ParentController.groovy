@@ -80,8 +80,8 @@ class ParentController {
 			println parentInstance.errors
 		}
 		flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-		//redirect(action: "show", id:parentInstance?.id)
-		render(view:"/parent/show/" + parentInstance?.id)
+		redirect(action: "show", id:parentInstance?.id, permanent:true)
+		
        // request.withFormat {
        //     form multipartForm {
        //         flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
@@ -170,17 +170,13 @@ class ParentController {
 			}
 		}
 		
-		flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		//redirect(action: "show", id:parentInstance?.id)
-		render(view:"/parent/show/" + parentInstance?.id)
-		
-        //request.withFormat {
-        //    form multipartForm {
-        //        flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-        //        redirect parentInstance
-        //    }
-        //    '*'{ respond parentInstance, [status: OK] }
-        //}
+        request.withFormat {
+            form multipartForm {
+                flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+                redirect(action: "show", id:parentInstance?.id, permanent:true) //redirect parentInstance, permanent:true
+            }
+            '*'{ respond parentInstance, [status: OK] }
+        }
     }
 
     @Transactional
@@ -312,7 +308,7 @@ class ParentController {
 			request.withFormat {
 		            form multipartForm {
 		                flash.message = "Error!"
-		                redirect controller:"home", action: "index", method: "GET"
+		                redirect controller:"home", action: "index", method: "GET", permanent:true
 		            }
 		            '*'{ render status: OK }
 		        }
@@ -328,19 +324,15 @@ class ParentController {
 					attachUploadedFilesTo(v,[key])
 				}
 			}
-		}
-
-		flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		//redirect (uri: "/home/index")
-		render(view:"/home/index")
+		}	
 		
-		//request.withFormat {
-		//            form multipartForm {
-		//                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		//                redirect controller:"home", action: "index", method: "GET"
-		//            }
-		//            '*'{ render status: OK }
-		//        }
+		request.withFormat {
+		            form multipartForm {
+		                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
+		                redirect controller:"home", action: "index", method: "GET", permanent:true
+		            }
+		            '*'{ render status: OK }
+		        }
 	}
 	def search(){		
 		//def test = Child.get(1)

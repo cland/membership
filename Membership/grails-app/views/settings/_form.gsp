@@ -42,7 +42,7 @@
 	<g:field name="visitcount" type="number" value="${settingsInstance.visitcount}"/>
 
 </div>
-
+<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 <div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'notifytime', 'error')} ">
 	<label for="notifytime">
 		<g:message code="settings.notifytime.label" default="Minutes after which to send reminder message (Warning/Orange)" />		
@@ -59,10 +59,6 @@
 
 </div>
 
-
-
-
-<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'newchildcount', 'error')} ">
 		<label for="newchildcount">
 			<g:message code="settings.newchildcount.label" default="Default number of fields open to create children under the 'New Client' tab." />
@@ -90,6 +86,12 @@
 			<g:message code="settings.smstestnumber.label" default="SMS Test number" />			
 		</label>
 		<g:field name="smsTestNumber" type="text" value="${settingsInstance.smsTestNumber}"/>	
+	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'smsFrom', 'error')} ">
+		<label for="smsFrom">
+			<g:message code="settings.smsfrom.label" default="SMS From" />			
+		</label>
+		<g:field name="smsFrom" type="text" value="${settingsInstance.smsFrom}"/>	
 	</div>
 </sec:ifAnyGranted>
 
