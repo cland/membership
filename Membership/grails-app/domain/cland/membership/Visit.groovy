@@ -120,11 +120,12 @@ class Visit {
 		def _sdate = starttime
 		if(!_sdate) _sdate = dateCreated
 		def _todate = endtime
-		if(!_todate) _todate = new Date()
+		if(!_todate) _todate = _sdate
 		
 		DateTime _frm = new DateTime(_sdate)
 		DateTime _to = new DateTime(_todate)
 		
+		if(_frm.isAfter(_to)) _to = _frm
 		Duration duration = new Interval(_frm, _to).toDuration();
 		// Convert to Period
 		Period period = duration.toPeriod();
