@@ -219,7 +219,7 @@
 									<div class="cell"></div>
 									<div class="cell">
 										<input type="hidden" name="template_status" id="template_status" value="active"/>
-										<input type="button" name="template_btn" id="template_btn" value="Submit"/>
+										<input type="button" name="template_btn" id="template_btn" value="Submit" class="button"/>
 									</div>
 								</div>																				
 							</div>

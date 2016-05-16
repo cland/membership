@@ -4,11 +4,14 @@ package cland.membership
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import org.apache.catalina.core.ApplicationContext
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import cland.membership.security.*
 
 @Transactional(readOnly = true)
 class SettingsController {
 	def groupManagerService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -77,14 +80,13 @@ class SettingsController {
         }
 
         settingsInstance.save flush:true
-
-		//flash.message = "Settings updated successfully! "
-		//redirect (controller: "home",action:"index",permanent:true)
-
+		
+		def returnLink = cbcApiService.getBasePath(request)
+	
         request.withFormat {
             form multipartForm {
                 flash.message = "Settings updated successfully!" // message(code: 'default.updated.message', args: [message(code: 'Settings.label', default: 'Settings'), settingsInstance.id])
-                redirect (uri:'/', permanent:true) //settingsInstance
+                redirect (url:returnLink, permanent:true) //settingsInstance
             }
             '*'{ respond settingsInstance, [status: OK] }
         }

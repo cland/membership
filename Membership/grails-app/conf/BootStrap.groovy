@@ -202,8 +202,9 @@ class BootStrap {
 				 '/requestMap/delete/**',
 				 '/requestMap/update/**',
 				 '/requestMap/show/**',
-				 '/requestMap/edit/**',				 
-				 '/requestMap/create/**']) {
+				 '/requestMap/edit/**',				 				 
+				 '/requestMap/create/**',
+				 '/parent/newcoupon/**']) {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
 	} //end method

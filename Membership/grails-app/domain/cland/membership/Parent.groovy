@@ -22,7 +22,7 @@ class Parent {
 	Date lastUpdated
 	String history
 	static transients = ["createdByName","lastUpdatedByName"]
-	static hasMany = [children:Child, contracts:Contract, notifications:Notification] 
+	static hasMany = [children:Child, contracts:Contract, notifications:Notification,coupons:Coupon] 
     static constraints = {
 		person2 nullable: true
 		comments nullable: true
@@ -60,6 +60,8 @@ class Parent {
 			comments:comments,
 			relationship:relationship?.toString(),
 			childlist:children*.toMap(),
+			coupons:coupons*.toMap(),
+			notifications:notifications*.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
 	}

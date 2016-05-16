@@ -1,14 +1,19 @@
 package cland.membership
 
+import javax.servlet.http.HttpServletRequest;
+
 import javassist.expr.Instanceof;
 import grails.plugin.springsecurity.*
+
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
 //import org.codehaus.groovy.grails.plugins.springsecurity.*
 import org.grails.datastore.gorm.finders.MethodExpression.IsEmpty;
 
 import cland.membership.location.*
 import cland.membership.security.*
+
 import com.sun.org.apache.xalan.internal.xsltc.compiler.ForEach;
+
 import org.apache.commons.lang.RandomStringUtils
 
 /**
@@ -196,5 +201,21 @@ class CbcApiService {
 		}
 		return office
 	}
-	
+	String getBasePath(HttpServletRequest request){
+		def _protocol = request.protocol
+		def _servername = request.getServerName()
+		def _port = ""
+		if(_servername.equalsIgnoreCase("localhost")) _port = ":" + request.localPort
+		return 'http://' + _servername + _port + request.contextPath +"/"
+	}
+	String generateUsername(String firstname, String lastname){
+		String username = firstname.toLowerCase() + "." + lastname.toLowerCase()
+		String tmp = username
+		int count = 1
+		while(Person.findByUsername(tmp) != null){
+			tmp = username + count.toString()
+			count++
+		} 
+		return tmp
+	}
 }//end class

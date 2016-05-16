@@ -67,16 +67,15 @@ class PersonController {
 			groupManagerService.addUserToGroup(personInstance,officegroups)
 		}
 
-		flash.message = message(code: 'default.created.message', args: [message(code: 'person.label', default: 'Person'), personInstance.toString()])
-		redirect(action: "show", id:personInstance?.id)
-		/*
+		
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'person.label', default: 'Person'), personInstance.id])
-                redirect personInstance
+                //redirect personInstance
+				redirect (url:cbcApiService.getBasePath(request) + "person/show/" + personInstance?.id, permanent:true)
             }
             '*' { respond personInstance, [status: CREATED] }
-        } */
+        } 
     }
 
     def edit(Person personInstance) {
@@ -104,16 +103,15 @@ class PersonController {
 		def officegroups = (params.list("officegroups")*.toLong())
 		groupManagerService.addUserToGroup(personInstance,officegroups)
 		
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.toString()])
-		redirect(action: "show", id:personInstance?.id)
-        /*
+     
 		request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.id])
-                redirect personInstance
+                //redirect personInstance
+				redirect (url:cbcApiService.getBasePath(request) + "person/show/" + personInstance?.id, permanent:true)
             }
             '*'{ respond personInstance, [status: OK] }
-        } */
+        } 
     }
 
     @Transactional

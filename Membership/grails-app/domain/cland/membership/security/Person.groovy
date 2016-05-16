@@ -178,7 +178,7 @@ class Person implements Serializable {
 		officegroups:(office==null?null:office.getOfficeGroups())]
 	}
 	def getStaffMemberStatus(){
-		return office?.staff?.contains(this)
+		return groupManagerService.isStaff(office,this) //  office?.staff?.contains(this)
 	}
 	/*
 	def getPhonesList() {

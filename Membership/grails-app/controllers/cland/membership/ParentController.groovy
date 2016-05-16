@@ -23,7 +23,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -54,7 +54,7 @@ class ParentController {
 		
 		Person person1 = new Person(params?.person1) 
 		person1.office = office
-		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase() , person1.lastName.toLowerCase())
 		person1.password = person1.username
 		person1.enabled = false
 		if (person1.save(flush:true)) {
@@ -66,7 +66,7 @@ class ParentController {
 		//Emergency person
 		Person person2 = new Person(params.person2)
 		person2.office = office
-		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.username = cbcApiService.generateUsername(person2.firstName.toLowerCase() , person2.lastName.toLowerCase())
 		person2.password = person2.username
 		person2.enabled = false
 		
@@ -79,16 +79,15 @@ class ParentController {
 		if(!parentInstance.save(flush:true)){
 			println parentInstance.errors
 		}
-		flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-		redirect(action: "show", id:parentInstance?.id, permanent:true)
 		
-       // request.withFormat {
-       //     form multipartForm {
-       //         flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
-       //         redirect parentInstance
-       //    }
-       //     '*' { respond parentInstance, [status: CREATED] }
-       // }
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.created.message', args: [message(code: 'parent.label', default: 'Parent'), parentInstance.id])
+                // redirect parentInstance
+				redirect (url:cbcApiService.getBasePath(request) + "parent/show/" + parentInstance?.id, permanent:true)
+           }
+            '*' { respond parentInstance, [status: CREATED] }
+        }
     }
 
     def edit(Parent parentInstance) {
@@ -122,10 +121,11 @@ class ParentController {
 				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
 				p.gender =  Keywords.get(params.get("child.person.gender" + i))
 				p.office = office
-				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+				p.username = cbcApiService.generateUsername(p.firstName.toLowerCase() , p.lastName.toLowerCase())
 				p.password = p.username
 				p.enabled = false
-				p.mobileNo = "-1"
+				p.mobileNo = parentInstance?.person1?.mobileNo
+				p.email = parentInstance?.person1?.email
 				if(!p.save(flush:true)){
 					println p.errors
 					 respond parentInstance.errors, view:'edit'            
@@ -173,7 +173,8 @@ class ParentController {
         request.withFormat {
             form multipartForm {
                 flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-                redirect(action: "show", id:parentInstance?.id, permanent:true) //redirect parentInstance, permanent:true
+                //redirect(action: "show", id:parentInstance?.id, permanent:true) //redirect parentInstance, permanent:true
+				redirect (url:cbcApiService.getBasePath(request) + "parent/show/" + parentInstance?.id, permanent:true)
             }
             '*'{ respond parentInstance, [status: OK] }
         }
@@ -212,6 +213,26 @@ class ParentController {
     }
 	
 	@Transactional
+	def newcoupon(){
+		def result = []
+		Map<String, String[]> vars = request.getParameterMap()
+		def _refno = vars.refno[0]
+		def _maxvisits = vars.maxvisits[0]
+		def _startdate = vars.startdate[0]
+		def _expirydate = vars.startdate[0]
+
+		def coupon = new Coupon(refNo:_refno, maxvisits:_maxvisits,startDate:new Date(_startdate),expiryDate:new Date(_expirydate))
+		if(!coupon.save(flush:true)){
+			println(coupon.errors)
+			result = [result:"failure",message:"Failed to save coupon!"]
+		}else{
+			result = [result:"success",id:coupon?.id]
+		}
+		
+		render result as JSON
+	}
+	
+	@Transactional
 	def newclient(){
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
 		Office office = Office.list().first()
@@ -222,7 +243,7 @@ class ParentController {
 		parentInstance.membershipNo = num
 		Person person1 = new Person(params.parent.person1)
 		person1.office = office
-		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase(), person1.lastName.toLowerCase())
 		person1.password = person1.username
 		person1.enabled = false
 		
@@ -237,7 +258,7 @@ class ParentController {
 		//Emergency person
 		Person person2 = new Person(params.parent.person2)
 		person2.office = office
-		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.username = cbcApiService.generateUsername(person2.firstName.toLowerCase() , person2.lastName.toLowerCase())
 		person2.password = person2.username
 		person2.enabled = false
 		
@@ -259,10 +280,11 @@ class ParentController {
 				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
 				p.gender =  Keywords.get(params.get("child.person.gender" + i))
 				p.office = office
-				p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+				p.username = cbcApiService.generateUsername(p.firstName, p.lastName)
 				p.password = p.username
 				p.enabled = false
-				p.mobileNo = "-1"
+				p.mobileNo = person1?.mobileNo
+				p.email = person1?.email
 				if(!p.save(flush:true)){
 					println p.errors
 					request.withFormat {
@@ -284,16 +306,12 @@ class ParentController {
 				}
 				// is checkin required now? IF NOT ARRAY NOT WORKING:
 				println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
-				if( params.get("child.checkin" + i) == "Yes" ){
-					//println ".. creating a visit now."
-					//println "time: " + params.child.visit.time[index]
-					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
+				if( params.get("child.checkin" + i) == "Yes" ){					
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
 					def _photokey = "visitphoto" + i
 					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
 					child.addToVisits(visit)
 					
-					//attachUploadedFilesTo(visit,["visitphoto" + index])
 					newvisits.put(p?.id , _photokey)
 				}
 								
@@ -329,16 +347,13 @@ class ParentController {
 		request.withFormat {
 		            form multipartForm {
 		                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		                redirect controller:"home", action: "index", method: "GET", permanent:true
+		                //redirect controller:"home", action: "index", method: "GET", permanent:true
+						redirect (url:cbcApiService.getBasePath(request), permanent:true)
 		            }
 		            '*'{ render status: OK }
 		        }
 	}
-	def search(){		
-		//def test = Child.get(1)
-		//def cnt = test.visits.findAll {it.status == "Active"}
-		//println("Active test cnt: " + cnt?.size())
-		
+	def search(){	
 		def term = "%" + params?.term + "%"
 		def results = Parent.createCriteria().list(params) {
 			or{
@@ -440,7 +455,7 @@ class ParentController {
 		parentInstance.membershipNo = num
 		Person person1 = new Person(params.parent.person1)
 		person1.office = office
-		person1.username = person1.firstName.toLowerCase() + "." + person1.lastName.toLowerCase()
+		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase() , person1.lastName.toLowerCase())
 		person1.password = person1.username
 		person1.enabled = false
 		
@@ -454,7 +469,7 @@ class ParentController {
 		//Emergency person
 		Person person2 = new Person(params.parent.person2)
 		person2.office = office
-		person2.username = person2.firstName.toLowerCase() + "." + person2.lastName.toLowerCase()
+		person2.username = cbcApiService.generateUsername(person2.firstName.toLowerCase() , person2.lastName.toLowerCase())
 		person2.password = person2.username
 		person2.enabled = false
 		
@@ -473,7 +488,7 @@ class ParentController {
 			p.dateOfBirth = new Date(params.child.person.dateOfBirth[index])
 			p.gender = Keywords.get(params.child.person.gender[index])
 			p.office = office
-			p.username = p.firstName.toLowerCase() + "." + p.lastName.toLowerCase()
+			p.username = cbcApiService.generateUsername(p.firstName.toLowerCase() , p.lastName.toLowerCase())
 			p.password = p.username
 			p.enabled = false
 			p.mobileNo = "-1"

@@ -1,7 +1,5 @@
 package cland.membership
 
-
-
 import static org.springframework.http.HttpStatus.*
 import cland.membership.security.Person
 import grails.converters.JSON
@@ -10,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class ChildController {
 	def springSecurityService
-
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "POST", delete: "DELETE"]
 
     def index(Integer max) {
@@ -159,21 +157,17 @@ class ChildController {
 		}else{
 	
 			attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
-			
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
-			redirect(action: "show", id:childInstance?.id)
-			render(view:"/child/show/" + childInstance?.id)
+													
+	        request.withFormat {
+	            form multipartForm {
+	                flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
+	                // redirect childInstance
+					redirect (url:cbcApiService.getBasePath(request) + "child/show/" + childInstance?.id, permanent:true)
+	            }
+	            '*'{ respond childInstance, [status: OK] }
+	        }
+        
 		}
-		
-		/*
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Child.label', default: 'Child'), childInstance?.toString()])
-                redirect childInstance
-            }
-            '*'{ respond childInstance, [status: OK] }
-        }
-        */
     }
 
     @Transactional
@@ -189,7 +183,8 @@ class ChildController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Child.label', default: 'Child'), childInstance.id])
-                redirect action:"index", method:"GET"
+                //redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "parent/index", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -199,7 +194,8 @@ class ChildController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'child.label', default: 'Child'), params.id])
-                redirect action: "index", method: "GET"
+                //redirect action: "index", method: "GET"
+				redirect (url:cbcApiService.getBasePath(request) + "parent/index", permanent:true)
             }
             '*'{ render status: NOT_FOUND }
         }
