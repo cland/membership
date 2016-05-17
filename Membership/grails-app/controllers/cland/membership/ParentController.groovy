@@ -216,19 +216,26 @@ class ParentController {
 	def newcoupon(){
 		def result = []
 		Map<String, String[]> vars = request.getParameterMap()
-		def _refno = vars.refno[0]
-		def _maxvisits = vars.maxvisits[0]
-		def _startdate = vars.startdate[0]
-		def _expirydate = vars.startdate[0]
-
-		def coupon = new Coupon(refNo:_refno, maxvisits:_maxvisits,startDate:new Date(_startdate),expiryDate:new Date(_expirydate))
-		if(!coupon.save(flush:true)){
-			println(coupon.errors)
-			result = [result:"failure",message:"Failed to save coupon!"]
+		def _parentid = vars.parentid[0]
+		def parentInstance = Parent.get(_parentid)
+		if(parentInstance){
+			def _refno = vars.refno[0]
+			def _maxvisits = vars.maxvisits[0]
+			def _startdate = vars.startdate[0]
+			def _expirydate = vars.startdate[0]
+	
+			def coupon = new Coupon(refNo:_refno, maxvisits:_maxvisits,startDate:new Date(_startdate),expiryDate:new Date(_expirydate))
+			if(!coupon.save(flush:true)){
+				println(coupon.errors)
+				result = [result:"failure",message:"Failed to save coupon!"]
+			}else{
+				parentInstance?.addToCoupons(coupon)
+				parentInstance.save(flush:true)
+				result = [result:"success",id:coupon?.id]
+			}
 		}else{
-			result = [result:"success",id:coupon?.id]
+			result = [result:"failure",message:"Could not find a client with id '" + parentid + "'"]
 		}
-		
 		render result as JSON
 	}
 	

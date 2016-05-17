@@ -14,13 +14,13 @@ class Coupon {
 	Date startDate
 	Date expiryDate
 	String refNo
-	
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
 	static transients = ["createdByName","lastUpdatedByName","visitsLeft"]
 	static hasMany = [visits:Visit]
+	static belongsTo = [parent:Parent]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		

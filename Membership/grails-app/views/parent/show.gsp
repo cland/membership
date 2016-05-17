@@ -84,8 +84,8 @@
 								<th>Status</th>								
 							</tr>
 						</thead>
-						<g:each in="${parentInstance?.notifications }" var="note" status="i">
-							
+						<tbody id="notification_list">
+							<g:each in="${parentInstance?.notifications }" var="note" status="i">							
 								<tr>
 									<td>${note?.dateCreated?.format("dd MMM yyyy")}</td>
 									<td><g:link controller="child" action="show" id="${note?.child?.id}">${note?.child?.person }</g:link>	</td>							
@@ -94,9 +94,9 @@
 								</tr>
 								<tr>
 									<td colspan="4" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">${note?.body}</td>									
-								</tr>
-							
-						</g:each>
+								</tr>		
+							</g:each>
+						</tbody>
 					</table>
 				</g:if>
 			</div>
@@ -112,8 +112,8 @@
 								<th>Expiry Date</th>
 							</tr>
 						</thead>
-						<g:each in="${parentInstance?.coupons }" var="note" status="i">
-							
+						<tbody id="coupon_list">
+							<g:each in="${parentInstance?.coupons }" var="note" status="i">							
 								<tr>
 									<td>${note.refNo }</td>
 									<td>${note?.startDate?.format("dd MMM yyyy")}</td>
@@ -156,15 +156,16 @@
 										</g:each>
 										</table>
 									</td>									
-								</tr>
-							
-						</g:each>
+								</tr>							
+							</g:each>
+						</tbody>
 					</table>
 				</g:if>
 				<fieldset>
 						<legend>Add New Coupon</legend>							
 							<form id="new_coupon_form" name="new_coupon_form">
 							<br/>
+							<input type="hidden" id="coupon_parent_id" name="coupon.parent.id" value="${parentInstance?.id }"/>
 							<div id="new_coupon_msg" class="text-align:center"></div>
 							<div class="table">
 								<div class="row">
@@ -177,7 +178,7 @@
 									<div class="cell"><label id="">Visits:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">
-											<g:textField id="coupon_visits" name="coupon.maxvisits" required="" value="" placeholder="Coupon Number"/>
+											<g:textField id="coupon_maxvisits" name="coupon.maxvisits" required="" value="18" placeholder="Visits"/>
 										</span>
 									</div>									
 								</div>
@@ -233,6 +234,10 @@
 									});
 								}
 					});	
+			initDatePicker($( "#coupon_startdate"),"0d","-1d","+2");
+			initDatePicker($( "#coupon_expirydate"),"+3m","+3m","+4m");
+			var d = new moment().add(3,'months').format("DD-MMM-YYYY");
+			$( "#coupon_expirydate").prop("value",d)
 			//handle template submit button
 			$(document).on("click","#coupon_btn",function(){
 				saveCoupon();
@@ -267,24 +272,32 @@
 		}
 		function saveCoupon(){	
 			var _msgEl = $("#new_coupon_msg");
+			var _parentid = $("#coupon_parent_id").val();
 			var _refno = $("#coupon_refno").val();
-			var _maxvisits = $('#coupon_maxvisits');
+			var _maxvisits = $('#coupon_maxvisits').val();
 			var _startdate = $("#coupon_startdate").val();
 			var _expirydate = $("#coupon_expirydate").val();
 			var _form = $("#new_coupon_form");
 			var _tbody = $("#coupon_list");
-			if(_title == "" || _body == ""){
+			if(_refno == "" || _startdate == "" || _maxvisits == ""){
 				_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing information!</span>")
 				return false;
 				}
+			if(_parentid == ""){
+				_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing parent id!</span>")
+				return false;
+			}
 			var postdata = {
 					  'refno': _refno,
+					  'parentid':_parentid,
 					  'startdate':_startdate,
 					  'expirydate':_expirydate,
 					  'maxvisits':_maxvisits,					 							 
 					  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
-					}												
-			var url = "${g.createLink(controller: 'parent', action: 'newcoupon')}"
+					}
+			console.log(postdata)								
+			var url = "${g.createLink(controller: 'parent', action: 'newcoupon')}";
+				console.log("Calling: " + url)
 			//ajax call here
 			var jqxhr = $.ajax({
 				  method: "POST",
@@ -292,8 +305,8 @@
 				  data: postdata
 				})
 			  .done(function(data) {
-					_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Template saved successfully!</span>")
-					_tbody.append("<tr><td>" + _title +" </td><td>" + _body +"</td></tr>")
+					_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Coupon saved successfully!</span>")
+					_tbody.append("<tr><td><span style='color:red;'>new</span></td><td>" + _refno +" </td><td>" + _startdate +"</td><td>" + _maxvisits +"</td><td>" + _maxvisits +"</td><td>" + _expirydate +"</td></tr>")
 					_form.trigger('reset')
 			  })
 			  .fail(function() {
@@ -302,6 +315,22 @@
 			  .always(function() { });
 			  
 			  return false;
+		}
+		function initDatePicker(el,def,min,max){
+			el.datepicker({
+				dateFormat: "dd-M-yy",
+				altFormat: "yy-mm-dd",
+				defaultDate : def,					
+				maxDate:max,
+				minDate:min
+				});
+		}
+		function getAussieDate(fmt,datestring){
+			if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
+			if(datestring === undefined || datestring === "") 
+				return moment().tz("Australia/Perth").format(fmt);
+			else
+				return moment(datestring).tz("Australia/Perth").format(fmt);
 		}
 		</script>
 	</body>
