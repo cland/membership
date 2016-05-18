@@ -791,3 +791,8 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 	 padding: 5px 0 5px 0;
 	 font-size:0.9em;
 }
+table.inner-table th { 
+	background:#f8d991;
+	font-size:8pt;	
+}
+table.inner-table td{font-size:8pt;}

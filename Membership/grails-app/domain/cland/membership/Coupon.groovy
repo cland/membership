@@ -21,6 +21,7 @@ class Coupon {
 	static transients = ["createdByName","lastUpdatedByName","visitsLeft"]
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
+	
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		

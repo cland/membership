@@ -218,4 +218,30 @@ class CbcApiService {
 		} 
 		return tmp
 	}
+	Coupon findActiveCoupon(Parent parentInstance, Date now, int visitlimit){
+		if(now == null) now = new Date()
+		
+		def coupons = Coupon.withCriteria(){
+			createAlias("parent","p")
+			eq("p.id",parentInstance?.id)					
+			ge("expiryDate",now)
+			le("startDate",now)	
+			//maxResults 1		
+		}
+		def coupon = coupons.find{
+			it.visitsLeft > visitlimit
+		}
+		return coupon
+		/*
+		def result = Coupon.validCoupons{
+			createAlias("parent","p")
+			
+			eq("p.id",parentInstance?.id)
+			
+			ge("expiryDate",now)
+			le("startDate",now)			
+		}
+		*/
+		//return (coupons == null?null:coupons?.first())
+	}
 }//end class

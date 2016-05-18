@@ -1,4 +1,4 @@
-
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Parent" %>
 <!DOCTYPE html>
 <html>
@@ -122,11 +122,12 @@
 									<td>${note?.expiryDate?.format("dd MMM yyyy")}</td>
 								</tr>
 								<tr id="coupon-visits-${note?.id }" class="coupon-visits-list">
-									<td colspan="4" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">
-										<table>
+									<td colspan="6" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">
+									<g:if test="${note?.visits}">
+										<table class="inner-table">
 											<thead>
 												<tr>
-													<th></th>
+													<th>#</th>
 													<th>Name</th>
 													<th>Date</th>
 													<th>Time-in</th>
@@ -139,7 +140,7 @@
 											</thead>
 										<g:each in="${note?.visits.sort{it.starttime} }" var="v" status="j">
 											<tr>
-												<td>${j }</td>
+												<td>${j+1 }</td>
 												<td><g:link controller="child" action="show" id="${v?.child?.id}">${v?.child?.person }</g:link></td>						
 												<td>${v?.starttime?.format("dd MMM yyyy")}</td>
 												<td>${v?.starttime?.format("hh:mm")}</td>
@@ -155,12 +156,14 @@
 											</tr>
 										</g:each>
 										</table>
+										</g:if>
 									</td>									
 								</tr>							
 							</g:each>
 						</tbody>
 					</table>
 				</g:if>
+				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
 				<fieldset>
 						<legend>Add New Coupon</legend>							
 							<form id="new_coupon_form" name="new_coupon_form">
@@ -205,6 +208,7 @@
 							</div>
 							</form>
 						</fieldset>
+				</sec:ifAnyGranted>		
 			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

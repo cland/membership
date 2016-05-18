@@ -31,6 +31,8 @@ class ParentController {
     }
 
     def show(Parent parentInstance) {
+		//def c = cbcApiService.findActiveCoupon(parentInstance, null,0)
+		//println(c)
         respond parentInstance
     }
 
@@ -222,17 +224,22 @@ class ParentController {
 			def _refno = vars.refno[0]
 			def _maxvisits = vars.maxvisits[0]
 			def _startdate = vars.startdate[0]
-			def _expirydate = vars.startdate[0]
+			def _expirydate = vars.expirydate[0]
 	
 			def coupon = new Coupon(refNo:_refno, maxvisits:_maxvisits,startDate:new Date(_startdate),expiryDate:new Date(_expirydate))
-			if(!coupon.save(flush:true)){
-				println(coupon.errors)
-				result = [result:"failure",message:"Failed to save coupon!"]
-			}else{
+			//if(!coupon.save(flush:true)){
+			//	println(coupon.errors)
+			//	result = [result:"failure",message:"Failed to save coupon!"]
+			//}else{
 				parentInstance?.addToCoupons(coupon)
-				parentInstance.save(flush:true)
-				result = [result:"success",id:coupon?.id]
-			}
+				if(!parentInstance.save(flush:true)){
+					println(parentInstance.errors)
+					result = [result:"failure",message:"Failed to add coupon to parentInstance coupons list"]
+				}else{
+					result = [result:"success",id:coupon?.id]
+				}
+				
+		//}
 		}else{
 			result = [result:"failure",message:"Could not find a client with id '" + parentid + "'"]
 		}
@@ -317,8 +324,7 @@ class ParentController {
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
 					def _photokey = "visitphoto" + i
 					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
-					child.addToVisits(visit)
-					
+					child.addToVisits(visit)					
 					newvisits.put(p?.id , _photokey)
 				}
 								
@@ -418,7 +424,8 @@ class ParentController {
 	def checkin(params){
 		def result = []
 		def msg = ""		
-	
+		def parentInstance = null
+		def coupon = null
 		def _contactno = params?.get("contactno")
 		def _starttime = params?.get("child.searchvisit.time")
 		def _children = params?.list("search_children")
@@ -426,13 +433,27 @@ class ParentController {
 		_children.each{
 			def childInstance = Child.get(Long.parseLong(it))
 			if(childInstance){
-				println(childInstance)
+				
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno)
-				childInstance.addToVisits(visit)
+				childInstance.addToVisits(visit)								
+				
 				if(!childInstance.save(flush:true)){
 					println(childInstance.errors)
 					msg = msg + "Child '" + value + "' failed to save! "
+				}
+				//add the coupon if available
+				try{
+					if(parentInstance == null) {
+						parentInstance = childInstance?.parent
+						coupon = cbcApiService.findActiveCoupon(parentInstance, timein,0)
+					}
+					if(coupon != null) {
+						coupon?.addToVisits(visit)
+						coupon.save()
+					}
+				}catch(Exception e){
+					e.printStackTrace()
 				}
 				attachUploadedFilesTo(visit,["visitphoto" + childInstance?.id])
 			}
