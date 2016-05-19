@@ -213,6 +213,58 @@ class ParentController {
             '*'{ render status: NOT_FOUND }
         }
     }
+	@Transactional
+	def editcoupon(){
+		def coupon = Coupon.get(params?.id)
+		render (view:"/parent/editcoupon",model:[couponInstance: coupon]) 
+	}
+	@Transactional
+	def updatecoupon(){
+		def result = []
+		Map<String, String[]> vars = request.getParameterMap()
+		def _couponid = vars.id[0]
+		Coupon c = Coupon.get(_couponid)
+		if(c){
+			def _refno = vars.refno[0]
+			def _maxvisits = vars.maxvisits[0]
+			def _startdate = vars.startdate[0]
+			def _expirydate = vars.expirydate[0]
+	
+			c.refNo = _refno
+			c.maxvisits=_maxvisits
+			c.startDate=new Date(_startdate)
+			c.expiryDate=new Date(_expirydate)
+			if(!c.save(flush:true)){
+				println(c.errors)
+				result = [result:"failure",message:"Failed to save coupon!"]
+			}else{
+			result = [result:"success",message:"Coupon updated successfully!",id:c?.id]
+			}
+		}else{
+			result = [result:"failure",message:"Could not find a coupon with id '" + _couponid + "'"]
+		}
+		render result as JSON
+	} //
+	@Transactional
+	def rmcoupon(){
+		def result = []
+		try{			
+			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _couponid = vars.id[0]
+			Coupon c = Coupon.get(_couponid)
+			if(c){
+				c.delete flush:true
+				result = [result:"success",message:"Removed coupon successfully!"]
+			}else{
+				result = [result:"failure",id:_couponid,message:"Could not find a coupon with id '" + _couponid + "'"]
+			}
+		
+		}catch(Exception e){
+			result = [result:"failure",message:"Could not find a client with id '" + _couponid + "'"]
+		}
+		render result as JSON
+	} //
 	
 	@Transactional
 	def newcoupon(){

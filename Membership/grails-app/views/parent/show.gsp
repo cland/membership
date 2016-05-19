@@ -7,6 +7,15 @@
 		<g:set var="entityName" value="${message(code: 'parent.label', default: 'Parent')}" />
 		<title><g:message code="default.show.label" args="[entityName]" />: ${parentInstance }</title>
 		<g:render template="head" var="thisInstance" bean="${parentInstance }" model="[sidenav:page_nav]"></g:render>
+		<style>
+			.row-deleted, .row_deleted td{
+				color:#d8d8d8;
+				text-decoration: line-through;
+			}
+			.delete-coupon-icon {}
+			.edit-coupon-icon {margin-left:1em;}
+			.delete-coupon-icon:hover, .edit-coupon-icon:hover {cursor:hand;cursor:pointer;transform: scale(1.8);}
+		</style>
 	</head>
 	<body>
 		<a href="#show-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -110,16 +119,24 @@
 								<th>Total Visits</th>																
 								<th>Visits Left</th>
 								<th>Expiry Date</th>
+								<th>Actions</th>
 							</tr>
 						</thead>
 						<tbody id="coupon_list">
-							<g:each in="${parentInstance?.coupons }" var="note" status="i">							
-								<tr>
+							<g:each in="${parentInstance?.coupons?.sort{it.startDate} }" var="note" status="i">							
+								<tr id="row-coupon-${note?.id }">
 									<td>${note.refNo }</td>
 									<td>${note?.startDate?.format("dd MMM yyyy")}</td>
 									<td>${note?.maxvisits}</td>							
 									<td>${note?.visitsLeft}</td>
 									<td>${note?.expiryDate?.format("dd MMM yyyy")}</td>
+									<td>
+										<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+											<asset:image src="skin/icon_delete.png" class="delete-coupon-icon" onClick="rmCoupon('${note?.id }');" id="del_${note?.id }" title="Delete this entry" alt="Delete this entry!"/>
+											<asset:image src="spinner.gif" class="spinner-wait hide" id="spinner-wait-${note?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
+											<asset:image src="skin/database_edit.png" class="edit-coupon-icon" onClick="editCoupon('${note?.id }');" id="edit_${note?.id }" title="Edit this entry" alt="Edit entry!"/>
+										</sec:ifAnyGranted>
+									</td>
 								</tr>
 								<tr id="coupon-visits-${note?.id }" class="coupon-visits-list">
 									<td colspan="6" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">
@@ -245,7 +262,8 @@
 			//handle template submit button
 			$(document).on("click","#coupon_btn",function(){
 				saveCoupon();
-				}); 	                
+				}); 	
+			         
 		});  
 		function viewPhoto(_link){
 			var $dialog = $('<div style="text-align:center;"><img src="' + _link + '" style="width:300px;"/></div>')             
@@ -274,6 +292,68 @@
                 
             $dialog.dialog('open');
 		}
+
+		function editCoupon(_id){
+			var _url = "${g.createLink(controller: 'parent', action: 'editcoupon')}/" + _id;
+			console.log(_url);
+			
+			var $dialog = $('<div style="text-align:center;">Loading coupon...</div>')             
+            .load(_url)
+            .dialog({
+            	modal:true,
+                autoOpen: false,
+                dialogClass: 'no-close',
+                width:800,
+                beforeClose: function(event,ui){
+                	
+                },
+                buttons:{
+                    "Close":function(){			                      	 
+                     	// $dialog.dialog('close')
+                     	 $dialog.dialog('destroy').remove()
+                        }
+                    },
+                close: function(event,ui){
+              	  	$dialog.dialog('destroy').remove()
+              	
+                },
+                position: {my:"top",at:"top",of:window},
+                title: 'Edit coupon ' + _id                         
+            });
+                
+            $dialog.dialog('open');	
+			return false;
+		} //edit
+		
+		function rmCoupon(_id){
+			var answer = confirm("Are you sure want to delete this coupon?");
+			var waitEl = $("spinner-wait-"+_id)
+			if(answer){
+				waitEl.show();
+				var url = "${g.createLink(controller: 'parent', action: 'rmcoupon')}";
+				var postdata = {
+						  'id': _id,				 							 
+						  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+						}
+				//ajax call here
+				var jqxhr = $.ajax({
+					  method: "POST",
+					  url: url,
+					  data: postdata
+					})
+				  .done(function(data) {
+						$("#row-coupon-" + _id).addClass("row-deleted");
+						$("#del_" + _id).hide();
+						
+				  })
+				  .fail(function() {
+				    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
+				  })
+				  .always(function() { waitEl.hide();});
+			}	  
+			return false;
+		}
+		
 		function saveCoupon(){	
 			var _msgEl = $("#new_coupon_msg");
 			var _parentid = $("#coupon_parent_id").val();
@@ -299,9 +379,9 @@
 					  'maxvisits':_maxvisits,					 							 
 					  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
 					}
-			console.log(postdata)								
+										
 			var url = "${g.createLink(controller: 'parent', action: 'newcoupon')}";
-				console.log("Calling: " + url)
+		
 			//ajax call here
 			var jqxhr = $.ajax({
 				  method: "POST",

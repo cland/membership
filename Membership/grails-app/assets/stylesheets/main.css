@@ -64,7 +64,7 @@ body {
 	height: 100%;
 }
 
-a:link, a:visited, a:hover {
+a:link, a:visited, a:hover,#child-list a {
 	color: #0080c0;
 }
 

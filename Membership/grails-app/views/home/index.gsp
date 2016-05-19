@@ -413,7 +413,6 @@ var cbc_params = {
 		}
 		function sendNotification(_child_id,_visit_id){		
 			 var _link = "${g.createLink(controller: 'harare', action: 'smsdialogcreate')}?cid=" + escape(_child_id) + "&vid=" + _visit_id ;
-			 console.log(_link);
 			 	
 		  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
 		                .load(_link)		                

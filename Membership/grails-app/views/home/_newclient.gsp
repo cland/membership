@@ -16,7 +16,7 @@
 				<div class="cell"><label id="">Cell number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.mobileNo" value=""/>
+						<g:textField name="parent.person1.mobileNo" value="" required=""/>
 					</span>
 				</div>			
 			</div>
@@ -30,7 +30,7 @@
 				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.email" value=""/>
+						<g:textField name="parent.person1.email" value="" required=""/>
 					</span>
 				</div>			
 			</div>
@@ -39,13 +39,13 @@
 				<div class="cell"><label id="">Id number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.idNumber" value=""/>
+						<g:textField name="parent.person1.idNumber" value="" required=""/>
 					</span>
 				</div>		
 				<div class="cell"><label id="">Relationship:</label></div>
 				<div class="cell">
 					<% def reltypes = cland.membership.lookup.Keywords.findByName("RelationshipTypes")?.values?.sort{it?.label} %>
-						<g:radioGroup 
+						<g:radioGroup required=""
 							values="${reltypes?.id}"
 							labels="${reltypes}" 
 							name="parent.relationship">
@@ -73,7 +73,7 @@
 				<div class="cell"><label id="">Cell number:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person2.mobileNo" value=""/>
+						<g:textField name="parent.person2.mobileNo" required="" value=""/>
 					</span>
 				</div>			
 			</div>

@@ -3,7 +3,7 @@
 <%@ page import="cland.membership.Parent" %>		
 		<div>
 			<div id="group-finder-div">
-				<input style="width:40em;padding:10px;" id="person-clients" name="query" value="" placeholder="Search for lastname or membership no.">
+				<input style="width:45em;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="person-clients" name="query" value="" placeholder="Search for lastname or membership no.">
 			</div>
 		
 			<table id="child-table" style="display:none">
@@ -166,7 +166,7 @@ $(document).ready(function() {
 			if(_childlist != null){
 				$("#child-table").show();
 				var _tbody = $("#child-list");				
-				_tbody.html("<tr><td colspan='3'>Parent/Gardian: <a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'>Today's visit contact number: <input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/>" );
+				_tbody.html("<tr><td colspan='3'><label>Parent/Gardian: </label><br/><a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'><label>Today's visit contact number:</label> <br/><input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/>" );
 				_tbody.append("<tr><td class='thead'></td><td class='thead'>Name</td><td class='thead'>Age</td><td class='thead'>Gender</td><td class='thead'>Today's Photo</td>");
 				$.each(_childlist,function(item){
 					var _sel = '';
