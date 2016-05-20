@@ -33,6 +33,7 @@
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<input type="button" name="cancel" onclick="document.location='${request.contextPath}/settings/edit/1?tab=2'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 				</fieldset>
 			</g:form>
 		</div>

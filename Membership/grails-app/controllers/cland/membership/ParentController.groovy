@@ -192,7 +192,8 @@ class ParentController {
 
         parentInstance.delete flush:true
 		flash.message = "Client '" + parentInstance + "' updated successfully! Membership number: '" + parentInstance?.membershipNo + "'"
-		redirect(action: "show", id:parentInstance?.id)
+		//redirect(action: "show", id:parentInstance?.id)
+		redirect (url:cbcApiService.getBasePath(request) + "parent/", permanent:true)
 		/*
         request.withFormat {
             form multipartForm {
@@ -222,11 +223,11 @@ class ParentController {
 	def updatecoupon(){
 		def result = []
 		Map<String, String[]> vars = request.getParameterMap()
-		def _couponid = vars.id[0]
+		def _couponid = vars.couponid[0]
 		Coupon c = Coupon.get(_couponid)
 		if(c){
 			def _refno = vars.refno[0]
-			def _maxvisits = vars.maxvisits[0]
+			def _maxvisits = Integer.parseInt(vars.maxvisits[0])
 			def _startdate = vars.startdate[0]
 			def _expirydate = vars.expirydate[0]
 	

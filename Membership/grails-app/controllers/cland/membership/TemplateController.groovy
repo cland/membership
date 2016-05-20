@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class TemplateController {
-
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", newtemplate:"POST"]
 
     def index(Integer max) {
@@ -41,7 +41,8 @@ class TemplateController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'template.label', default: 'Template'), templateInstance.id])
-                redirect templateInstance
+                //redirect templateInstance
+				redirect (url:cbcApiService.getBasePath(request) + "settings/edit/1?tab=2", permanent:true)
             }
             '*' { respond templateInstance, [status: CREATED] }
         }
@@ -68,7 +69,8 @@ class TemplateController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Template.label', default: 'Template'), templateInstance.id])
-                redirect templateInstance
+                //redirect templateInstance
+				redirect (url:cbcApiService.getBasePath(request) + "settings/edit/1?tab=2", permanent:true)
             }
             '*'{ respond templateInstance, [status: OK] }
         }
@@ -87,7 +89,8 @@ class TemplateController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Template.label', default: 'Template'), templateInstance.id])
-                redirect action:"index", method:"GET"
+                //redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "settings/edit/1?tab=2", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }

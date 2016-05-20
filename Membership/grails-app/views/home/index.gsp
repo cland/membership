@@ -301,7 +301,9 @@ var cbc_params = {
 				oneLine: true,
 				timeFormat: 'HH:mm', // 'hh:mm tt',
 				dateFormat: "dd-M-yy",
-				altFormat: "yy-mm-dd HH:mm",
+				altFormat: "yy-mm-dd",
+				altTimeFormat : "HH:mm",
+				altFieldTimeOnly: false,
 				stepMinute: 5
 			});
 			el.prop("value",getAussieDate("DD-MMM-YYYY HH:mm"))

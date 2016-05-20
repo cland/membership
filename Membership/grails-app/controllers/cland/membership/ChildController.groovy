@@ -155,7 +155,7 @@ class ChildController {
 			respond childInstance.errors, view:'edit'
 			return
 		}else{
-	
+			
 			attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
 													
 	        request.withFormat {

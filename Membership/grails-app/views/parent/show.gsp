@@ -262,8 +262,8 @@
 			//handle template submit button
 			$(document).on("click","#coupon_btn",function(){
 				saveCoupon();
-				}); 	
-			         
+			}); 
+			   
 		});  
 		function viewPhoto(_link){
 			var $dialog = $('<div style="text-align:center;"><img src="' + _link + '" style="width:300px;"/></div>')             
@@ -295,8 +295,6 @@
 
 		function editCoupon(_id){
 			var _url = "${g.createLink(controller: 'parent', action: 'editcoupon')}/" + _id;
-			console.log(_url);
-			
 			var $dialog = $('<div style="text-align:center;">Loading coupon...</div>')             
             .load(_url)
             .dialog({
@@ -344,6 +342,7 @@
 				  .done(function(data) {
 						$("#row-coupon-" + _id).addClass("row-deleted");
 						$("#del_" + _id).hide();
+						$("#edit_" + _id).hide();
 						
 				  })
 				  .fail(function() {
@@ -416,6 +415,7 @@
 			else
 				return moment(datestring).tz("Australia/Perth").format(fmt);
 		}
+		
 		</script>
 	</body>
 </html>

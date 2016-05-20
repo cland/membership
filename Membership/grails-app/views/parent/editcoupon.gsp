@@ -96,25 +96,25 @@ var cbc_params = {
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">		
 			<div style="text-align:right;">Parent: ${couponInstance?.parent?.person1 }</div>		
-			<div class="send-wait">Sending message, please wait...</div>
-			<div id="message"></div>
-			
-			<fieldset id="previewmsg"><legend>Edit Coupon Details</legend>
-				<form id="coupon_form" name="coupon_form">
+			<div class="edit-coupon-wait hide">Processing, please wait...</div>
+			<div id="edit-coupon-message"></div>
+			<input type="hidden" name="edit_coupon_id" id="edit_coupon_id" value="${couponInstance?.id }"/>
+			<fieldset id="edit-previewmsg"><legend>Edit Coupon Details</legend>
+				<form id="edit-coupon-form" name="edit_coupon_form">
 							<br/>							
-							<div id="coupon_msg" class="text-align:center"></div>
+							<div id="edit_coupon_msg" class="text-align:center"></div>
 							<div class="table">
 								<div class="row">
 									<div class="cell"><label id="">Coupon No:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">
-											<g:textField id="coupon_refno" name="refno" required="" value="${couponInstance?.refNo }" placeholder="Coupon Number"/>
+											<g:textField id="edit_coupon_refno" name="refno" required="" value="${couponInstance?.refNo }" placeholder="Coupon Number"/>
 										</span>
 									</div>	
 									<div class="cell"><label id="">Visits:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">
-											<g:textField id="coupon_maxvisits" name="maxvisits" required="" value="${couponInstance?.maxvisits }" placeholder="Visits"/>
+											<g:textField id="edit_coupon_maxvisits" name="maxvisits" required="" value="${couponInstance?.maxvisits }" placeholder="Visits"/>
 										</span>
 									</div>									
 								</div>
@@ -122,20 +122,20 @@ var cbc_params = {
 									<div class="cell"><label id="">Activation Date:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">																						
-											<g:textField name="startdate" placeholder="Start Date" value="${couponInstance?.startDate?.format('dd-MMM-yyyy')}" id="coupon_startdate" class="datetime-picker"/>
+											<g:textField name="startdate" placeholder="Start Date" value="${couponInstance?.startDate?.format('dd-MMM-yyyy')}" id="edit_coupon_startdate" class="datetime-picker"/>
 										</span>
 									</div>	
 									<div class="cell"><label id="">Expiry Date:</label></div>
 									<div class="cell">
 										<span class="property-value" aria-labelledby="home-label">											
-											<g:textField name="expirydate" placeholder="Expiry Date" value="${couponInstance?.expiryDate?.format('dd-MMM-yyyy')}" id="coupon_expirydate" class="datetime-picker"/>
+											<g:textField name="expirydate" placeholder="Expiry Date" value="${couponInstance?.expiryDate?.format('dd-MMM-yyyy')}" id="edit_coupon_expirydate" class="datetime-picker"/>
 										</span>
 									</div>										
 								</div>	
 								<div class="row">
 									<div class="cell"></div>
 									<div class="cell">
-										<input type="button" class="button" name="coupon_btn" id="coupon_btn" value="Submit"/>
+										<input type="button" class="button" name="edit_coupon_btn" onClick="updateCoupon();return false;" id="edit-coupon-btn" value="Update"/>
 									</div>
 								</div>																				
 							</div>
@@ -144,13 +144,77 @@ var cbc_params = {
 		</div>
 
 	<script>
+	$(document).ready(function() {
+		
+		initDatePicker1($( "#edit_coupon_startdate"),"0d","-1y","+2");
+		initDatePicker1($( "#edit_coupon_expirydate"),"+3m","0d","+4m");
+		
+		//handle template submit button		
+	//	$(document).on("click","#edit-coupon-btn",function(){
+	//		updateCoupon();
+	//	});	
+		         
+	});  
 
-		$(document).ready(function() {	
-			
-			
-		});		
-
-
+	function initDatePicker1(el,def,min,max){
+		el.datepicker({
+			dateFormat: "dd-M-yy",
+			altFormat: "yy-mm-dd"
+			});
+	}
+	function getAussieDate(fmt,datestring){
+		if(fmt === undefined || fmt ==="") fmt = 'DD MMMM YYYY HH:mm:ss';
+		if(datestring === undefined || datestring === "") 
+			return moment().tz("Australia/Perth").format(fmt);
+		else
+			return moment(datestring).tz("Australia/Perth").format(fmt);
+	}
+	function updateCoupon(){
+		var _msgEl = $("#edit_coupon_msg");
+		var _couponid = $("#edit_coupon_id").val();
+		var _refno = $("#edit_coupon_refno").val();
+		var _maxvisits = $('#edit_coupon_maxvisits').val();
+		var _startdate = $("#edit_coupon_startdate").val();
+		var _expirydate = $("#edit_coupon_expirydate").val();
+		var _form = $("#edit_coupon_form");
+		var _tbody = $("#coupon_list");
+		if(_refno == "" || _startdate == "" || _maxvisits == ""){
+			_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing information!</span>")
+			return false;
+			}
+		if(_couponid == "" || _couponid === undefined){
+			_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing coupon id!</span>")
+			return false;
+		}
+		var _postdata = {
+				  'refno': _refno,
+				  'couponid':_couponid,
+				  'startdate':_startdate,
+				  'expirydate':_expirydate,
+				  'maxvisits':_maxvisits,					 							 
+				  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+				}				
+		var _url = "${g.createLink(controller: 'parent', action: 'updatecoupon')}";
+	
+		//ajax call here
+		var jqxhr = $.ajax({
+			  method: "POST",
+			  url: _url,
+			  data: _postdata
+			})
+		  .done(function(data) {
+				_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Coupon saved successfully!</span>")					
+				_form.hide()	
+				var _lnk = "${g.createLink(controller: 'parent', action: 'show')}/${couponInstance?.parent?.id}?tab=4";
+				document.location.href = _lnk;			
+		  })
+		  .fail(function() {
+		    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
+		  })
+		  .always(function() { });
+		  
+		  return false;
+	}
 	</script>		
 	</body>
 </html>
