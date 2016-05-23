@@ -56,8 +56,8 @@ class Coupon {
 	String toString(){
 		return "Coupon ${refNo} [${startDate}]"
 	}
-	Integer getVisitsLeft(){
-		return maxvisits - visits?.size()
+	Long getVisitsLeft(){
+		return maxvisits - (visits*.totalMinutes?.sum()/60)
 	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)

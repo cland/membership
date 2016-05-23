@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -32,6 +33,8 @@
 		<meta name="msapplication-TileColor" content="#ffffff">
 		<meta name="msapplication-TileImage" content="${assetPath(src: 'fav/ms-icon-144x144.png')}">
 		<meta name="theme-color" content="#ffffff">
+		
+		
 	</head>
 	<body>
 		<div id="grailsLogo" role="banner">

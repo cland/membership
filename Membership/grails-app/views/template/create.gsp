@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,6 +27,7 @@
 			</g:hasErrors>
 			<g:form url="[resource:templateInstance, action:'save']" >
 				<fieldset class="form">
+					<g:render template="../layouts/templateholders"/>
 					<g:render template="form"/>
 				</fieldset>
 				<fieldset class="buttons">

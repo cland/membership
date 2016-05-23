@@ -247,6 +247,33 @@ class ParentController {
 		render result as JSON
 	} //
 	@Transactional
+	def rmcouponvisit(){
+		def result = []
+		try{
+			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _couponid = vars.cid[0]
+			def _visitid = vars.vid[0]
+			Coupon c = Coupon.get(_couponid)
+			if(c){
+				Visit visit = Visit.get(_visitid)
+				if(visit){
+					c.visits.remove(visit)
+					//c.save flush:true
+					result = [result:"success",message:"Visit removed from coupon successfully!"]
+				}else{
+					result = [result:"failure",id:_couponid,message:"Could not find a visit with id '" + _visitid + "'"]
+				}
+			}else{
+				result = [result:"failure",id:_couponid,message:"Could not find a coupon with id '" + _couponid + "'"]
+			}
+		
+		}catch(Exception e){
+			result = [result:"failure",message:"Could not find a client with id '" + _couponid + "'"]
+		}
+		render result as JSON
+	} //
+	@Transactional
 	def rmcoupon(){
 		def result = []
 		try{			
@@ -459,6 +486,22 @@ class ParentController {
 			visit.endtime = dateout //timeout.toLocalDateTime();
 			visit.status = _status
 			if(visit.save(flush:true)){
+				//add the coupon if status is completed
+				if(visit?.status?.equalsIgnoreCase("complete")){
+					try{
+						def parentInstance = visit?.child?.parent
+						if(parentInstance != null) {						
+							def coupon = cbcApiService.findActiveCoupon(parentInstance, visit.starttime,0)
+							if(coupon != null) {
+								coupon?.addToVisits(visit)
+								coupon.save()
+							}
+						}
+						
+					}catch(Exception e){
+						e.printStackTrace()
+					}
+				}
 				result = [result:"success"]
 				result.putAll(visit?.toMap())				
 			}else{
@@ -495,7 +538,8 @@ class ParentController {
 					println(childInstance.errors)
 					msg = msg + "Child '" + value + "' failed to save! "
 				}
-				//add the coupon if available
+				//add the coupon if available - moved this to point of check-out
+				/*
 				try{
 					if(parentInstance == null) {
 						parentInstance = childInstance?.parent
@@ -508,6 +552,7 @@ class ParentController {
 				}catch(Exception e){
 					e.printStackTrace()
 				}
+				*/
 				attachUploadedFilesTo(visit,["visitphoto" + childInstance?.id])
 			}
 		}//end looping through all the children id list
@@ -515,7 +560,7 @@ class ParentController {
 
 		result = [result:"success",message:msg]
 		render result as JSON
-	} //end function checkin
+	} //end function checking
 	
 	@Transactional
 	def newclientajax(){

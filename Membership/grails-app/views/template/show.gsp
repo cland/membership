@@ -1,4 +1,4 @@
-
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Template" %>
 <!DOCTYPE html>
 <html>
@@ -50,10 +50,13 @@
 				</g:if>						
 			
 			</ol>
+			<g:render template="../layouts/templateholders"/>
 			<g:form url="[resource:templateInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${templateInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					<sec:ifAnyGranted roles="${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ADMIN }">
+						<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					</sec:ifAnyGranted>
 				</fieldset>
 			</g:form>
 		</div>

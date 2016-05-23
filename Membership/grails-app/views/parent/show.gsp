@@ -152,11 +152,14 @@
 													<th>Duration</th>
 													<th>Contact No.</th>
 													<th>Status</th>
-													<th>Visit Photo</th>							
+													<th>Visit Photo</th>
+													<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">	
+														<th></th>			
+													</sec:ifAnyGranted>			
 												</tr>
 											</thead>
 										<g:each in="${note?.visits.sort{it.starttime} }" var="v" status="j">
-											<tr>
+											<tr id="row-coupon-visit-${v?.id}">
 												<td>${j+1 }</td>
 												<td><g:link controller="child" action="show" id="${v?.child?.id}">${v?.child?.person }</g:link></td>						
 												<td>${v?.starttime?.format("dd MMM yyyy")}</td>
@@ -164,12 +167,18 @@
 												<td>${v?.endtime?.format("HH:mm")}</td>
 												<td>${v?.durationText}</td>
 												<td>${v?.contactNo}</td>
-												<td>${v?.status}</td>												
+												<td>${v?.status}</td>						
 												<td>
 													<attachments:each bean="${v}">
 														<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>
 													</attachments:each>
 												</td>
+												<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+													<td>
+														<asset:image src="skin/icon_cross.png" class="rm-coupon-visit-icon" onClick="rmVisitFromCoupon('${note?.id }','${v?.id }');return false;" id="rm-coupon-visit-${v?.id }" title="Remove this visit from coupon" alt="Remove this visit from coupon!"/>
+														<asset:image src="spinner.gif" class="spinner-wait hide" id="spinner-wait-${v?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
+													</td>
+												</sec:ifAnyGranted>
 											</tr>
 										</g:each>
 										</table>
@@ -230,7 +239,9 @@
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${parentInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					<sec:ifAnyGranted roles="${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ADMIN }">
+						<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					</sec:ifAnyGranted>
 				</fieldset>
 			</g:form>
 		</div>
@@ -322,7 +333,34 @@
             $dialog.dialog('open');	
 			return false;
 		} //edit
-		
+		function rmVisitFromCoupon(coupon_id,visit_id){
+			var answer = confirm("Are you sure want to remove this visit from the coupon?");
+			var waitEl = $("spinner-wait-"+visit_id)
+			if(answer){
+				waitEl.show();
+				var url = "${g.createLink(controller: 'parent', action: 'rmcouponvisit')}";
+				var postdata = {
+						  'cid': coupon_id,
+						  'vid': visit_id,			 							 
+						  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+						}
+				//ajax call here
+				var jqxhr = $.ajax({
+					  method: "POST",
+					  url: url,
+					  data: postdata
+					})
+				  .done(function(data) {
+						$("#row-coupon-visit-" + visit_id).addClass("row-deleted");
+						$("#rm-coupon-visit-" + visit_id).hide();						
+				  })
+				  .fail(function() {
+				    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
+				  })
+				  .always(function() { waitEl.hide();});
+			}	  
+			return false;
+		}
 		function rmCoupon(_id){
 			var answer = confirm("Are you sure want to delete this coupon?");
 			var waitEl = $("spinner-wait-"+_id)

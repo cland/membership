@@ -1,3 +1,4 @@
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Template" %>
 <!DOCTYPE html>
 <html>
@@ -29,6 +30,7 @@
 			<g:form url="[resource:templateInstance, action:'update']" method="PUT" >
 				<g:hiddenField name="version" value="${templateInstance?.version}" />
 				<fieldset class="form">
+					<g:render template="../layouts/templateholders"/>
 					<g:render template="form"/>
 				</fieldset>
 				<fieldset class="buttons">

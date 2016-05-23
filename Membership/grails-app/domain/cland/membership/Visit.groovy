@@ -24,7 +24,8 @@ class Visit {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
-	static transients = ["createdByName","lastUpdatedByName","visitPhotoId","durationDays","durationHours","durationMinutes","durationText"]
+	static transients = ["createdByName","lastUpdatedByName","visitPhotoId",
+		"durationDays","durationHours","durationMinutes","durationText","totalMinutes"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
@@ -79,7 +80,8 @@ class Visit {
 				days:getDurationDays(),
 				hours:getDurationHours(),
 				minutes: getDurationMinutes(),
-				selectedhours: selectedHours
+				selectedhours: selectedHours,
+				totalminutes:getTotalMinutes()
 				],
 			params:params]
 	}
@@ -108,6 +110,9 @@ class Visit {
 	}
 	Integer getDurationHours(){
 		return getDurationPeriod().getHours()
+	}
+	Long getTotalMinutes(){
+		return (getDurationDays() * 1440) + (getDurationHours() * 60) + getDurationMinutes() 
 	}
 	Integer getDurationMinutes(){
 		return getDurationPeriod().getMinutes()
