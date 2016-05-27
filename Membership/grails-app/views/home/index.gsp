@@ -99,7 +99,8 @@ var cbc_params = {
 		<div id="page-body" role="main">
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
-			</g:if>			
+			</g:if>	
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">		
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			
 				<div id="tabs" style="display: none;">
@@ -121,13 +122,15 @@ var cbc_params = {
 						</form>
 					</div>
 					<div id="tab-2">
+						<div id="form-div">
 						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']">
 							<g:render template="newclient" model="[settings:settingsInstance]"></g:render>
 							<fieldset class="buttons">
-								<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
+								<g:submitButton id="register-btn" name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
 								<input type="button" name="cancel" onclick="document.location='${request.contextPath}/'" class="cancel" value="${message(code: 'default.button.cancel.label', default: 'Cancel')}" />
 							</fieldset>
 						</g:uploadForm>
+						</div>
 					</div>
 					<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 						<div id="tab-3">
@@ -138,7 +141,7 @@ var cbc_params = {
 			</fieldset>
 			<div class="wait">Loading, please wait...</div>
 			<g:render template="liveform" var="thisInstance" bean="${parentInstance }" model="[mode:'edit',settings:settingsInstance]"></g:render>
-			
+		</sec:ifAnyGranted>
 		</div>
 
 <br/><br/>
@@ -267,6 +270,11 @@ var cbc_params = {
 			//show datetime:
 			showTheTime(); // for the first load
 			setInterval(showTheTime, 250); // update it periodically 
+
+			$(document).on("click","#register-btn",function(){
+				$(".wait").show();$("#form-div").hide();
+				return true;
+			});
 		});
 
 		function onSuccessNewClientCallbackHander(data,textStatus){

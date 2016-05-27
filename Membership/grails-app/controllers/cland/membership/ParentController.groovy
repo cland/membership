@@ -23,7 +23,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST", selfregister:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -561,6 +561,107 @@ class ParentController {
 		result = [result:"success",message:msg]
 		render result as JSON
 	} //end function checking
+	
+	@Transactional
+	def selfregister(){
+		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
+		Office office = Office.list().first()
+		
+		Parent parentInstance = new Parent(params.parent)
+		parentInstance.clientType = Keywords.findByName("Standard")
+		def num = cbcApiService.generateIdNumber(new Date(),5)
+		parentInstance.membershipNo = num
+		Person person1 = new Person(params.parent.person1)
+		person1.office = office
+		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase(), person1.lastName.toLowerCase())
+		person1.password = person1.username
+		person1.enabled = false
+		
+		if(!person1.save(flush:true)){
+			println person1.errors
+			render person1.errors as JSON
+			return
+		}
+		groupManagerService.addUserToGroup(person1,office,"ROLE_USER")
+		parentInstance.person1 = person1
+		
+		//Emergency person
+		Person person2 = new Person(params.parent.person2)
+		person2.office = office
+		person2.username = cbcApiService.generateUsername(person2.firstName.toLowerCase() , person2.lastName.toLowerCase())
+		person2.password = person2.username
+		person2.enabled = false
+		
+		if(!person2.save(flush:true)){
+			println person2.errors
+		}else{
+			parentInstance.person2 = person2
+		}
+		groupManagerService.addUserToGroup(person2,office,"ROLE_USER")
+		def newvisits = [:]
+		// save the children
+		def i = 1
+		while(params.get("child.person.lastname" + i)){
+			def child = new Child()
+			def p = new Person()
+			p.firstName = params.get("child.person.firstname" + i)
+			p.lastName = params.get("child.person.lastname" + i)
+			if(p.firstName != "" & p.lastName != ""){
+				p.dateOfBirth = new Date(params.get("child.person.dateOfBirth" + i))
+				p.gender =  Keywords.get(params.get("child.person.gender" + i))
+				p.office = office
+				p.username = cbcApiService.generateUsername(p.firstName, p.lastName)
+				p.password = p.username
+				p.enabled = false
+				p.mobileNo = person1?.mobileNo
+				p.email = person1?.email
+				if(!p.save(flush:true)){
+					println p.errors
+					request.withFormat {
+						form multipartForm {
+							flash.message = "Error!"
+							redirect controller:"home", action: "index", method: "GET"
+						}
+						'*'{ render status: OK }
+					}
+					return
+				}
+				groupManagerService.addUserToGroup(p,office,"ROLE_USER")
+				child.person = p
+				//attachUploadedFilesTo(p,["profilephoto" + i])
+				if(parentInstance.children){
+					child.accessNumber = parentInstance.children.size() + 1
+				}else{
+					child.accessNumber = 1
+				}				
+				child.comments = params.get("child.comments" + i)				
+				parentInstance.addToChildren(child)
+			}// end first check for firstname and lastname
+			
+			i++
+		}
+		
+		if(!parentInstance.save(flush: true)){
+			println parentInstance.errors
+			request.withFormat {
+					form multipartForm {
+						flash.message = "Error!"
+						redirect controller:"home", action: "index", method: "GET", permanent:true
+					}
+					'*'{ render status: OK }
+				}
+			return
+		}
+		
+		request.withFormat {
+					form multipartForm {
+						flash.message = "Registration successful for '" + parentInstance + "'! Membership number: '" + parentInstance?.membershipNo + "'"
+						//redirect controller:"home", action: "index", method: "GET", permanent:true
+						redirect (url:cbcApiService.getBasePath(request) + "selfregister", permanent:true)
+					}
+					'*'{ render status: OK }
+				}
+	}
 	
 	@Transactional
 	def newclientajax(){

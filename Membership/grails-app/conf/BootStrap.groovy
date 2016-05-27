@@ -131,6 +131,8 @@ class BootStrap {
 			 for (String url in [
 				 '/',
 				 '/index',
+				 '/selfregister',
+				 '/parent/selfregister/**',
 				 '/**/show/**',
 				  '/**/index/**',
 				   '/person/**',
