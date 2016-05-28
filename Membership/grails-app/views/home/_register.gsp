@@ -116,7 +116,7 @@
 			</div>
 			<div class="row">
 				<input type="hidden" name="currentChildCount" id="curchild-count" value="1"/>
-				<input type="button" class="button" id="next-child-btn" name="add-child_btn" value="Add Another Child" style="margin-left:30px;"/>
+				<input type="button" class="button2" id="next-child-btn" name="add-child_btn" value="Add Another Child" style="margin-left:30px;"/>
 			</div>			
 		</div>
 	</fieldset>

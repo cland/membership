@@ -97,9 +97,10 @@ var cbc_params = {
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">
-		<div class="message" style="font-size:1.5em;" role="status">TEST MESSAGE = ${flash.message}</div>
 			<g:if test="${flash.message}">
-				
+				<div class="message" style="font-size:1.5em;text-align:center !important;" role="status">				
+					${flash.message}
+				</div>
 			</g:if>			
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Register Form</legend>			
@@ -135,7 +136,7 @@ var cbc_params = {
 			setTimeout(function () {
 			    $(".message").html("<span style='font-weight:bold;'>Thank you!</span>");
 			    $(".message").fadeOut(5000);
-			}, 15000);
+			}, 16000);
 			$(".message").fadeIn(2000).animate({
 			    padding: "+=20"
 			}, 1500).delay(1000).queue(function (next) {
@@ -248,7 +249,10 @@ var cbc_params = {
 			el.prop("value",getAussieDate("DD-MMM-YYYY HH:mm"))
 		}						
 
-		
+		function validateEmail($email) {
+			  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+			  return emailReg.test( $email );
+		}
 	</script>		
 	</body>
 </html>

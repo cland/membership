@@ -100,6 +100,7 @@ var cbc_params = {
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>	
+			<div class="wait">Loading, please wait...</div>
 			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">		
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			
@@ -139,7 +140,7 @@ var cbc_params = {
 					</sec:ifAnyGranted>
 				</div>
 			</fieldset>
-			<div class="wait">Loading, please wait...</div>
+			
 			<g:render template="liveform" var="thisInstance" bean="${parentInstance }" model="[mode:'edit',settings:settingsInstance]"></g:render>
 		</sec:ifAnyGranted>
 		</div>
@@ -234,6 +235,7 @@ var cbc_params = {
 		
 		$(document).ready(function() {	
 			console.log("DATE: " + new Date())
+			
 			var livepanel = $("#livepanel")
 			initVisits(livepanel)
 			$("#tabs").tabs(

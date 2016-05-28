@@ -27,7 +27,7 @@ class ParentController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Parent.list(params), model:[parentInstanceCount: Parent.count()]
+        respond Parent.list(params).sort{it.person1.lastName }, model:[parentInstanceCount: Parent.count()]
     }
 
     def show(Parent parentInstance) {

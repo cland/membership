@@ -557,10 +557,11 @@ th:hover, tr:hover {
 	border-radius: 2px;
 	box-shadow: 0 1px #ccc;
 }
-.button:hover,.button2:hover {background-color: #EAAD91; color:#494949;}
+.button:hover,.button2:hover,.button:focus,.button2:focus {background-color: #EAAD91; color:#494949;}
 
 .button:active,.button2:active {
   background-color: #EAAD91;
+  
   box-shadow: 0 5px #000000;
   transform: translateY(4px);
 }
@@ -801,3 +802,4 @@ table.inner-table td{font-size:8pt;}
 	background: #900;
 	display: none;
 }
+.ui-autocomplete-category {font-weight:bold;font-size:1.2em;}

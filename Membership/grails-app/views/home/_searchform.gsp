@@ -3,6 +3,7 @@
 <%@ page import="cland.membership.Parent" %>		
 		<div>
 			<div id="group-finder-div">
+				<asset:image src="spinner.gif" class="spinner-wait" id="spinner-wait-search" title="Searching, please wait..." alt="Searching, please wait...!"/>
 				<input style="width:48.5em;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="person-clients" name="query" value="" placeholder="Search for lastname or membership no.">
 			</div>
 		
@@ -20,6 +21,8 @@
 		<script type="text/javascript">
 <!--  
 function checkInForm(formid){
+	$("#checkin_btn").prop("disabled",true);
+	$(".wait").show();
 	var _action = $("#" + formid).prop("action"); //search_form
 	var formdata = new FormData($("#" + formid)[0]);
 	var jqxhr = $.ajax({ 
@@ -47,6 +50,8 @@ function checkInForm(formid){
   })
   .always(function() {
     	//console.log( "complete!" );
+	  $("#checkin_btn").prop("disabled",false);
+	  $(".wait").hide();
   });
 	return false;
 }
@@ -55,7 +60,6 @@ function onprogressHandler(evt) {
     console.log('Upload progress: ' + percent + '%');
 }
 function checkIn(_timein,_contactno, _values){
-	console.log(_timein + ": " + _values.toString());
 	var postdata = new FormData(); // { 'values': _values.toString(), 'starttime': _timein,'contactno':_contactno };
 	
 	postdata.append('values',_values.toString());
@@ -65,7 +69,7 @@ function checkIn(_timein,_contactno, _values){
 	$.each(_values, function(i,file){
 		postdata.append('file_' + i,$("#file_"+i));
 	});
-	
+	$(".wait").show();
 	var jqxhr = $.ajax({ 
 		url: "${request.contextPath}/parent/checkin",
 		data:postdata.toString(),
@@ -73,7 +77,7 @@ function checkIn(_timein,_contactno, _values){
 		method:"POST",
 		cache: false
 	 })
-  .done(function(data) {
+  .done(function(data) {	 
 	  if(data.result = "success"){		 
 		  if(data.result === "success"){
 			  var panel = $("#livepanel");
@@ -90,6 +94,7 @@ function checkIn(_timein,_contactno, _values){
   })
   .always(function() {
     	//console.log( "complete!" );
+	  $(".wait").hide();
   });
 	return false;	  
 }
@@ -100,7 +105,8 @@ function clearSearchForm(){
 	 $("#searchform-actions").hide()	 
 }
 $(document).ready(function() {
-	
+	var _spinner = $("#spinner-wait-search");
+	_spinner.hide();
 	$(document).on("click","#checkin_btn",function(){
 			var checkin_time = $("#visit_time_search").val();
 			var checkin_contactno = $("#checkin_contactno").val();
@@ -141,14 +147,18 @@ $(document).ready(function() {
 	//** Parent/Child Picker			
 	$( "#person-clients" ).catcomplete({
 		source: function(request,response) {
+			var _spinner = $("#spinner-wait-search");
+			_spinner.show();
 			$.ajax({
 				url : "${g.createLink(controller: 'parent', action: 'search')}", 
 				dataType: "json",
 				data : request,
 				success : function(data) {
+					_spinner.hide();
 					response(data); // set the response
 				},
 				error : function() { // handle server errors
+					_spinner.hide();
 					alert("Unable to retrieve records");
 				}
 			});

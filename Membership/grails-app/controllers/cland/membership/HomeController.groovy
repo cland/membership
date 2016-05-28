@@ -4,9 +4,12 @@ import grails.plugin.springsecurity.annotation.*
 
 class HomeController {
 	def cbcApiService
+	def groupManagerService
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def index = {
-		
+		if(groupManagerService.currentUser.toString().equalsIgnoreCase("Self Register")){			
+			redirect (url:cbcApiService.getBasePath(request) + "selfregister", permanent:true)
+		}
 	}
 	def index1 = {}
 	
