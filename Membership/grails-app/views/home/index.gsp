@@ -124,7 +124,9 @@ var cbc_params = {
 					</div>
 					<div id="tab-2">
 						<div id="form-div">
-						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']">
+						<div id="errors-div" class="errors hide"></div>
+						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'newclient']"
+						onsubmit="return submitForm()" >
 							<g:render template="newclient" model="[settings:settingsInstance]"></g:render>
 							<fieldset class="buttons">
 								<g:submitButton id="register-btn" name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Submit')}" />
@@ -273,12 +275,21 @@ var cbc_params = {
 			showTheTime(); // for the first load
 			setInterval(showTheTime, 250); // update it periodically 
 
-			$(document).on("click","#register-btn",function(){
-				$(".wait").show();$("#form-div").hide();
-				return true;
-			});
 		});
-
+		function submitForm(){
+			var _email = $("#parentemail").prop("value");
+			var _result = validateEmail(_email);			
+			
+			if(_result){
+				$(".wait").show();$("#form-div").hide();
+				return true
+			}
+			//problem with email
+			$("#errors-div").html("<b>Please provide a valid email address.</b>");
+			$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
+			$("#errors-div").show();
+			return false;
+		}
 		function onSuccessNewClientCallbackHander(data,textStatus){
 				//append any new visits to the live panel
 				$("#livepanel").empty();
@@ -484,6 +495,10 @@ var cbc_params = {
 			$(".bookingwait").hide()
 			$("#booking-message").html("Operation failed with status '" + textStatus + "'")
 			$("#booking-message").removeClass("message").addClass("errors");
+		}
+		function validateEmail($email) {
+			  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+			  return emailReg.test( $email );
 		}
 	</script>		
 	</body>

@@ -147,7 +147,7 @@ var cbc_params = {
 			$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
 			$("#errors-div").show();
 			return false;
-			}
+		}
 		$(document).ready(function() {
 			
 			setTimeout(function () {

@@ -30,7 +30,7 @@
 				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField name="parent.person1.email" value="" required=""/>
+						<g:textField id="parentemail" name="parent.person1.email" value="" required=""/>
 					</span>
 				</div>			
 			</div>
