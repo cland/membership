@@ -114,7 +114,9 @@ var cbc_params = {
 							<input type="button" class="button" id="start-register-btn" name="startregisterbtn" value="Start Registration" style="font-size: 2em;"/>
 						</div>
 						<div id="form-div">
-						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'selfregister']">
+						<div id="errors-div" class="errors hide"></div>
+						<g:uploadForm id="newclient_form" name="newclient_form" url="[controller:'parent',action:'selfregister']"
+						onsubmit="return submitForm()" >
 							<g:render template="/home/register" model="[settings:settingsInstance]"></g:render>
 							<fieldset class="buttons">
 								<g:submitButton id="register-btn" name="create" class="save" value="${message(code: 'default.button.register.label', default: 'Register')}" />
@@ -132,7 +134,22 @@ var cbc_params = {
 
 <br/><br/>
 	<script>
+		function submitForm(){
+			var _email = $("#parentemail").prop("value");
+			var _result = validateEmail(_email);			
+			
+			if(_result){
+				$(".wait").show();$("#form-div").hide();
+				return true
+			}
+			//problem with email
+			$("#errors-div").html("<b>Please provide a valid email address.</b>");
+			$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
+			$("#errors-div").show();
+			return false;
+			}
 		$(document).ready(function() {
+			
 			setTimeout(function () {
 			    $(".message").html("<span style='font-weight:bold;'>Thank you!</span>");
 			    $(".message").fadeOut(5000);
@@ -174,10 +191,7 @@ var cbc_params = {
 				
 			});
 			
-			$(document).on("click","#register-btn",function(){
-				$(".wait").show();$("#form-div").hide();
-				return true;
-			});
+			
 			$("#tabs").tabs(
 					{
 					active:cbc_params.active_tab(),

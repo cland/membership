@@ -30,7 +30,7 @@
 				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:textField type="email" name="parent.person1.email" value="" required=""/>
+						<g:textField type="email" id="parentemail" name="parent.person1.email" value="" required=""/>
 						
 					</span>
 				</div>			
@@ -96,7 +96,7 @@
 									
 								</div>
 								<div class="cell border-bottom">
-									<g:textField name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="child${index } datepick_single_past" value=""/>						
+									<g:textField  name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="child${index } datepick_single_past" value=""/>						
 									<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort{it?.label} %>
 									<br/><g:radioGroup style="margin-top:15px;" 
 										class="child${index }"

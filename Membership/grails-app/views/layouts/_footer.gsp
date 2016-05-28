@@ -11,6 +11,7 @@
 
 <sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER }">
 	<g:link url="${resource(dir:'person', file:'index')}">People</g:link>  |
+	<g:link url="${resource(dir:'/', file:'selfregister')}">Self Register</g:link>  |
 </sec:ifAnyGranted>
 
 
