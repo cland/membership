@@ -232,16 +232,23 @@ class CbcApiService {
 			it.visitsLeft > visitlimit
 		}
 		return coupon
-		/*
-		def result = Coupon.validCoupons{
-			createAlias("parent","p")
-			
-			eq("p.id",parentInstance?.id)
-			
-			ge("expiryDate",now)
-			le("startDate",now)			
+		
+	}
+	
+	def removeVisitFromCoupon(Visit visit){
+		def coupons = Coupon.findAll{
+			c -> c?.visits.contains(visit) 
 		}
-		*/
-		//return (coupons == null?null:coupons?.first())
+		coupons?.each{c ->
+			c.visits.remove(visit)
+		}
+	}
+	boolean addVisitToCoupon(Visit visit){
+		def coupon = findActiveCoupon(visit?.child?.parent, visit?.starttime, 0)
+		if(coupon){
+			coupon.addToVisits(visit)
+			if(coupon.save(flush:true)) return true
+		}
+		return false
 	}
 }//end class

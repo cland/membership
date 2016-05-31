@@ -23,7 +23,7 @@ class ParentController {
 	def emailService
 	def nexmoService
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST", selfregister:"POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST", selfregister:"POST", updatevisitstatus:"POST", addvisittocoupon:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -273,6 +273,58 @@ class ParentController {
 		}
 		render result as JSON
 	} //
+	@Transactional
+	def updatevisitstatus(){
+		def result = []
+		try{
+			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _status = vars.status[0]
+			def _visitid = vars.vid[0]
+			Visit visit = Visit.get(_visitid)
+			if(visit){
+				visit.status = _status
+				if( visit.save(flush:true) ){				
+					result = [result:"success",message:"Visit status updated successfully!"]
+					if(visit?.status?.equalsIgnoreCase("Cancelled")) cbcApiService.removeVisitFromCoupon(visit)
+				}else{
+					result = [result:"failure",id:_visitid,message:"Failed to update visit status"]
+				}
+			}else{
+				result = [result:"failure",id:_visitid,message:"Could not find a visit with id '" + _visitid + "'"]
+			}
+			
+		
+		}catch(Exception e){
+			result = [result:"failure",message:"Error processing action."]
+		}
+		render result as JSON
+	}
+	
+	@Transactional
+	def addvisittocoupon(){
+		def result = []
+		try{			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _visitid = vars.vid[0]
+			Visit visit = Visit.get(_visitid)
+			if(visit){
+				if(cbcApiService.addVisitToCoupon(visit)){
+					result = [result:"success",message:"Visit added to coupon successfully!"]
+				}else{
+					result = [result:"failure",id:_visitid,message:"Failed add visit to coupon"]
+				}
+			}else{
+				result = [result:"failure",id:_visitid,message:"Could not find a visit with id '" + _visitid + "'"]
+			}
+			
+		
+		}catch(Exception e){
+			result = [result:"failure",message:"Error processing action."]
+		}
+		render result as JSON
+	}
+	
 	@Transactional
 	def rmcoupon(){
 		def result = []

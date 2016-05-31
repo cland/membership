@@ -43,7 +43,7 @@
 				</div>
 			<div id="tab-2">
 				<g:if test="${parentInstance.children}">
-					<table>
+					<table class="inner-table">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -54,7 +54,8 @@
 								<th>Contact No.</th>
 								<th>Status</th>	
 								<th>Selected Hours</th>
-								<th>Visit Photo</th>							
+								<th>Visit Photo</th>
+								<th>Actions</th>							
 							</tr>
 						</thead>
 						<g:each in="${parentInstance?.children }" var="child" status="i">
@@ -66,13 +67,21 @@
 									<td>${c?.endtime?.format("HH:mm")}</td>
 									<td>${c?.durationText}</td>
 									<td>${c?.contactNo}</td>
-									<td>${c?.status}</td>
+									<td id="row-visit-status-${c?.id}" class="status-${c?.status }">${c?.status}</td>
 									<td>${c?.selectedHours}</td>
 									<td>
 										<attachments:each bean="${c}">
 											<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>
 										</attachments:each>
 									</td>
+									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+										<td>
+											<g:if test="${c?.status?.equalsIgnoreCase('Complete')}">
+												<asset:image src="skin/icon_cross.png" class="rm-visit-icon" onClick="setVisitStatus('${c?.id }','Cancelled');return false;" id="rm-visit-${c?.id }" title="Cancel this visit!" alt="Cancel this visit!"/>
+											</g:if>
+											<asset:image src="spinner.gif" class="spinner-rmvisit-wait hide" id="spinner-rmvisit-wait-${c?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
+										</td>
+									</sec:ifAnyGranted>
 								</tr>
 							</g:each>
 						</g:each>
@@ -333,6 +342,33 @@
             $dialog.dialog('open');	
 			return false;
 		} //edit
+		function setVisitStatus(visit_id,_status){			
+			var answer = confirm("Are you sure want to set the status of this visit to '" + _status + "'?");
+			var waitEl = $("spinner-rmvisit-wait-"+visit_id)
+			if(answer){
+				waitEl.show();
+				var url = "${g.createLink(controller: 'parent', action: 'updatevisitstatus')}";
+				var postdata = {
+						  'statu': _status,
+						  'vid': visit_id,			 							 
+						  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+						}
+				//ajax call here
+				var jqxhr = $.ajax({
+					  method: "POST",
+					  url: url,
+					  data: postdata
+					})
+				  .done(function(data) {
+						$("#row-visit-status-" + visit_id).html(_status);									
+				  })
+				  .fail(function() {
+				   		alert("Failed to change status to '" + _status + "'")
+				  })
+				  .always(function() { waitEl.hide();});
+			}	  
+			return false;
+		}
 		function rmVisitFromCoupon(coupon_id,visit_id){
 			var answer = confirm("Are you sure want to remove this visit from the coupon?");
 			var waitEl = $("spinner-wait-"+visit_id)

@@ -794,9 +794,9 @@ fieldset legend, form fieldset legend, .tab fieldset legend {font-weight:bold;co
 }
 table.inner-table th { 
 	background:#f8d991;
-	font-size:8pt;	
+	font-size:9pt;	
 }
-table.inner-table td{font-size:8pt;}
+table.inner-table td{font-size:9pt;border-bottom: rgba(246, 193, 165, 0.29) solid 1px;}
 .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
 	float:left;
 	background: #900;

@@ -209,6 +209,8 @@ class BootStrap {
 				 '/parent/editcoupon/**',
 				 '/parent/rmcouponvisit/**',
 				 '/parent/rmcoupon/**',
+				 '/parent/updatevisitstatus/**',
+				 '/parent/addvisittocoupon/**',
 				 '/parent/newcoupon/**']) {
 				 new RequestMap( url: url, configAttribute: SystemRoles.ROLE_ADMIN.value).save()
 			}
