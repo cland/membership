@@ -26,7 +26,7 @@ class ParentController {
     static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST", selfregister:"POST", updatevisitstatus:"POST", addvisittocoupon:"POST"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 30, 100)
         respond Parent.list(params).sort{it.person1.lastName }, model:[parentInstanceCount: Parent.count()]
     }
 
@@ -296,6 +296,8 @@ class ParentController {
 			
 		
 		}catch(Exception e){
+			//e.printStackTrace()
+			println e.getMessage()
 			result = [result:"failure",message:"Error processing action."]
 		}
 		render result as JSON
@@ -312,7 +314,7 @@ class ParentController {
 				if(cbcApiService.addVisitToCoupon(visit)){
 					result = [result:"success",message:"Visit added to coupon successfully!"]
 				}else{
-					result = [result:"failure",id:_visitid,message:"Failed add visit to coupon"]
+					result = [result:"failure",id:_visitid,message:"No matching coupon found for the visit's date."]
 				}
 			}else{
 				result = [result:"failure",id:_visitid,message:"Could not find a visit with id '" + _visitid + "'"]

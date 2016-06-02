@@ -236,12 +236,12 @@ class CbcApiService {
 	}
 	
 	def removeVisitFromCoupon(Visit visit){
-		def coupons = Coupon.findAll{
-			c -> c?.visits.contains(visit) 
-		}
-		coupons?.each{c ->
-			c.visits.remove(visit)
-		}
+		def coupons = Coupon.createCriteria().get{
+			visits {
+				idEq(visit?.id)
+			}
+		} 
+		if(coupons) coupons.removeFromVisits(visit)	
 	}
 	boolean addVisitToCoupon(Visit visit){
 		def coupon = findActiveCoupon(visit?.child?.parent, visit?.starttime, 0)

@@ -25,7 +25,8 @@ class Visit {
 	Date dateCreated
 	Date lastUpdated
 	static transients = ["createdByName","lastUpdatedByName","visitPhotoId",
-		"durationDays","durationHours","durationMinutes","durationText","totalMinutes"]
+		"durationDays","durationHours","durationMinutes","durationText","totalMinutes",
+		"isCancelled","isCompleted","isActive"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
@@ -151,5 +152,14 @@ class Visit {
 			pid = tmp?.id
 		}
 		return pid
+	}
+	boolean getIsCompleted(){
+		return status.equalsIgnoreCase("Complete")
+	}
+	boolean getIsCancelled(){
+		return status.equalsIgnoreCase("Cancelled")
+	}
+	boolean getIsActive(){
+		return (!getIsCompleted() & !getIsCancelled())
 	}
 } //end class

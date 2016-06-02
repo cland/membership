@@ -78,6 +78,7 @@
 										<td>
 											<g:if test="${c?.status?.equalsIgnoreCase('Complete')}">
 												<asset:image src="skin/icon_cross.png" class="rm-visit-icon" onClick="setVisitStatus('${c?.id }','Cancelled');return false;" id="rm-visit-${c?.id }" title="Cancel this visit!" alt="Cancel this visit!"/>
+												&nbsp;<asset:image src="skin/database_add.png" class="add-couponvisit-icon" onClick="addVisitToCoupon('${c?.id }');" id="add_couponvisit_${c?.id }" title="Add this visit to coupon" alt="Add this visit to coupon!"/>
 											</g:if>
 											<asset:image src="spinner.gif" class="spinner-rmvisit-wait hide" id="spinner-rmvisit-wait-${c?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
 										</td>
@@ -143,7 +144,7 @@
 										<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
 											<asset:image src="skin/icon_delete.png" class="delete-coupon-icon" onClick="rmCoupon('${note?.id }');" id="del_${note?.id }" title="Delete this entry" alt="Delete this entry!"/>
 											<asset:image src="spinner.gif" class="spinner-wait hide" id="spinner-wait-${note?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
-											<asset:image src="skin/database_edit.png" class="edit-coupon-icon" onClick="editCoupon('${note?.id }');" id="edit_${note?.id }" title="Edit this entry" alt="Edit entry!"/>
+											<asset:image src="skin/database_edit.png" class="edit-coupon-icon" onClick="editCoupon('${note?.id }');" id="edit_${note?.id }" title="Edit this entry" alt="Edit entry!"/>											
 										</sec:ifAnyGranted>
 									</td>
 								</tr>
@@ -349,7 +350,7 @@
 				waitEl.show();
 				var url = "${g.createLink(controller: 'parent', action: 'updatevisitstatus')}";
 				var postdata = {
-						  'statu': _status,
+						  'status': _status,
 						  'vid': visit_id,			 							 
 						  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
 						}
@@ -360,7 +361,11 @@
 					  data: postdata
 					})
 				  .done(function(data) {
-						$("#row-visit-status-" + visit_id).html(_status);									
+					  	if(data.result == "success"){
+							$("#row-visit-status-" + visit_id).html(_status);
+					  	}else{
+						  	alert(data.message)
+						  }		
 				  })
 				  .fail(function() {
 				   		alert("Failed to change status to '" + _status + "'")
@@ -369,8 +374,38 @@
 			}	  
 			return false;
 		}
+		function addVisitToCoupon(visit_id){
+			var answer = confirm("Are you sure you want to ADD this visit to a coupon?");
+			var waitEl = $("spinner-wait-"+visit_id)
+			if(answer){
+				waitEl.show();
+				var url = "${g.createLink(controller: 'parent', action: 'addvisittocoupon')}";
+				var postdata = {						  
+						  'vid': visit_id,			 							 
+						  'basic':'d2lnZ2x5dG9lTUFJTEVSc2lwYzp3aWdnbHl0b2VzaXBjMjAxNm1BSUxFUg=='
+						}
+				//ajax call here
+				var jqxhr = $.ajax({
+					  method: "POST",
+					  url: url,
+					  data: postdata
+					})
+				  .done(function(data) {
+					  	if(data.result=="success"){
+					  		$("#add_couponvisit_" + visit_id).hide()
+					  		alert("Added successfully!")
+					  	}
+												
+				  })
+				  .fail(function() {
+				    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
+				  })
+				  .always(function() { waitEl.hide();});
+			}	  
+			return false;
+		}
 		function rmVisitFromCoupon(coupon_id,visit_id){
-			var answer = confirm("Are you sure want to remove this visit from the coupon?");
+			var answer = confirm("Are you sure you want to remove this visit from the coupon?");
 			var waitEl = $("spinner-wait-"+visit_id)
 			if(answer){
 				waitEl.show();
@@ -387,8 +422,10 @@
 					  data: postdata
 					})
 				  .done(function(data) {
+				  		if(data.result=="success"){
 						$("#row-coupon-visit-" + visit_id).addClass("row-deleted");
-						$("#rm-coupon-visit-" + visit_id).hide();						
+						$("#rm-coupon-visit-" + visit_id).hide();
+						}						
 				  })
 				  .fail(function() {
 				    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")
@@ -398,7 +435,7 @@
 			return false;
 		}
 		function rmCoupon(_id){
-			var answer = confirm("Are you sure want to delete this coupon?");
+			var answer = confirm("Are you sure you want to delete this coupon?");
 			var waitEl = $("spinner-wait-"+_id)
 			if(answer){
 				waitEl.show();

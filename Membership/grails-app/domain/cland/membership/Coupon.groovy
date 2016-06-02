@@ -57,7 +57,13 @@ class Coupon {
 		return "Coupon ${refNo} [${startDate}]"
 	}
 	Long getVisitsLeft(){
-		return maxvisits - (visits*.totalMinutes?.sum()/60)
+		def completevisits = visits?.findAll{it.isCompleted == true}
+		
+		if(completevisits){			
+			return maxvisits - (completevisits*.totalMinutes?.sum()/60)
+		}
+		
+		return maxvisits
 	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)
