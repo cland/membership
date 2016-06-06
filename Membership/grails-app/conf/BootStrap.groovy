@@ -171,7 +171,13 @@ class BootStrap {
 					'/organisation/orglist/**',
 				   '/reports/**',
 				   '/reports/officeSummaryStats/**',
-				   '/parent/search/**']) {
+				   '/parent/search/**',
+				   '/parent/editcoupon/**',
+				 '/parent/rmcouponvisit/**',
+				 '/parent/rmcoupon/**',
+				 '/parent/updatevisitstatus/**',
+				 '/parent/addvisittocoupon/**',
+				 '/parent/newcoupon/**']) {
 					new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ','
 						+ SystemRoles.ROLE_DEVELOPER.value + ','
 						+ SystemRoles.ROLE_MANAGER.value + ','
@@ -183,7 +189,12 @@ class BootStrap {
 				 '/reports/**',
 				 '/reports/officeSummaryStats/**',
 				 '/settings/**',
-				  '/settings/edit/**']) {
+				  '/settings/edit/**','/parent/editcoupon/**',
+				 '/parent/rmcouponvisit/**',
+				 '/parent/rmcoupon/**',
+				 '/parent/updatevisitstatus/**',
+				 '/parent/addvisittocoupon/**',
+				 '/parent/newcoupon/**']) {
 				  new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ',' 
 					  + SystemRoles.ROLE_DEVELOPER.value + ',' 
 					  + SystemRoles.ROLE_MANAGER.value).save()

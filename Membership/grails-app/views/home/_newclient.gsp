@@ -106,10 +106,12 @@
 										name="child.person.gender${index }">
 										${it.radio} <g:message code="${it.label}" />
 									</g:radioGroup>
+									<br/><span class="visit-wbn-input"><br/><g:textField class="child-wbn${index }" name="child.visit.visitno${index }" placeholder="Wrist Band No."  value="" id="visit-visitno-${index }"/></span>
 								</div>
 								<div class="cell border-bottom">
 									<label>Profile Photo:</label> <input type="file" name="profilephoto${index }"/><br/>
-									<label>Full Body Photo:</label> <input type="file" name="visitphoto${index }"/>
+									<span class="visit-photo-input"><label>Full Body Photo:</label> <input type="file" name="visitphoto${index }"/><br/></span>
+									
 								</div>			
 							</div>
 						</g:each>				
@@ -126,6 +128,7 @@
 	
 <script>
 $(document).ready(function(){
+	$(".visit-photo-input").hide();
 	$(".child-form-entry").hide();
 	$("#child1").show();
 	$(".child1").prop("required",true);

@@ -17,6 +17,7 @@ class Settings {
 	String debug
 	String smsTestNumber
 	String smsFrom
+	boolean visitPhotoEnabled = false
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated

@@ -93,6 +93,12 @@
 		</label>
 		<g:field name="smsFrom" type="text" value="${settingsInstance.smsFrom}"/>	
 	</div>
+	<div class="fieldcontain ${hasErrors(bean: personInstance, field: 'vistPhotoEnabled', 'error')} ">
+			<label for="vistPhotoEnabled">
+				<g:message code="user.visitphotoenabled.label" default="Visit Photo Enabled" />				
+			</label>
+			<g:checkBox name="vistPhotoEnabled" value="${personInstance?.vistPhotoEnabled}" />
+		</div>
 </sec:ifAnyGranted>
 
 

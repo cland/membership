@@ -199,7 +199,7 @@
 						</tbody>
 					</table>
 				</g:if>
-				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">
 				<fieldset>
 						<legend>Add New Coupon</legend>							
 							<form id="new_coupon_form" name="new_coupon_form">

@@ -105,6 +105,7 @@ function clearSearchForm(){
 	 $("#searchform-actions").hide()	 
 }
 $(document).ready(function() {
+		
 	var _spinner = $("#spinner-wait-search");
 	_spinner.hide();
 	$(document).on("click","#checkin_btn",function(){
@@ -176,21 +177,24 @@ $(document).ready(function() {
 			if(_childlist != null){
 				$("#child-table").show();
 				var _tbody = $("#child-list");				
-				_tbody.html("<tr><td colspan='3'><label>Parent/Gardian: </label><br/><a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'><label>Today's visit contact number:</label> <br/><input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/>" );
-				_tbody.append("<tr><td class='thead'></td><td class='thead'>Name</td><td class='thead'>Age</td><td class='thead'>Gender</td><td class='thead'>Today's Photo</td>");
+				_tbody.html("<tr><td colspan='4'><label>Parent/Gardian: </label><br/><a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'><label>Today's visit contact number:</label> <br/><input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/></td></tr>" );
+				_tbody.append("<tr><td class='thead'></td><td class='thead'>Name</td><td class='thead'>Age</td><td class='thead'>Gender</td><td class='thead visit-wbn-col'>Wrist Band No.</td><td class='thead visit-photo-col'>Today's Photo</td></tr>");
 				$.each(_childlist,function(item){
 					var _sel = '';
 					
 					var _chbox = "<input type='checkbox' name='search_children' value='" + this.id + "' " +_sel+ "/>";
 					var _photoinput = "<input type='file' id='file_" + this.id + "' name='visitphoto" + this.id + "'/>";
+					var _inputbandno = "<input type='text' id='wbn_" + this.id + "' name='visitNo' value=''/>";
 					if(this.isactive){
 						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
 						_photoinput = "";
 					} 											
-					_tbody.append("<tr><td>" + _chbox + "</td><td>" + this.person.firstname + " " + this.person.lastname + "</td><td>" + this.person.age + "</td><td>" + this.person.gender.label + "</td><td>" + _photoinput + "</td>");	
+					_tbody.append("<tr><td>" + _chbox + "</td><td>" + this.person.firstname + " " + this.person.lastname + "</td><td>" + this.person.age + "</td><td>" + this.person.gender.label + "</td><td class='visit-wbn-input'>" + _inputbandno + "</td><td class='visit-photo-input'>" + _photoinput + "</td></tr>");	
 				})
 				initTimePicker($("#visit_time_search"),"")
-				$("#searchform-actions").show()					
+				$("#searchform-actions").show()		
+				//$(".visit-wbn-input").hide();
+				$(".visit-photo-col").hide(); $(".visit-photo-input").hide();		//depending on settings			
 			}
 			ui.item.value = ""
 		}

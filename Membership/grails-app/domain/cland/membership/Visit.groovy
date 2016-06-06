@@ -19,6 +19,8 @@ class Visit {
 	String contactNo
 	String photoKey
 	Integer selectedHours
+	Office office
+	String visitNo
 	static belongsTo = [child:Child]
 	long createdBy
 	long lastUpdatedBy
@@ -34,6 +36,7 @@ class Visit {
 		endtime nullable:true
 		photoKey nullable:true
 		selectedHours nullable:true
+		office nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
@@ -71,6 +74,7 @@ class Visit {
 			endtime:endtime?.format("dd MMM yyyy HH:mm"),
 			enddatetime:endtime,
 			status:status,
+			visitno:visitNo,
 			contactno:contactNo,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
