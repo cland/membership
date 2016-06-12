@@ -456,8 +456,9 @@ class ParentController {
 				println "Processing checkin...'" + params.get("child.checkin" + i) + "'"
 				if( params.get("child.checkin" + i) == "Yes" ){					
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
+					def _visitno = params.get("child.visit.visitno"+ i)
 					def _photokey = "visitphoto" + i
-					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey,visitNo:_visitno)
 					child.addToVisits(visit)					
 					newvisits.put(p?.id , _photokey)
 				}
@@ -585,7 +586,8 @@ class ParentController {
 			if(childInstance){
 				
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
-				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno)
+				def _visitno = params?.get("visitno" + childInstance?.id)
+				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno,visitNo:_visitno)
 				childInstance.addToVisits(visit)								
 				
 				if(!childInstance.save(flush:true)){

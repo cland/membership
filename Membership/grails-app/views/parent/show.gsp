@@ -54,7 +54,7 @@
 								<th>Contact No.</th>
 								<th>Status</th>	
 								<th>Selected Hours</th>
-								<th>Visit Photo</th>
+								<th>Wrist Band No.</th>
 								<th>Actions</th>							
 							</tr>
 						</thead>
@@ -70,11 +70,11 @@
 									<td id="row-visit-status-${c?.id}" class="status-${c?.status }">${c?.status}</td>
 									<td>${c?.selectedHours}</td>
 									<td>
-										<attachments:each bean="${c}">
-											<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>
-										</attachments:each>
+										${c?.visitNo }
+										
+										
 									</td>
-									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 										<td>
 											<g:if test="${c?.status?.equalsIgnoreCase('Complete')}">
 												<asset:image src="skin/icon_cross.png" class="rm-visit-icon" onClick="setVisitStatus('${c?.id }','Cancelled');return false;" id="rm-visit-${c?.id }" title="Cancel this visit!" alt="Cancel this visit!"/>
@@ -120,7 +120,7 @@
 				</g:if>
 			</div>
 			<div id="tab-5">
-				<g:if test="${parentInstance.coupons}">
+				
 					<table>
 						<thead>
 							<tr>
@@ -141,7 +141,7 @@
 									<td>${note?.visitsLeft}</td>
 									<td>${note?.expiryDate?.format("dd MMM yyyy")}</td>
 									<td>
-										<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">
+										<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 											<asset:image src="skin/icon_delete.png" class="delete-coupon-icon" onClick="rmCoupon('${note?.id }');" id="del_${note?.id }" title="Delete this entry" alt="Delete this entry!"/>
 											<asset:image src="spinner.gif" class="spinner-wait hide" id="spinner-wait-${note?.id }" title="Processing, please wait..." alt="Processing, please wait...!"/>
 											<asset:image src="skin/database_edit.png" class="edit-coupon-icon" onClick="editCoupon('${note?.id }');" id="edit_${note?.id }" title="Edit this entry" alt="Edit entry!"/>											
@@ -198,7 +198,8 @@
 							</g:each>
 						</tbody>
 					</table>
-				</g:if>
+				
+				
 				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">
 				<fieldset>
 						<legend>Add New Coupon</legend>							
@@ -473,6 +474,7 @@
 			var _expirydate = $("#coupon_expirydate").val();
 			var _form = $("#new_coupon_form");
 			var _tbody = $("#coupon_list");
+			
 			if(_refno == "" || _startdate == "" || _maxvisits == ""){
 				_msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Missing information!</span>")
 				return false;
@@ -500,8 +502,8 @@
 				})
 			  .done(function(data) {
 					_msgEl.html("<span style='font-weight:bold;font-size:1.6em;color:green'>Coupon saved successfully!</span>")
-					_tbody.append("<tr><td><span style='color:red;'>new</span></td><td>" + _refno +" </td><td>" + _startdate +"</td><td>" + _maxvisits +"</td><td>" + _maxvisits +"</td><td>" + _expirydate +"</td></tr>")
-					_form.trigger('reset')
+					_tbody.append("<tr><td>(<span style='color:red;'>new</span>) " + _refno +" </td><td>" + _startdate +"</td><td>" + _maxvisits +"</td><td>" + _maxvisits +"</td><td>" + _expirydate +"</td></tr>")					
+					_form.trigger('reset');
 			  })
 			  .fail(function() {
 			    _msgEl.html("<span style='font-weight:bold;font-size:2em;color:red'>Failed to save template!</span>")

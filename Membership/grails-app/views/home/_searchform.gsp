@@ -184,7 +184,7 @@ $(document).ready(function() {
 					
 					var _chbox = "<input type='checkbox' name='search_children' value='" + this.id + "' " +_sel+ "/>";
 					var _photoinput = "<input type='file' id='file_" + this.id + "' name='visitphoto" + this.id + "'/>";
-					var _inputbandno = "<input type='text' id='wbn_" + this.id + "' name='visitNo' value=''/>";
+					var _inputbandno = "<input type='text' id='wbn_" + this.id + "' name='visitno" + this.id + "' value=''/>";
 					if(this.isactive){
 						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
 						_photoinput = "";

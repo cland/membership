@@ -128,7 +128,7 @@
 						<th>Contact No.</th>
 						<th>Status</th>
 						<th>Selected Hours</th>
-						<th>Visit Photo</th>							
+						<th>Wrist Band No.</th>							
 					</tr>
 				</thead>
 				<g:each in="${visits}" var="c">
@@ -140,10 +140,8 @@
 						<td>${c?.contactNo}</td>
 						<td>${c?.status}</td>
 						<td>${c?.selectedHours}</td>
-						<td>
-							<attachments:each bean="${c}">
-								<a href="#" onclick="viewPhoto('${request.contextPath}/attachmentable/show/${attachment?.id }');return false;">View Photo</a>
-							</attachments:each>
+						<td> ${c?.visitNo }
+							
 						</td>
 					</tr>
 				</g:each>
