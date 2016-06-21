@@ -6,6 +6,7 @@
 </sec:ifNotLoggedIn>
 <sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 	<g:link url="${resource(dir:'admin', file:'technical')}">Technical</g:link>  |
+	<g:link url="${resource(dir:'office', file:'index')}">Offices</g:link>  |
 </sec:ifAnyGranted>
 <sec:ifLoggedIn>
 

@@ -12,21 +12,21 @@ class GroupManagerService {
 		println "... Generating Office Groups..."
 		//def _tmp = getGroupNamePrefix(office) //"GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_") 
 		def _tmp_desc = office?.name?.toString()
-	/*
-		def officeAdminGroup = new RoleGroup(name: _GroupName(office,SystemRoles.ROLE_OCO.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_OCO.description ).save()		
-		def officeWorkerGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_CWO.getKey()),description:_tmp_desc + " - " +SystemRoles.ROLE_CWO.description).save()
-		def officeSPGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_SPO.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_SPO.description).save()
+	
+		def officeAdminGroup = new RoleGroup(name: _GroupName(office,SystemRoles.ROLE_ADMIN.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_ADMIN.description ).save()		
+		def officeManagerGroup = new RoleGroup(name: _GroupName(office,SystemRoles.ROLE_MANAGER.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_MANAGER.description ).save()
+		def officeAssistantGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_ASSISTANT.getKey()),description:_tmp_desc + " - " +SystemRoles.ROLE_ASSISTANT.description).save()
+		def officeUserGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_USER.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_USER.description).save()
 		def officeReviewerGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_REVIEWER.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_REVIEWER.description).save()
-		def officeReaderGroup = new RoleGroup(name:_GroupName(office,SystemRoles.ROLE_READER.getKey()),description:_tmp_desc + " - " + SystemRoles.ROLE_READER.description).save()
 		
-		
-		if(officeAdminGroup?.hasErrors()) println("RoleGroup Error: " + officeAdminGroup.errors)
-		if(officeAdminGroup) RoleGroupRole.create officeAdminGroup, Role.findByAuthority(SystemRoles.ROLE_OCO.value)
-		if(officeWorkerGroup) RoleGroupRole.create officeWorkerGroup, Role.findByAuthority(SystemRoles.ROLE_CWO.value)
-		if(officeSPGroup) RoleGroupRole.create officeSPGroup, Role.findByAuthority(SystemRoles.ROLE_SPO.value)
+
+		if(officeAdminGroup) RoleGroupRole.create officeAdminGroup, Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)
+		if(officeManagerGroup) RoleGroupRole.create officeManagerGroup, Role.findByAuthority(SystemRoles.ROLE_MANAGER.value)
+		if(officeAssistantGroup) RoleGroupRole.create officeAssistantGroup, Role.findByAuthority(SystemRoles.ROLE_ASSISTANT.value)
+		if(officeUserGroup) RoleGroupRole.create officeUserGroup, Role.findByAuthority(SystemRoles.ROLE_USER.value)
 		if(officeReviewerGroup) RoleGroupRole.create officeReviewerGroup, Role.findByAuthority(SystemRoles.ROLE_REVIEWER.value)
-		if(officeReaderGroup) RoleGroupRole.create officeReaderGroup, Role.findByAuthority(SystemRoles.ROLE_READER.value)
-	*/	
+		
+		
 		println "... Done generating Office Groups..."
     }// end generateGroups
 	
@@ -49,16 +49,20 @@ class GroupManagerService {
 		//return grplist
 	}
 	private String getGroupNamePrefix(Object obj){
+		
+		try{
+			if(obj?.instanceOf(Office)){
+				Office office = (Office)obj
+				return "GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
+			}
+			if(obj?.instanceOf(Region)){
+				Region region = (Region)obj
+				return "GROUP_REGION_" + region?.name?.toString()?.toUpperCase()?.replace(" ","_")
+			}
+		}catch(Exception e){
+			println("Error getting GroupNamePrefix " + e.getMessage());
+		}
 		return "GROUP"
-		//TODO: activate once we implement the other offices
-		if(obj?.instanceOf(Office)){
-			Office office = (Office)obj
-			return "GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
-		}
-		if(obj?.instanceOf(Region)){
-			Region region = (Region)obj
-			return "GROUP_REGION_" + region?.name?.toString()?.toUpperCase()?.replace(" ","_")
-		}
 	}
 	private String _GroupName(Object obj, def rolename){
 		return getGroupNamePrefix(obj) + "_" + rolename
@@ -74,25 +78,25 @@ class GroupManagerService {
 	def removeOfficeGroups(Office office){
 	//	def _tmp = getGroupNamePrefix(office) //"GROUP_" + office?.code?.toString()?.toUpperCase()?.replace(" ","_")
 		def _tmp_desc = office?.name?.toString()
-		/*
-		def officeAdminGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_OCO.getKey()))
-		def officeWorkerGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_CWO.getKey()))
-		def officeSPGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_SPO.getKey()))
+		def officeAdminGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_ADMIN.getKey()))
+		def officeManagerGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_MANAGER.getKey()))
+		def officeAssistantGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_ASSISTANT.getKey()))
+		def officeUserGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_USER.getKey()))
 		def officeReviewerGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_REVIEWER.getKey()))
-		def officeReaderGroup = RoleGroup.findByName(_GroupName(office,SystemRoles.ROLE_READER.getKey()))
 		
-		RoleGroupRole.remove officeAdminGroup, Role.findByAuthority(SystemRoles.ROLE_OCO.value)
-		RoleGroupRole.remove officeWorkerGroup, Role.findByAuthority(SystemRoles.ROLE_CWO.value)
-		RoleGroupRole.remove officeSPGroup, Role.findByAuthority(SystemRoles.ROLE_SPO.value)
-		RoleGroupRole.remove officeReviewerGroup, Role.findByAuthority(SystemRoles.ROLE_REVIEWER.value)
-		RoleGroupRole.remove officeReaderGroup, Role.findByAuthority(SystemRoles.ROLE_READER.value)
+
+		if(officeAdminGroup) RoleGroupRole.remove officeAdminGroup, Role.findByAuthority(SystemRoles.ROLE_ADMIN.value)
+		if(officeManagerGroup) RoleGroupRole.remove officeManagerGroup, Role.findByAuthority(SystemRoles.ROLE_MANAGER.value)
+		if(officeAssistantGroup) RoleGroupRole.remove officeAssistantGroup, Role.findByAuthority(SystemRoles.ROLE_ASSISTANT.value)
+		if(officeUserGroup) RoleGroupRole.remove officeUserGroup, Role.findByAuthority(SystemRoles.ROLE_USER.value)
+		if(officeReviewerGroup) RoleGroupRole.remove officeReviewerGroup, Role.findByAuthority(SystemRoles.ROLE_REVIEWER.value)
 		
-		officeAdminGroup?.delete flush:true
-		officeWorkerGroup?.delete flush:true
-		officeSPGroup?.delete flush:true
-		officeReaderGroup?.delete flush:true
-		officeReviewerGroup?.delete flush:true
-		*/
+		if(officeAdminGroup) officeAdminGroup?.delete flush:true
+		if(officeManagerGroup) officeManagerGroup?.delete flush:true
+		if(officeAssistantGroup) officeAssistantGroup?.delete flush:true
+		if(officeUserGroup) officeUserGroup?.delete flush:true
+		if(officeReviewerGroup) officeReviewerGroup?.delete flush:true
+		
 	}
 	
 	def removeRegionGroups(Region region){

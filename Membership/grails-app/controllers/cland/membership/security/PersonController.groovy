@@ -63,7 +63,6 @@ class PersonController {
 		}else{
 			//Add user to access groups
 			def officegroups = (params.list("officegroups")*.toLong())
-			println(officegroups)
 			groupManagerService.addUserToGroup(personInstance,officegroups)
 		}
 

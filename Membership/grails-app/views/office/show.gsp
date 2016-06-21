@@ -9,9 +9,8 @@
 	</head>
 	<body>
 		<a href="#show-office" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
+		<div class="nav navpage" role="navigation">
 			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
@@ -86,20 +85,20 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${officeInstance?.lastUpdatedBy}">
+				<g:if test="${officeInstance?.lastUpdatedByName}">
 				<li class="fieldcontain">
 					<span id="lastUpdatedBy-label" class="property-label"><g:message code="office.lastUpdatedBy.label" default="Last Updated By" /></span>
 					
-						<span class="property-value" aria-labelledby="lastUpdatedBy-label"><g:fieldValue bean="${officeInstance}" field="lastUpdatedBy"/></span>
+						<span class="property-value" aria-labelledby="lastUpdatedBy-label"><g:fieldValue bean="${officeInstance}" field="lastUpdatedByName"/></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${officeInstance?.createdBy}">
+				<g:if test="${officeInstance?.createdByName}">
 				<li class="fieldcontain">
 					<span id="createdBy-label" class="property-label"><g:message code="office.createdBy.label" default="Created By" /></span>
 					
-						<span class="property-value" aria-labelledby="createdBy-label"><g:fieldValue bean="${officeInstance}" field="createdBy"/></span>
+						<span class="property-value" aria-labelledby="createdBy-label"><g:fieldValue bean="${officeInstance}" field="createdByName"/></span>
 					
 				</li>
 				</g:if>
@@ -163,6 +162,31 @@
 				</g:if>
 			
 			</ol>
+			<br/><h1>Groups</h1>
+					<div>
+						<table>
+						<thead>
+							<tr>
+							
+								<g:sortableColumn property="name" title="${message(code: 'roleGroup.name.label', default: 'Name')}" />
+							
+								<g:sortableColumn property="description" title="${message(code: 'roleGroup.description.label', default: 'Description')}" />
+							
+							</tr>
+						</thead>
+						<tbody>
+						<g:each in="${officeInstance?.officeGroups}" status="i" var="roleGroupInstance">
+							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+							
+								<td><g:link controller="roleGroup" action="show" id="${roleGroupInstance.id}">${fieldValue(bean: roleGroupInstance, field: "name")}</g:link></td>
+							
+								<td>${fieldValue(bean: roleGroupInstance, field: "description")}</td>
+							
+							</tr>
+						</g:each>
+						</tbody>
+						</table>
+					</div>
 			<g:form url="[resource:officeInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${officeInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
