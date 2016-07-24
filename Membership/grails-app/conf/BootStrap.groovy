@@ -177,7 +177,9 @@ class BootStrap {
 				 '/parent/rmcoupon/**',
 				 '/parent/updatevisitstatus/**',
 				 '/parent/addvisittocoupon/**',
-				 '/parent/newcoupon/**']) {
+				 '/parent/newcoupon/**',
+				 '/harare/webcamcreate/**',
+				 '/harare/doupload/**']) {
 					new RequestMap( url: url, configAttribute:  SystemRoles.ROLE_ADMIN.value + ','
 						+ SystemRoles.ROLE_DEVELOPER.value + ','
 						+ SystemRoles.ROLE_MANAGER.value + ','

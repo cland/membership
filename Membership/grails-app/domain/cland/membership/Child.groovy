@@ -74,7 +74,7 @@ class Child {
 		return (user==null?"unknown":user?.toString())
 	}
 	Integer getVisitCount(){
-		return visits?.size()
+		return visits?.findAll{it.status!="Cancelled"}?.size()
 	}
 	boolean isActive(){
 		return (getActiveVisit() == null?false:true)

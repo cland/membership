@@ -1,6 +1,7 @@
 <g:set var="activeVisit" value="${childInstance?.activeVisit }"/>
 <g:set var="parent" value="${childInstance?.parent }"/>
-<g:set var="visits" value="${childInstance.visits?.sort{it.starttime}.reverse() }"/>
+<g:set var="visits" value="${childInstance.visits?.findAll{it.status!= "Cancelled"}?.sort{it.starttime}.reverse() }"/>
+<g:set var="cancelledvisits" value="${childInstance.visits?.findAll{it.status== "Cancelled"}?.sort{it.starttime}.reverse() }"/>
 <g:set var="isEditMode" value="${mode?.equals("edit") }"/>
 	<fieldset>
 		<legend>Child's Profile</legend>

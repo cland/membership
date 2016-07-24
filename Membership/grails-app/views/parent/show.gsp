@@ -59,7 +59,7 @@
 							</tr>
 						</thead>
 						<g:each in="${parentInstance?.children }" var="child" status="i">
-							<g:each in="${child?.visits.sort{it.starttime}.reverse()}" var="c">
+							<g:each in="${child?.visits?.findAll{it.status!="Cancelled"}.sort{it.starttime}.reverse()}" var="c">
 								<tr>
 									<td><g:link controller="child" action="show" id="${child?.id}">${child?.person }</g:link></td>						
 									<td>${c?.starttime?.format("dd MMM yyyy")}</td>

@@ -18,12 +18,14 @@ class PersonController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 50, 100)
+		if(!params?.sort) params.sort = "username"
+		//params.order = "asc"
 		Office office = Office.list().first()
 		def personList = null
 		
 		if(groupManagerService.isAdmin()){
-			personList = Person.list()
+			personList = Person.list(params)
 		}else{
 			personList = Person.createCriteria().list(params) {
 				and{
@@ -32,8 +34,8 @@ class PersonController {
 				}		
 			}
 		}
-		
-        respond personList, model:[personInstanceCount: personList?.size()]
+		println(personList?.size())
+        respond personList, model:[personInstanceCount: Person.count()]
     }
 
     def show(Person personInstance) {

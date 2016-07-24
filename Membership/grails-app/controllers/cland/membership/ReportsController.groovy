@@ -27,13 +27,34 @@ class ReportsController {
 			between('dateCreated',startdate, today.toDate() )
 		}
 		Settings settings = Settings.list().first()
+		/*
 		def promokids = Child.findAll {
 			(visits?.size() >= settings?.visitcount)
+		}
+		*/
+
+		def visitsData =  Visit.createCriteria().list {
+				createAlias('child','c')
+				createAlias('c.person','p')
+				projections {
+				   property('p.firstName')
+				   property('p.lastName')
+				   groupProperty('c.id')
+				   countDistinct('id', 'idDistinct')
+				}
+				eq("status","Complete")
+				order('idDistinct','desc')				
+			 }
+		
+		def promokids = visitsData.count { 
+			it[3] >= settings?.visitcount
 		}
 		
 		def newvisits = Visit.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
+			eq("status", "Complete")
 		}
+		
 		def notifications = Notification.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
 		}
@@ -47,9 +68,9 @@ class ReportsController {
 		ostats.statsdata.num_new_children = newchildren?.size()
 		ostats.statsdata.num_children = Child?.list().size()
 		ostats.statsdata.num_new_visits = newvisits?.size()
-		ostats.statsdata.num_visits = Visit?.list().size()
+		ostats.statsdata.num_visits = Visit?.createCriteria().list {eq("status", "Complete")}?.size()
 		ostats.statsdata.num_notifications = notifications?.size()
-		ostats.statsdata.num_promo_children = promokids?.size()
+		ostats.statsdata.num_promo_children = promokids
 		render ostats as JSON
 	}
 	

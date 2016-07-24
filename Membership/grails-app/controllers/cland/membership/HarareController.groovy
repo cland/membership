@@ -13,7 +13,7 @@ class HarareController {
 	def mailService //emailService
 	def nexmoService
 
-	static allowedMethods = [htown: "POST",savenote:"POST"]
+	static allowedMethods = [htown: "POST",savenote:"POST",doupload:"POST"]
     def htown(params) {
 		
 		println(params)
@@ -129,5 +129,36 @@ class HarareController {
 	def smsdialogcreate() {
 		def visit = Visit.get(params?.vid)	
 		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit,templateInstanceList:Template.list()]) //new Child(params)
+	}
+	def webcamcreate(){
+		def _picname = (params?.picname ? params?.picname : "pic1")
+		def _fmt = (params?.fmt ? params?.fmt : "jpeg")
+		render (view:"/home/webcam",model:[picname:_picname,fmt:_fmt])
+	}
+	
+	def doupload(){
+		println(params)
+		Map<String, String[]> vars = request.getParameterMap()
+		//println(vars)
+		def _filename = "child1.png"
+		def _fileid = "child1"
+		def result = []
+		def f = request.getFile(_fileid)
+		if (f.empty) {
+			
+			result = ["response_code":"failed","response_msg":"file is empty!"]
+		}else{
+			def path = 'file:' + File.separator + 'var' + File.separator + 'grails' + File.separator + 'uploads' + File.separator + 'taglets' + File.separator + 'wiggly' + File.separator + 'temp' +  _filename
+			if (System.properties["os.name"] != "Linux") {
+				path = "C:" + File.separator + "temp" + File.separator + "uploads" + File.separator + _filename
+			}
+			
+			f.transferTo(new File(path))
+			//response.sendError(200, 'Done')
+			result = ["response_code":"success","response_msg":"All done!", "filepath":path]
+		}
+	
+		
+		render result as JSON
 	}
 } //end class
