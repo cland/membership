@@ -6,6 +6,7 @@ package cland.membership
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 import grails.converters.JSON
+import com.macrobit.grails.plugins.attachmentable.domains.Attachment;
 
 class HarareController {
 	def springSecurityService
@@ -138,11 +139,26 @@ class HarareController {
 	
 	def doupload(){
 		println(params)
-		Map<String, String[]> vars = request.getParameterMap()
-		//println(vars)
+		def result = []
+		try{
+			
+			def _id = params.get("childid")
+			Child child = Child.get(_id)
+			if(child){
+				println("Found child: " + child)
+				attachUploadedFilesTo(child?.person,["profilephoto" + _id])
+			}else{
+				result = ["response_code":"failed","response_msg":"Child with id " + _id + "' not found!"]
+			}
+		}catch(Exception e){
+			println(params)
+			e.printStackTrace()
+			result = ["response_code":"failed","response_msg":"Error - " + e.getMessage()]
+		}
+		/*
 		def _filename = "child1.png"
 		def _fileid = "child1"
-		def result = []
+		
 		def f = request.getFile(_fileid)
 		if (f.empty) {
 			
@@ -157,7 +173,7 @@ class HarareController {
 			//response.sendError(200, 'Done')
 			result = ["response_code":"success","response_msg":"All done!", "filepath":path]
 		}
-	
+		*/
 		
 		render result as JSON
 	}

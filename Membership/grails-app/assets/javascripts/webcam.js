@@ -710,7 +710,7 @@ var Webcam = {
 		return taBytes;
 	},
 	
-	upload: function(image_data_uri, target_url, callback) {
+	upload: function(image_data_uri, target_url,form, callback) {
 		// submit image data to server using binary AJAX
 		var form_elem_name = this.params.upload_name || 'webcam';
 		
@@ -749,7 +749,7 @@ var Webcam = {
 		var blob = new Blob( [ this.base64DecToArr(raw_image_data) ], {type: 'image/'+image_fmt} );
 		
 		// stuff into a form, so servers can easily receive it as a standard file upload
-		var form = new FormData();
+		//var form = new FormData();
 		form.append( form_elem_name, blob, form_elem_name+"."+image_fmt.replace(/e/, '') );
 		
 		// send data to server

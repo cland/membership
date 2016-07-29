@@ -11,7 +11,7 @@
 					    <attachments:deleteLink
 					                         attachment="${attachment}"
 					                         label="${'[X]'}"
-					                         returnPageURI="${createLink(action: 'actionName', id: childInstance?.id)}"/>
+					                         returnPageURI="${createLink(action: 'show', id: childInstance?.id)}"/>
 					    <attachments:downloadLink attachment="${attachment}"/>			                   
 					    ${attachment.niceLength}
 				   	</g:if>    

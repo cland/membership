@@ -16,6 +16,7 @@
 			.edit-coupon-icon {margin-left:1em;}
 			.delete-coupon-icon:hover, .edit-coupon-icon:hover {cursor:hand;cursor:pointer;transform: scale(1.8);}
 		</style>
+		<asset:javascript src="webcam.js"/>
 	</head>
 	<body>
 		<a href="#show-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -37,6 +38,7 @@
 						<li style="display:none;"><a href="#tab-3">Supporting Documents</a></li>
 						<li><a href="#tab-4">Notifications</a></li>
 						<li><a href="#tab-5">Coupons</a></li>
+						<li><a href="#tab-6">Profile Photos</a></li>
 					</ul>
 				<div id="tab-1">
 					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>
@@ -70,9 +72,7 @@
 									<td id="row-visit-status-${c?.id}" class="status-${c?.status }">${c?.status}</td>
 									<td>${c?.selectedHours}</td>
 									<td>
-										${c?.visitNo }
-										
-										
+										${c?.visitNo }																
 									</td>
 									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 										<td>
@@ -246,6 +246,9 @@
 							</form>
 						</fieldset>
 				</sec:ifAnyGranted>		
+			</div>
+			<div id="tab-6">
+				<g:render template="photos" var="parentInstance" bean="${parentInstance }" model="[sidenav:page_nav]"></g:render>
 			</div>
 			<g:form url="[resource:parentInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
