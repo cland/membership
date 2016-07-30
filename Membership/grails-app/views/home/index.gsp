@@ -347,10 +347,14 @@ var cbc_params = {
 					  var visitno = el.visitno
 					  var photoid = el.child.person.photoid
 					  var deadline = new Date(Date.parse(timein));
+					  var clienttype = el.child.parent.clienttype.name;
+					  var clienttypeflag = "";
+					  if(clienttype == "GymMember") clienttypeflag = " <b>(GYM)</b>";
+						  
 					 // deadline.setHours(deadline.getHours() + 2)
 					  var photolink = "${request.contextPath}/attachmentable/show/" + photoid;
 					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
-					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno)
+					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno,clienttypeflag)
 					  var countup =  true;
 					 
 					  var selected_hr = el.duration.selectedhours;
@@ -371,14 +375,14 @@ var cbc_params = {
 		
 		}
 
-		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno){
+		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno,clienttypeflag){
 			var lnk = "${request.contextPath}/child/show/" + divid;
 			var html = '<div id="person_' + visit_id + '" class="person-card float-left">' +
 			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
 			  '<div class="person-info">' +
 				'<div class="details-title">' +
 				  '<span><a style="color:#fff;" href="' +lnk + '">' + name + '</a></span><br/>' +
-				  '<small>Tel: ' + tel + '</small>' +
+				  '<small>Tel: ' + tel + clienttypeflag + '</small>' +
 				  '<div id="clockdiv_' + divid + '" class="clock ' + clockstatus +'">' +
 					  '<div style="display:none;">' +
 						'<span class="days"></span>' +

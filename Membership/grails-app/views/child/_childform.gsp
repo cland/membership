@@ -65,7 +65,13 @@
 							<div class="cell">${parent?.person1?.mobileNo }</div>
 							<div class="cell"><label id="">Email:</label></div>
 							<div class="cell">${parent?.person1?.email}</div>
-						</div>						
+						</div>		
+						<div class="row">
+							<div class="cell"><label id="clientType">Client type:</label></div>
+							<div class="cell">
+								${parent?.clientType?.toString() }
+							</div>
+						</div>				
 					</div>
 				</div>					
 				<div class="cell">				

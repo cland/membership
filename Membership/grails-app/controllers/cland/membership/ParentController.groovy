@@ -26,7 +26,7 @@ class ParentController {
     static allowedMethods = [save: "POST", update: "POST", delete: "DELETE",checkout:"POST",newclient:"POST",checkin:"POST", newcoupon:"POST", selfregister:"POST", updatevisitstatus:"POST", addvisittocoupon:"POST"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 20, 100)
+        params.max = Math.min(max ?: 30, 100)
 		params.sort = "person1.lastName"
 		params.order = "asc"
 		params.ignoreCase = true

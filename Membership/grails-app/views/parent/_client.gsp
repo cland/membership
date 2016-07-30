@@ -70,6 +70,22 @@
 					</g:if><g:else>${parentInstance?.relationship?.toString() }</g:else>
 				</div>			
 			</div>	
+			<div class="row">
+				<div class="cell"><label id="">Client type:</label></div>
+				<div class="cell">
+					<g:if test="${isEditMode }">
+					<% def ctypes = cland.membership.lookup.Keywords.findByName("ClientTypes")?.values?.sort{it?.id} %>
+						<g:radioGroup 
+							value="${parentInstance?.clientType?.id }"
+							values="${ctypes?.id}"
+							labels="${ctypes}" 
+							name="clientType">
+							${it.radio} <g:message code="${it.label}" />
+						</g:radioGroup>
+					</g:if><g:else>${parentInstance?.clientType?.toString() }</g:else>
+				</div>
+				<div class="cell"></div>
+			</div>
 		</div>	
 	</fieldset>
 	<fieldset><legend>Emergency Contact Details</legend>
