@@ -2,6 +2,7 @@ package cland.membership
 
 import cland.membership.security.Person
 import java.util.Date;
+import cland.membership.lookup.Keywords;
 
 class Contract {
 	transient groupManagerService
@@ -9,6 +10,7 @@ class Contract {
 	static attachmentable = true
 	
 	String contractNo
+	Keywords contractType
 	String status
 	/** Admin Tracking Information **/
 	long createdBy

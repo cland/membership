@@ -17,7 +17,9 @@
 		<a href="#show-child" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
 			<ul>
-				<li><g:link class="create" controller="parent" action="show" id="${parent?.id }">Parent: ${parent }</g:link></li>				
+				
+				<li><g:link class="create" controller="parent" action="show" id="${parent?.id }">Parent: ${parent }</g:link></li>	
+				<li><a href="" class="button2" onclick="sendNotification('${childInstance?.id}','0'); return false;">Send Notification</a></li>			
 			</ul>
 		</div>
 		<div id="show-child" class="content scaffold-show" role="main">

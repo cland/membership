@@ -18,7 +18,7 @@ class Child {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
-	static transients = ['visitCount',"createdByName","lastUpdatedByName","activeVisit","fullAccessNumber","promoOn" ]
+	static transients = ['visitCount',"createdByName","lastUpdatedByName","activeVisit","fullAccessNumber","promoOn","lastVisit" ]
 	static hasMany = [visits:Visit]
 	static belongsTo = [parent:Parent]
     static constraints = {
@@ -88,6 +88,13 @@ class Child {
 	}
 	Visit getActiveVisit(){
 		def v = visits.find {it.status == "Active"}
+		return v
+	}
+	Visit getLastVisit(){
+		//get the last visit
+		def v = null
+		def visits = visits.sort{it?.starttime}.reverse()
+		if(visits?.size() > 0) v = visits.get(0)
 		return v
 	}
 	String getFullAccessNumber(){

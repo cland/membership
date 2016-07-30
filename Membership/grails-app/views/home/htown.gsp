@@ -2,6 +2,15 @@
 <g:set var="isDebug" value="${settingsInstance?.debug }"/>
 <g:set var="smsTestNumber" value="${settingsInstance?.smsTestNumber }"/>
 <g:set var="smsFrom" value="${settingsInstance?.smsFrom }"/>
+<g:if test="${ visitInstance}">
+	<g:set var="starttime" value="${visitInstance?.starttime }"/>
+	<g:set var="contactno" value="${visitInstance?.contactNo }"/>
+	
+</g:if>
+<g:else>
+	<g:set var="starttime" value=""/>
+	<g:set var="contactno" value="${ childInstance?.parent?.person1?.mobileNo }"/>
+</g:else>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -97,9 +106,11 @@ var cbc_params = {
 		<div id="page-body" role="main">
 		<span style="display:none;" id="code_parentname"></span>
 		<span style="display:none;" id="code_parentno">${childInstance?.person }</span>
-		<span style="display:none;" id="code_starttime">${visitInstance?.starttime }</span>
+		<span style="display:none;" id="code_starttime">${starttime }</span>
 		<span style="display:none;" id="code_childname"></span>	
-			<div style="text-align:right;">Child: ${childInstance?.person } - Checked-in at: ${visitInstance?.starttime }</div>		
+			<div style="text-align:right;">Child: ${childInstance?.person } 
+			<g:if test="${ visittype == 'active'}"> - Checked-in at: ${visitInstance?.starttime } </g:if>
+			</div>		
 			<div class="send-wait">Sending message, please wait...</div>
 			<div id="message"></div>
 			<fieldset id="template-fieldset"><legend>Select Notification Template</legend>
@@ -132,7 +143,7 @@ var cbc_params = {
 									<div class="cell"><label id="">To Parent/Guardian:</label></div>
 									<div class="cell"><input type="text" class="form-control" id="inputName" name="inputName" value="${childInstance?.parent?.person1 }" placeholder="Name"></div>
 									<div class="cell"><label id="">Mobile No.:</label></div>
-									<div class="cell"><input type="text" class="form-control" id="inputTel" name="inputTel" value="${visitInstance?.contactNo }" placeholder="Mobile Number"> </div>
+									<div class="cell"><input type="text" class="form-control" id="inputTel" name="inputTel" value="${contactno }" placeholder="Mobile Number"> </div>
 								</div>								
 							</div>
 						</div>
@@ -169,13 +180,13 @@ var cbc_params = {
 				var _body = $("#" + _id + "_body").text();
 				var _title = $("#" + _id + "_title").text();
 				var _name = $("#inputName").val();
-				if(_name == "") _name = "${childInstance?.parent?.person1 }"
+				if(_name == "") _name = "${childInstance?.parent?.person1 }"				
 				$("#templateId").prop("value",el.prop("value"));
 				$("#inputMessage").val(
 						_body.replace(/{{parentname}}/gi,_name).
 						replace(/{{parentno}}/gi,"${childInstance?.parent?.membershipNo }").
 						replace(/{{childname}}/gi,"${childInstance?.person }").
-						replace(/{{starttime}}/gi,"${visitInstance?.starttime }")
+						replace(/{{starttime}}/gi,"${starttime }")
 						)
 			}
 		}

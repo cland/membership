@@ -119,7 +119,7 @@
 			</fieldset>		
 		</g:if>
 		<g:if test="${childInstance.visits}">
-			<table>
+			<table class="inner-table">
 				<thead>
 					<tr>
 						<th>Date</th>

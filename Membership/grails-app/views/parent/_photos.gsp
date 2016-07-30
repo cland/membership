@@ -28,7 +28,7 @@
 					<g:set var="hasPhoto" value="0"/>
 					<attachments:each bean="${child?.person}">
 						<g:set var="hasPhoto" value="1"/>
-						<img src="/wiggly/attachmentable/show/${attachment?.id }" alt="Current Profile Picture for ${child?.person }" title="Current Profile Picture for ${child?.person }"/><br/>
+						<img src="${request.contextPath}/attachmentable/show/${attachment?.id }" alt="Current Profile Picture for ${child?.person }" title="Current Profile Picture for ${child?.person }"/><br/>
 						<attachments:deleteLink
 	                         attachment="${attachment}"
 	                         label="${'[Delete] '}"

@@ -128,8 +128,16 @@ class HarareController {
 		render result as JSON
 	}
 	def smsdialogcreate() {
-		def visit = Visit.get(params?.vid)	
-		render (view:"/home/htown",model:[childInstance: Child.get(params?.cid), id:params?.cid,visitInstance:visit,templateInstanceList:Template.list()]) //new Child(params)
+			
+		def child = Child.get(params?.cid)
+		def visit = Visit.get(params?.vid)
+		def visitType = "active"
+		if(!visit & child != null){
+			//get the last visit			
+			visit = child?.lastVisit
+			visitType = "last"
+		}
+		render (view:"/home/htown",model:[childInstance: child, id:params?.cid,visitInstance:visit,templateInstanceList:Template.list(),visittype:visitType]) //new Child(params)
 	}
 	def webcamcreate(){
 		def _picname = (params?.picname ? params?.picname : "pic1")

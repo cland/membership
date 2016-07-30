@@ -1,5 +1,8 @@
 <%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Parent" %>
+<g:set var="children" value="${parentInstance?.children?.sort{it?.person.firstName} }"/>
+<g:set var="coupons" value="${parentInstance?.coupons?.sort{it.startDate}  }"/>
+<g:set var="notifications" value="${parentInstance.notifications?.sort{it.dateCreated }.reverse()}"/>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -44,7 +47,7 @@
 					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>
 				</div>
 			<div id="tab-2">
-				<g:if test="${parentInstance.children?.sort{it?.person.firstName}}">
+				<g:if test="${children }">
 					<table class="inner-table">
 						<thead>
 							<tr>
@@ -60,7 +63,7 @@
 								<th>Actions</th>							
 							</tr>
 						</thead>
-						<g:each in="${parentInstance?.children?.sort{it?.person.firstName} }" var="child" status="i">
+						<g:each in="${children }" var="child" status="i">
 							<g:each in="${child?.visits?.findAll{it.status!="Cancelled"}.sort{it.starttime}.reverse()}" var="c">
 								<tr>
 									<td><g:link controller="child" action="show" id="${child?.id}">${child?.person }</g:link></td>						
@@ -93,8 +96,8 @@
 				<p>Documents</p>
 			</div>
 			<div id="tab-4">
-				<g:if test="${parentInstance.notifications}">
-					<table>
+				<g:if test="${notifications}">
+					<table class="inner-table">
 						<thead>
 							<tr>
 								<th>Date Sent</th>
@@ -104,7 +107,7 @@
 							</tr>
 						</thead>
 						<tbody id="notification_list">
-							<g:each in="${parentInstance?.notifications }" var="note" status="i">							
+							<g:each in="${notifications }" var="note" status="i">							
 								<tr>
 									<td>${note?.dateCreated?.format("dd MMM yyyy")}</td>
 									<td><g:link controller="child" action="show" id="${note?.child?.id}">${note?.child?.person }</g:link>	</td>							
@@ -121,7 +124,7 @@
 			</div>
 			<div id="tab-5">
 				
-					<table>
+					<table class="inner-table">
 						<thead>
 							<tr>
 								<th>Coupon No.</th>
@@ -133,7 +136,7 @@
 							</tr>
 						</thead>
 						<tbody id="coupon_list">
-							<g:each in="${parentInstance?.coupons?.sort{it.startDate} }" var="note" status="i">							
+							<g:each in="${coupons}" var="note" status="i">							
 								<tr id="row-coupon-${note?.id }">
 									<td>${note.refNo }</td>
 									<td>${note?.startDate?.format("dd MMM yyyy")}</td>

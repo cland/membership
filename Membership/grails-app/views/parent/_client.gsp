@@ -104,7 +104,7 @@
 	</fieldset>
 	<fieldset><legend>Children</legend>
 		<g:if test="${parentInstance.children?.sort{it?.person.firstName}}">
-		<table>
+		<table class="inner-table">
 			<thead>
 				<tr>
 					<th>First Name</th>
@@ -113,7 +113,8 @@
 					<th>Gender</th>
 					<th>Total Visits</th>
 					<th>Checked-In?</th>
-					
+					<th>Last Visit</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<g:each in="${parentInstance.children?.sort{it?.person.firstName}}" var="c">
@@ -125,7 +126,8 @@
 					<td>${c?.person?.gender}</td>
 					<td>${c?.getVisitCount()}</td>
 					<td><g:formatBoolean boolean="${c?.isActive() }" false="No" true="Yes"/></td>
-					
+					<td>${c?.lastVisit?.starttime?.format("dd MMM yyyy") }</td>
+					<td><a href="" class="button2" onclick="sendNotification('${c?.id}','0'); return false;">Notify</a></td>
 				</tr>
 			</g:each>
 		</table>
@@ -164,4 +166,36 @@
 			</div>
 		</g:if>
 	</fieldset>
-	
+	<script>
+	function sendNotification(_child_id,_visit_id){		
+		 var _link = "${g.createLink(controller: 'harare', action: 'smsdialogcreate')}?cid=" + escape(_child_id) + "&vid=" + _visit_id ;
+		 console.log(_link);
+		 	
+	  	 var $dialog = $('<div><div id="wait" style="font-weight:bold;text-align:center;">Loading...</div></div>')             
+	                .load(_link)		                
+	                .dialog({
+	                	modal:true,
+	                    autoOpen: false,
+	                    dialogClass: 'no-close',
+	                    width:800,
+	                    beforeClose: function(event,ui){
+	                    	
+	                    },
+	                    buttons:{
+	                        "DONE":function(){			                      	 
+	                         	// $dialog.dialog('close')
+	                         	 $dialog.dialog('destroy').remove()
+	                            }
+		                    },
+	                    close: function(event,ui){
+	                  	  	$dialog.dialog('destroy').remove()
+	                  	
+	                    },
+	                    position: {my:"top",at:"top",of:window},
+	                    title: 'Send SMS Notification'                         
+	                });
+	                    
+	                $dialog.dialog('open');
+	               
+	  } //end function sendNotification() 
+	</script>
