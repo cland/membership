@@ -500,7 +500,8 @@ class ParentController {
 		            form multipartForm {
 		                flash.message = "Client '" + parentInstance + "' create successfully! Membership number: '" + parentInstance?.membershipNo + "'"
 		                //redirect controller:"home", action: "index", method: "GET", permanent:true
-						redirect (url:cbcApiService.getBasePath(request), permanent:true)
+						//redirect (url:cbcApiService.getBasePath(request), permanent:true)
+						redirect (url:cbcApiService.getBasePath(request) + "parent/show/" + parentInstance?.id + "?tab=5", permanent:true)
 		            }
 		            '*'{ render status: OK }
 		        }

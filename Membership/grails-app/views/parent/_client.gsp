@@ -103,7 +103,7 @@
 		</div>		
 	</fieldset>
 	<fieldset><legend>Children</legend>
-		<g:if test="${parentInstance.children}">
+		<g:if test="${parentInstance.children?.sort{it?.person.firstName}}">
 		<table>
 			<thead>
 				<tr>
@@ -116,7 +116,7 @@
 					
 				</tr>
 			</thead>
-			<g:each in="${parentInstance.children}" var="c">
+			<g:each in="${parentInstance.children?.sort{it?.person.firstName}}" var="c">
 				<tr>
 					<td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.person?.firstName}</g:link></span>
 					</td>

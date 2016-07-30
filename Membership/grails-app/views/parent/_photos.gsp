@@ -8,36 +8,39 @@
 	
 	
 	<fieldset><legend>Profile Photos</legend>
-		<g:if test="${parentInstance.children}">
-			<g:each in="${parentInstance?.children }" var="child" status="i">
+		<g:if test="${parentInstance.children}" >
+			<g:each in="${parentInstance?.children?.sort{it?.person.firstName} }" var="child" status="i">
+			<div id="photo-container-${child?.id }" class="photo-container-div"> 
 				<h2>${child?.person }</h2>
 				<input type="hidden" name="photo_name_${child?.id }" id="photo_name_${child?.id }" value="${child?.parent?.membershipNo + child?.accessNumber + child?.id + child?.person?.firstName }"/>
-				<div id="div-result-${child?.id }" class="float-right">
+				<div id="div-live-${child?.id }"  class="float-right live-webcam">					
+					<input type=button value="Open WebCam" id="${child?.id }" class="init-webcam-btn button"/>
+					<div id="my_camera_${child?.id }"></div><br/>
+					<div id="pre_take_buttons_${child?.id }" class="pre_take_buttons_${child?.id} take_buttons" style="display:none">
+						<input class="button2" type=button value="Take Snapshot" onClick="preview_snapshot('${child?.id }')">
+					</div>
+					<div id="post_take_buttons_${child?.id }" class="post_take_buttons_${child?.id}  take_buttons" style="display:none">
+						<input class="button2" type=button value="&lt; Take Another" onClick="cancel_preview('${child?.id }')">
+						<input class="button2" type=button value="Save Photo &gt;" onClick="save_photo('${child?.id }')" style="font-weight:bold;">
+					</div>
+				</div>
+				<div id="div-result-${child?.id }">
+					<g:set var="hasPhoto" value="0"/>
 					<attachments:each bean="${child?.person}">
+						<g:set var="hasPhoto" value="1"/>
 						<img src="/wiggly/attachmentable/show/${attachment?.id }" alt="Current Profile Picture for ${child?.person }" title="Current Profile Picture for ${child?.person }"/><br/>
 						<attachments:deleteLink
-						                         attachment="${attachment}"
-						                         label="${'[DELETE] '}"
-						                         returnPageURI="${createLink(action: 'show', id: parentInstance?.id)}"/>
-						    <attachments:downloadLink attachment="${attachment}"/>			                   
-						    ${attachment.niceLength}	
+	                         attachment="${attachment}"
+	                         label="${'[Delete] '}"
+	                         returnPageURI="${createLink(action: 'show', id: parentInstance?.id, params:[tab:5])}"/>						    
 						    <br/>				
 					</attachments:each>
 				</div>
-				<div id="div-live-${child?.id }">
-					<div id="my_camera_${child?.id }">
-						 
-					</div>
-					<input type=button value="Open WebCam" id="${child?.id }" class="init-webcam-btn"/>
-					<div id="pre_take_buttons_${child?.id }" class="pre_take_buttons_${child?.id} take_buttons" style="display:none">
-						<input type=button value="Take Snapshot" onClick="preview_snapshot('${child?.id }')">
-					</div>
-					<div id="post_take_buttons_${child?.id }" class="post_take_buttons_${child?.id}  take_buttons" style="display:none">
-						<input type=button value="&lt; Take Another" onClick="cancel_preview('${child?.id }')">
-						<input type=button value="Save Photo &gt;" onClick="save_photo('${child?.id }')" style="font-weight:bold;">
-					</div>
-				</div>
-				
+				<g:if test="${hasPhoto == '0' }">					
+					<img id="no-photo-${child?.id }" src="${assetPath(src: 'kidface.png')}" title="No Photo Available" alt="No Photo Available"/>
+				</g:if>
+				<div style="clear:both;"></div>
+			</div>	
 			</g:each>
 		</g:if>		
 	</fieldset>
@@ -118,6 +121,10 @@
 				// swap buttons back
 				$('.pre_take_buttons_' + _id).show();
 				$('.post_take_buttons_' + _id).hide();
+				$('#no-photo-' + _id).hide();
+				Webcam.reset()
+				$(".init-webcam-btn").show()
+				$(".take_buttons").hide()
 			} );
 		}
 	</script>		

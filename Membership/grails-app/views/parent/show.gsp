@@ -38,13 +38,13 @@
 						<li style="display:none;"><a href="#tab-3">Supporting Documents</a></li>
 						<li><a href="#tab-4">Notifications</a></li>
 						<li><a href="#tab-5">Coupons</a></li>
-						<li><a href="#tab-6">Profile Photos</a></li>
+						<li><a href="#tab-6">Manage Profile Photos</a></li>
 					</ul>
 				<div id="tab-1">
 					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>
 				</div>
 			<div id="tab-2">
-				<g:if test="${parentInstance.children}">
+				<g:if test="${parentInstance.children?.sort{it?.person.firstName}}">
 					<table class="inner-table">
 						<thead>
 							<tr>
@@ -60,7 +60,7 @@
 								<th>Actions</th>							
 							</tr>
 						</thead>
-						<g:each in="${parentInstance?.children }" var="child" status="i">
+						<g:each in="${parentInstance?.children?.sort{it?.person.firstName} }" var="child" status="i">
 							<g:each in="${child?.visits?.findAll{it.status!="Cancelled"}.sort{it.starttime}.reverse()}" var="c">
 								<tr>
 									<td><g:link controller="child" action="show" id="${child?.id}">${child?.person }</g:link></td>						

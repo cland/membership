@@ -138,14 +138,13 @@ class HarareController {
 	}
 	
 	def doupload(){
-		println(params)
+		
 		def result = []
 		try{
 			
 			def _id = params.get("childid")
 			Child child = Child.get(_id)
-			if(child){
-				println("Found child: " + child)
+			if(child){				
 				attachUploadedFilesTo(child?.person,["profilephoto" + _id])
 			}else{
 				result = ["response_code":"failed","response_msg":"Child with id " + _id + "' not found!"]

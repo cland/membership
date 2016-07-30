@@ -803,3 +803,16 @@ table.inner-table td{font-size:9pt;border-bottom: rgba(246, 193, 165, 0.29) soli
 	display: none;
 }
 .ui-autocomplete-category {font-weight:bold;font-size:1.2em;}
+.photo-container-div {
+	border-bottom : solid 1px #FFDAB9;
+	padding: 10px; 
+}
+.live-webcam {
+	border:solid 1px #000;
+	min-height:200px;
+	min-width:30%;
+}
+.init-webcam-btn {
+	margin-left:25%;
+	margin-top:3%;
+}
