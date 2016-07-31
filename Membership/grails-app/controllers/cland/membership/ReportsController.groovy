@@ -17,8 +17,7 @@ class ReportsController {
 	
 		//clients created this month
 		DateTime today = new DateTime()
-		Date startdate = parseDate("1-" + today.getMonthOfYear() + "-" + today.getYear(),"d-m-yyyy")
-		
+		Date startdate = parseDate(today.getMonthOfYear() + "/1/" + today.getYear(),"M/d/yyyy")
 		def newclients = Parent.createCriteria().list  {
 			between('dateCreated',startdate, today.toDate() )
 		}
