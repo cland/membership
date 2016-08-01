@@ -19,6 +19,10 @@ public class StatsData {
 	
 	//** BOOKINGS
 	public int num_bookings = 0;
+	
+	//** COUPONS
+	public int num_coupons = 0;
+	public int num_new_coupons= 0
 
 	@Override
 	public String toString() {
@@ -26,9 +30,7 @@ public class StatsData {
 				+ ", num_clients=" + num_clients + ", num_new_children=" + num_new_children
 				+ ", num_children=" + num_children + ", num_visits="
 				+ num_visits + ", num_new_visits="
-				+ num_new_visits+ ", num_bookings=" + num_bookings + "]";
+				+ num_new_visits + ", num_coupons=" + num_coupons + ", num_bookings=" + num_bookings + "]";
 	}
-	
-	//** PCMs
 	
 }

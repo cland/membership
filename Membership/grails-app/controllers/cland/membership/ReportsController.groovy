@@ -18,6 +18,7 @@ class ReportsController {
 		//clients created this month
 		DateTime today = new DateTime()
 		Date startdate = parseDate(today.getMonthOfYear() + "/1/" + today.getYear(),"M/d/yyyy")
+		
 		def newclients = Parent.createCriteria().list  {
 			between('dateCreated',startdate, today.toDate() )
 		}
@@ -57,6 +58,10 @@ class ReportsController {
 		def notifications = Notification.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
 		}
+		
+		def new_coupons = Coupon.createCriteria().list{
+			between('dateCreated',startdate, today.toDate() )
+		}
 		OfficeSummaryStats ostats = new OfficeSummaryStats()
 		ostats.startdate=new Date()
 		ostats.enddate = new Date()
@@ -70,6 +75,8 @@ class ReportsController {
 		ostats.statsdata.num_visits = Visit?.createCriteria().list {eq("status", "Complete")}?.size()
 		ostats.statsdata.num_notifications = notifications?.size()
 		ostats.statsdata.num_promo_children = promokids
+		ostats.statsdata.num_coupons = Coupon.list().size();
+		ostats.statsdata.num_new_coupons = new_coupons?.size();
 		render ostats as JSON
 	}
 	

@@ -120,7 +120,13 @@ var cbc_params = {
 							<td width="122"><div id="new_visits">--</div></td>							
 							<td width="159"><div id="total_visits">--</div></td>
 							<td width="35"><img class="wait" id="wait_visits" src="${assetPath(src: 'spinner.gif')}" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
-						</tr>				
+						</tr>	
+						<tr valign="top">
+							<td width="122"><label>Coupons</label></td>
+							<td width="122"><div id="new_coupons">--</div></td>							
+							<td width="159"><div id="total_coupons">--</div></td>
+							<td width="35"><img class="wait" id="wait_coupons" src="${assetPath(src: 'spinner.gif')}" title="loading..." alt="loading..." style="display: none;"/>&nbsp;</td>
+						</tr>			
 					</tbody>
 				</table>
 				<div class="info">Total number of children qualifying for discounted visit: <span id='promo_clients'>0</span></div>
@@ -257,6 +263,8 @@ var cbc_params = {
 					   	setDivValue("#total_children",data.statsdata.num_children)
 					   	setDivValue("#total_visits",data.statsdata.num_visits)
 					   	setDivValue("#new_visits",data.statsdata.num_new_visits)
+					   	setDivValue("#total_coupons",data.statsdata.num_coupons)
+					   	setDivValue("#new_coupons",data.statsdata.num_new_coupons)
 					   	setDivValue("#promo_clients",data.statsdata.num_promo_children)
 				 		wait(false)
 						},

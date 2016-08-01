@@ -154,7 +154,7 @@
 								<tr id="coupon-visits-${note?.id }" class="coupon-visits-list">
 									<td colspan="6" style="padding:5px;border-bottom:solid 1px rgb(243, 167, 132);">
 									<g:if test="${note?.visits}">
-										<table class="inner-table">
+										<table class="inner2-table">
 											<thead>
 												<tr>
 													<th>#</th>
