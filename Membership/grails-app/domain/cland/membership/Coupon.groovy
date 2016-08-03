@@ -10,7 +10,7 @@ class Coupon {
 	transient springSecurityService
 	transient groupManagerService
 	
-	Integer maxvisits
+	Integer maxvisits //hrs
 	Date startDate
 	Date expiryDate
 	String refNo
@@ -63,6 +63,18 @@ class Coupon {
 			return maxvisits - (completevisits*.totalMinutes?.sum()/60)
 		}
 		
+		return maxvisits
+	}
+	Long getVisitsLeft(Integer cutoffMinutes,Integer modulo){
+		def completevisits = visits?.findAll{it.isCompleted == true}
+		
+		if(completevisits){
+			Integer total_min = completevisits*.totalMinutes?.sum()
+			Integer hrs = (total_min/modulo)
+			Integer mod = total_min % modulo
+			if(mod >= cutoffMinutes) hrs++
+			return maxvisits - hrs
+		}
 		return maxvisits
 	}
 	String getCreatedByName(){

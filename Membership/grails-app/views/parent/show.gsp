@@ -1,5 +1,6 @@
 <%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Parent" %>
+<g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="children" value="${parentInstance?.children?.sort{it?.person.firstName} }"/>
 <g:set var="coupons" value="${parentInstance?.coupons?.sort{it.startDate}  }"/>
 <g:set var="notifications" value="${parentInstance.notifications?.sort{it.dateCreated }.reverse()}"/>
@@ -141,7 +142,7 @@
 									<td>${note.refNo }</td>
 									<td>${note?.startDate?.format("dd MMM yyyy")}</td>
 									<td>${note?.maxvisits}</td>							
-									<td>${note?.visitsLeft}</td>
+									<td>${note?.getVisitsLeft(settingsInstance?.mincutoff,settingsInstance?.minmodulo)}</td>
 									<td>${note?.expiryDate?.format("dd MMM yyyy")}</td>
 									<td>
 										<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">

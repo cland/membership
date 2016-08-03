@@ -98,7 +98,19 @@
 				<g:message code="user.visitphotoenabled.label" default="Visit Photo Enabled" />				
 			</label>
 			<g:checkBox name="vistPhotoEnabled" value="${personInstance?.vistPhotoEnabled}" />
-		</div>
+	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'mincutoff', 'error')} ">
+		<label for="debug">
+			<g:message code="settings.mincutoff.label" default="the number of minutes at which point a visit is regarded as a full hour payable" />			
+		</label>
+		<g:field name="mincutoff" type="text" value="${settingsInstance.mincutoff}"/>	
+	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'minmodulo', 'error')} ">
+		<label for="minmodulo">
+			<g:message code="settings.minmodulo.label" default="the value used to compute the modulo value in when computing the modulus minutes" />			
+		</label>
+		<g:field name="minmodulo" type="text" value="${settingsInstance.minmodulo}"/>	
+	</div>
 </sec:ifAnyGranted>
 
 
