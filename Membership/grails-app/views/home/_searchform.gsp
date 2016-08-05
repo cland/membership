@@ -173,11 +173,16 @@ $(document).ready(function() {
 			var _category = ui.item.category;
 			var _childlist = (ui.item.childlist == null?null:ui.item.childlist)			
 			var _parentlink = "${request.contextPath}/parent/show/" + _parentid;
+			var _coupon ="";
+			if(ui.item.activecoupon != null){
+				_cpn = ui.item.activecoupon;
+				_coupon = "<br/><span class='coupon-display-span'><b>Active coupon " + _cpn.refno + ":</b> <span class='coupon-balance'>" + _cpn.balance + "</span> of " + _cpn.maxvisits + " hrs left | Expiry date: " + moment(_cpn.expirydate).format("DD MMM YYYY") + "</span>";
+			}
 			//process the children
 			if(_childlist != null){
 				$("#child-table").show();
 				var _tbody = $("#child-list");				
-				_tbody.html("<tr><td colspan='4'><label>Parent/Gardian: </label><br/><a href='" + _parentlink + "'>" + _parentlabel + "</a></td><td colspan='2'><label>Today's visit contact number:</label> <br/><input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/></td></tr>" );
+				_tbody.html("<tr><td colspan='4'><label>Parent/Gardian: </label><br/><a href='" + _parentlink + "'>" + _parentlabel + "</a>" + _coupon + "</td><td colspan='2'><label>Today's visit contact number:</label> <br/><input type='type' id='checkin_contactno' name='contactno' value='" + _contactno +"'/></td></tr>");			
 				_tbody.append("<tr><td class='thead'></td><td class='thead'>Name</td><td class='thead'>Age</td><td class='thead'>Gender</td><td class='thead visit-wbn-col'>Wrist Band No.</td><td class='thead visit-photo-col'>Today's Photo</td></tr>");
 				$.each(_childlist,function(item){
 					var _sel = '';
@@ -185,6 +190,7 @@ $(document).ready(function() {
 					var _chbox = "<input type='checkbox' name='search_children' value='" + this.id + "' " +_sel+ "/>";
 					var _photoinput = "<input type='file' id='file_" + this.id + "' name='visitphoto" + this.id + "'/>";
 					var _inputbandno = "<input type='text' id='wbn_" + this.id + "' name='visitno" + this.id + "' value=''/>";
+					
 					if(this.isactive){
 						_chbox = "<span style='font-weight:bold;color:green'>In</span>";
 						_photoinput = "";

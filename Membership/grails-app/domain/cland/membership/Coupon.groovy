@@ -43,6 +43,7 @@ class Coupon {
 			expirydate:expiryDate,
 			visits:visits*.toMap(),
 			balance:getVisitsLeft(),
+			maxvisits:maxvisits,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			params:params]
@@ -57,15 +58,12 @@ class Coupon {
 		return "Coupon ${refNo} [${startDate}]"
 	}
 	Long getVisitsLeft(){
-		def completevisits = visits?.findAll{it.isCompleted == true}
-		
-		if(completevisits){			
-			return maxvisits - (completevisits*.totalMinutes?.sum()/60)
-		}
-		
-		return maxvisits
+		Settings settingsInstance = Settings.list().first()		
+		return getVisitsLeft(settingsInstance?.mincutoff,settingsInstance?.minmodulo)
 	}
 	Long getVisitsLeft(Integer cutoffMinutes,Integer modulo){
+		if(cutoffMinutes == null) cutoffMinutes = 12
+		if(modulo == null) modulo = 60
 		def completevisits = visits?.findAll{it.isCompleted == true}
 		
 		if(completevisits){

@@ -61,6 +61,7 @@ class Parent {
 			relationship:relationship?.toString(),
 			childlist:children*.toMap(),
 			coupons:coupons*.toMap(),
+			activecoupon:cbcApiService.findActiveCoupon(this, null, 0),
 			notifications:notifications*.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
@@ -71,6 +72,7 @@ class Parent {
 		value:id,
 		contactno:person1?.mobileNo,
 		childlist:children*.toMap(),
+		activecoupon:(cbcApiService.findActiveCoupon(this, null, 0))?.toMap(),
 		office:[name: person1?.office?.name,id:person1?.office?.id],
 		category:(relationship != null ? relationship?.toString() : "Client")]
 	}

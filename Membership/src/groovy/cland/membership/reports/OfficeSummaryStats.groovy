@@ -11,5 +11,6 @@ public class OfficeSummaryStats {
 	public Office office
 	public StatsData statsdata = new StatsData()
 	public String error = ""
+	public def promokids = null
 	
 } //end class

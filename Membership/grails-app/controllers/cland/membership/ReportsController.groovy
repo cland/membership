@@ -36,19 +36,19 @@ class ReportsController {
 		def visitsData =  Visit.createCriteria().list {
 				createAlias('child','c')
 				createAlias('c.person','p')
+				createAlias('c.parent','par')
 				projections {
-				   property('p.firstName')
-				   property('p.lastName')
-				   groupProperty('c.id')
-				   countDistinct('id', 'idDistinct')
+					groupProperty('c.id')
+				    property('p.firstName')
+				    property('p.lastName')				    
+				    countDistinct('id', 'idDistinct')					
 				}
 				eq("status","Complete")
 				order('idDistinct','desc')				
 			 }
-		
-		def promokids = visitsData.count { 
-			it[3] >= settings?.visitcount
-		}
+		def promokids = visitsData.findAll{(it[3] % settings?.visitcount)==0}
+		println(promokids) 
+	
 		
 		def newvisits = Visit.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
@@ -65,6 +65,7 @@ class ReportsController {
 		OfficeSummaryStats ostats = new OfficeSummaryStats()
 		ostats.startdate=new Date()
 		ostats.enddate = new Date()
+		ostats.promokids = promokids
 		ostats.office_name = o?.name
 		ostats.office_id = o?.id
 		ostats.statsdata.num_new_clients = newclients?.size()
@@ -74,9 +75,10 @@ class ReportsController {
 		ostats.statsdata.num_new_visits = newvisits?.size()
 		ostats.statsdata.num_visits = Visit?.createCriteria().list {eq("status", "Complete")}?.size()
 		ostats.statsdata.num_notifications = notifications?.size()
-		ostats.statsdata.num_promo_children = promokids
-		ostats.statsdata.num_coupons = Coupon.list().size();
-		ostats.statsdata.num_new_coupons = new_coupons?.size();
+		ostats.statsdata.num_promo_children = 1 //promokids?.length()
+		ostats.statsdata.num_coupons = Coupon.list().size()
+		ostats.statsdata.num_new_coupons = new_coupons?.size()
+		
 		render ostats as JSON
 	}
 	

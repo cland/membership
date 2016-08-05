@@ -129,8 +129,10 @@ var cbc_params = {
 						</tr>			
 					</tbody>
 				</table>
-				<div class="info">Total number of children qualifying for discounted visit: <span id='promo_clients'>0</span></div>
 				<div class="key"></div>
+				<div class="info">Total number of children qualifying for discounted visit: <span id='promo_clients'><b>0</b></span></div>
+				<div id="promokids" class="table" style="display:none"></div>
+				
 				
 			</fieldset>
 			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
@@ -267,7 +269,14 @@ var cbc_params = {
 					   	setDivValue("#new_coupons",data.statsdata.num_new_coupons)
 					   	setDivValue("#promo_clients",data.statsdata.num_promo_children)
 				 		wait(false)
-						},
+				 		_promokids = $("#promokids")
+				 		_promokids.html("<div class='row headrow' style=''><div class='cell'></div><div class='cell'>Child's Name</div><div class='cell'>Current Visits</div></div>");
+				 		$.each(data.promokids,function( i, elem){	
+					 		_lnk ="${request.contextPath}/child/show/" + elem[0]			 								 	
+					 		_promokids.append("<div class='row'><div class='cell'>&raquo; </div><div class='cell'><a href='" + _lnk + "'>" + elem[1] + " " + elem[2]+"</a></div><div class='cell'>" + elem[3]+"</div></div>");
+					 		_promokids.show();
+					 	});
+					},
 					// callback handler that will be called on completion
 				        // which means, either on success or error
 			        complete: function(){

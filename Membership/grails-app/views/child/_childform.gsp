@@ -71,6 +71,8 @@
 							<div class="cell">
 								${parent?.clientType?.toString() }
 							</div>
+							<div class="cell"><label id="">Total visits:</label></div>
+							<div class="cell">${childInstance?.visits?.size()}</div>
 						</div>				
 					</div>
 				</div>					

@@ -818,3 +818,13 @@ table.inner2-table td{font-size:9pt;border-bottom: rgba(246, 193, 165, 0.29) sol
 	margin-left:25%;
 	margin-top:3%;
 }
+.coupon-display-span {
+	font-size: 0.8em;
+	color: orangered;
+}
+.coupon-balance{font-size:1.2em;font-weight:bold;color:green;}
+div.row.headrow .cell{
+	background:#000;color:#fff;font-weight:bold;
+	border-right:solid 1px #fff;
+	font-size:0.8em;
+}
