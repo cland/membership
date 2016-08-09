@@ -45,10 +45,22 @@ class ReportsController {
 				}
 				eq("status","Complete")
 				order('idDistinct','desc')				
+			 } //
+		
+		def visitsDailyReport =  Visit.createCriteria().list {
+				
+				projections {
+					groupProperty('startyear')
+					groupProperty('startmonth')
+				    property('starttime')					
+				    countDistinct('id', 'idDistinct')
+					// sum("totalMinutes")					
+				} 
+				eq("status","Complete")
+				order('starttime','desc')				
 			 }
+		println (visitsDailyReport)
 		def promokids = visitsData.findAll{(it[3] % settings?.visitcount)==0}
-		println(promokids) 
-	
 		
 		def newvisits = Visit.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
@@ -75,7 +87,7 @@ class ReportsController {
 		ostats.statsdata.num_new_visits = newvisits?.size()
 		ostats.statsdata.num_visits = Visit?.createCriteria().list {eq("status", "Complete")}?.size()
 		ostats.statsdata.num_notifications = notifications?.size()
-		ostats.statsdata.num_promo_children = 1 //promokids?.length()
+		ostats.statsdata.num_promo_children = promokids?.size()
 		ostats.statsdata.num_coupons = Coupon.list().size()
 		ostats.statsdata.num_new_coupons = new_coupons?.size()
 		

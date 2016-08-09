@@ -26,6 +26,11 @@ class Visit {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
+	Integer startweek
+	Integer startmonth
+	Integer startyear
+	Integer startday
+	Long totalminutes
 	static transients = ["createdByName","lastUpdatedByName","visitPhotoId",
 		"durationDays","durationHours","durationMinutes","durationText","totalMinutes",
 		"isCancelled","isCompleted","isActive"]
@@ -38,6 +43,12 @@ class Visit {
 		selectedHours nullable:true
 		office nullable:true
     }
+	static mapping = {
+		startday formula:'DAYOFMONTH(starttime)'
+		startweek formula: 'WEEK(starttime)'
+		startmonth formula: 'MONTH(starttime)'
+		startyear formula: 'YEAR(starttime)'		
+		}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
