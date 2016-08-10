@@ -48,10 +48,13 @@ class Child {
 				relationship:parent?.relationship],
 			person:person?.toMap(),
 			accessnumber:accessNumber,
+			fullaccessnumber:fullAccessNumber,
 			comments:comments,
 			medicalcomments:medicalComments,
 			visits:visits*.toMap(),
+			visitcount:getVisitCount(),
 			isactive:isActive(),
+			datecreated:dateCreated?.format("dd-MMM-yyyy"),
 			lastupdatedbyname:getLastUpdatedByName(),
 			params:params]
 	}

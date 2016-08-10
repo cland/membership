@@ -135,7 +135,7 @@ var cbc_params = {
 				
 				
 			</fieldset>
-			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN }">
 				<br/>
 				<fieldset><legend>Export to Excel</legend>
 					<div class="filter-div">				
@@ -208,7 +208,7 @@ var cbc_params = {
 		 $( "#start-date" ).datepicker({
 			 dateFormat: "dd-M-yy",
 				maxDate:"+0",
-				defaultDate: new Date(today.getFullYear(), today.getMonth()-6, today.getDate()),
+				defaultDate: new Date(today.getFullYear(), today.getMonth()-1, today.getDate()),
 				onSelect: function(dateText, inst) {
 				      // var actualDate = new Date(dateText);
 				      // var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate()+1);

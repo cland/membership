@@ -136,6 +136,7 @@ class Person implements Serializable {
 		return [id:id,
 			firstname:firstName,
 			lastname:lastName,
+			fullname:fullname,
 			username:username,
 			email:email,
 			mobileno: mobileNo,
@@ -147,6 +148,7 @@ class Person implements Serializable {
 			datelastupdated:lastUpdated?.format("dd-MMM-yyyy"),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
+			birthdate:dateOfBirth?.format("dd-MMM-yyyy"),
 			isstaff:staffMemberStatus,
 			photoid:getProfilePhotoId(),
 			params:params]

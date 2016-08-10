@@ -70,7 +70,9 @@ class Visit {
 				accessno:child?.accessNumber,
 				comments:child?.comments,
 				medical:child?.medicalComments,
+				fullaccessnumber:child?.fullAccessNumber,
 				parent:[
+					id:child?.parent?.id,
 					person1:child?.parent?.person1?.toMap(),
 					person2:child?.parent?.person2?.toMap(),
 					membershipno:child?.parent?.membershipNo,
@@ -97,7 +99,8 @@ class Visit {
 				hours:getDurationHours(),
 				minutes: getDurationMinutes(),
 				selectedhours: selectedHours,
-				totalminutes:getTotalMinutes()
+				totalminutes:getTotalMinutes(),
+				businesshours:getVisitHours()
 				],
 			params:params]
 	}
@@ -151,6 +154,20 @@ class Visit {
 		// Convert to Period
 		Period period = duration.toPeriod();
 		return period
+	}
+	Long getVisitHours(){
+		Settings settingsInstance = Settings.list().first()
+		return getVisitHours(settingsInstance?.mincutoff,settingsInstance?.minmodulo)
+	}
+	Long getVisitHours(Integer cutoffMinutes,Integer modulo){
+		if(cutoffMinutes == null) cutoffMinutes = 12
+		if(modulo == null) modulo = 60
+		
+		Integer hrs = (totalMinutes/modulo)
+		Integer mod = totalMinutes % modulo
+		if(mod >= cutoffMinutes) hrs++
+		return hrs
+
 	}
 	/**
 	 * To ensure that all attachments are removed when the "owner" domain is deleted.

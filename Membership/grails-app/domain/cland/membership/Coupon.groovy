@@ -39,13 +39,16 @@ class Coupon {
 		return [id:id,
 			title:"Coupon ${refNo} [${startDate}]",			
 			refno:refNo,
-			startdate:startDate,
-			expirydate:expiryDate,
+			startdate:startDate?.format("dd MMM yyyy"),
+			expirydate:expiryDate?.format("dd MMM yyyy"),
 			visits:visits*.toMap(),
+			visitcount:visits?.size(),
 			balance:getVisitsLeft(),
 			maxvisits:maxvisits,
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
+			parentname:parent?.person1?.fullname,
+			membershipno:parent?.membershipNo,
 			params:params]
 	}
 	def toAutoCompleteMap(){		

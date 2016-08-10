@@ -101,60 +101,82 @@ class ReportsController {
 		if(startdate != null & startdate != "") startdate = parseDate(startdate,"dd-MMM-yyyy") else startdate = new DateTime().minusMonths(24).toDate()
 		if(enddate != null  & startdate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
 		
+		// ** VISITS
 		def visitList = Visit.createCriteria().list(params){
-			//if(startdate != null & enddate != null){
-			//	between('starttime', startdate, enddate)
-			//}
+			if(startdate != null & enddate != null){
+				between('starttime', startdate, enddate)
+			}
 		}
-		
-		def childList = []
-		def clientList = Parent.list()
-	
-		visitList?.each {thisvisit ->
-			
-			childList.add(thisvisit?.child)					
-			//clientList.add(thisvisit?.child?.parent)
-		}
+				
 		def visitHeaders = ['Child Name','Duration','Check-In','Check-Out','Age','Date of Birth','Gender','Status','Visit Contact No.',
-			'Selected Hours','Parent Name','Mobile No.','Membership No.','Parent Email','Current Total Visits','Access Number',
+			'Parent Name','Mobile No.','Membership No.','Parent Email','Access Number',
 			'Emergency Contact','Emergency Contact No.',
 			'Item Id','Child Id', 'Parent Id']
-		def withVisitProperties = ['child.person.fullname','durationText','starttime','endtime','child.person.age','child.person.dateOfBirth','child.person.gender','status','contactNo',
-			'selectedHours','child.parent.person1.fullname','child.parent.person1.mobileNo','child.parent.membershipNo','child.parent.person1.email','child.visitCount','child.fullAccessNumber',
-			'child.parent.person2.fullname','child.parent.person2.mobileNo',
-			'id','child.id','child.parent.id']
-
+		def withVisitProperties = ['child.person.fullname','duration.businesshours','starttime','endtime','child.person.age','child.person.birthdate','child.person.gender','status','contactno',
+			'child.parent.person1.fullname','child.parent.person1.mobileno','child.parent.membershipno','child.parent.person1.email','child.fullaccessnumber',
+			'child.parent.person2.fullname','child.parent.person2.mobileno',
+			'id','child.id','child.parent.id']		
+		
+		// ** COUPONS
+		def couponsList = Coupon.list()		
+		def couponsHeaders = ['Client Name','Membership No.',
+			'Coupon No.',
+			'Max Visit Hours',
+			'Visits Left','Visit Count','Date Activated','Expiry Date',
+			'Item Id']
+		def withCouponsProperties = ['parentname','membershipno',
+			'refno',
+			'maxvisits',
+			'balance',
+			'visitcount',
+			'startdate','expirydate',
+			'id'
+			]
+		
+		//** CHILD LIST
+		def childList = []
+		/* visitList?.each {thisvisit ->
+			childList.add(thisvisit?.child)
+			//clientList.add(thisvisit?.child?.parent)
+		} */
+		def childHeaders = ['Name','Age','Date Of Birth','Gender','Total Visits','Access Number','Parent Name','Mobile No.','Membership No.','Parent Email','Date Created','Item Id','Parent Id']
+		def withChildProperties = ['child.person.fullname','child.person.age','child.person.birthdate','child.person.gender','visitcount','fullaccessnumber','parent.person1.fullname','parent.person1.mobileno','parent.membershipno','parent.person1.email','dateCreated','id','child.parent.id']
+		
+		//** PARENT/CLIENT LIST
+		//def clientList = Parent.list()
 		def clientHeaders = ['Client Name',
 			'Mobile No.',
 			'Membership No',
 			'Emergency Contact','Emergency Contact No.',
-			'Item Id']			
+			'Item Id']
 		def withClientProperties = ['person1.fullname',
 			'person1.mobileNo',
 			'membershipNo',
 			'person1.email',
-			'person2.fullname','person2.mobileNo',			
+			'person2.fullname','person2.mobileNo',
 			'id'
 			]
 		
-		
-		def childHeaders = ['Name','Age','Date Of Birth','Gender','Total Visits','Access Number','Date Created','Parent Name','Mobile No.','Membership No.','Parent Email','Item Id','Parent Id']
-		def withChildProperties = ['child.person.fullname','child.person.age','child.person.dateOfBirth','child.person.gender','Current Total Visits','Access Number','parent.person1.fullname','parent.person1.mobileNo','parent.membershipNo','parent.person1.email','dateCreated','id','child.parent.id']
-		
+		//Build the export report
+		println(">> Exporting report...")
 		new WebXlsxExporter().with {
 			setResponseHeaders(response)
 			sheet('Visits').with {
 				fillHeader(visitHeaders)
 				add(visitList*.toMap(), withVisitProperties)
 			}
-			sheet('Child List').with{
+			sheet('Coupons').with {
+				fillHeader(couponsHeaders)
+				add(couponsList*.toMap(), withCouponsProperties)
+			}
+		/*	sheet('Child List').with{
 				fillHeader(childHeaders)
-				add(childList,withChildProperties)
+				add(childList*.toMap(),withChildProperties)
 			}
 			sheet('Clients').with{
 				fillHeader(clientHeaders)
 				add(clientList,withClientProperties)
-			}			
+			} */			
 			save(response.outputStream)
 		}
 	} //
