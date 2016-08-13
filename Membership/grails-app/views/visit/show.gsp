@@ -194,14 +194,7 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${visitInstance?.totalminutes}">
-				<li class="fieldcontain">
-					<span id="totalminutes-label" class="property-label"><g:message code="visit.totalminutes.label" default="Totalminutes" /></span>
-					
-						<span class="property-value" aria-labelledby="totalminutes-label"><g:fieldValue bean="${visitInstance}" field="totalminutes"/></span>
-					
-				</li>
-				</g:if>							
+									
 			
 			</ol>
 			<g:form url="[resource:visitInstance, action:'delete']" method="DELETE">

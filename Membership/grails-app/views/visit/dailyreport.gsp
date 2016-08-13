@@ -11,7 +11,7 @@
 		<a href="#list-visit" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
 			<ul>
-				<li><g:link class="list" controller="report" action="index">Summary Report</g:link></li>
+				<li><g:link class="list" controller="reports" action="index">Summary Report</g:link></li>
 			</ul>
 		</div>
 		<div id="list-visit" class="content scaffold-list" role="main">
