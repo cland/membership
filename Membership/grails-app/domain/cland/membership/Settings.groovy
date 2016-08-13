@@ -19,6 +19,7 @@ class Settings {
 	String smsFrom
 	Integer mincutoff	//the number of minutes at which point a visit is regarded as a full hour payable
 	Integer minmodulo	//the value used to compute the modulo value in when computing the modulus minutes
+	Integer reportminmonth 	//default months to go back to report on.
 	boolean visitPhotoEnabled = false
 	long createdBy
 	long lastUpdatedBy
@@ -38,6 +39,7 @@ class Settings {
 		smsFrom nullable:true, maxSize: 11
 		mincutoff nullable:true
 		minmodulo nullable:true
+		reportminmonth nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
@@ -46,8 +48,9 @@ class Settings {
 		if(debug == null) debug = "0"
 		if(smsTestNumber == null) smsTestNumber="+61411111111"
 		if(smsFrom == null) smsFrom = "WigglyToesI" //Max length from API is 11 characters
-		if(mincutoff == null) mincutoff = "12"
-		if(minmodulo == null) minmodulo = "60"
+		if(mincutoff == null) mincutoff = 12
+		if(minmodulo == null) minmodulo = 60
+		if(reportminmonth == null) reportminmonth = 1
 		createdBy = curId
 		lastUpdatedBy = curId		
 	}

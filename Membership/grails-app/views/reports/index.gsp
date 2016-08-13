@@ -90,9 +90,14 @@ var cbc_params = {
 </script>
 	</head>
 	<body>
+		<div class="nav navpage" role="navigation">
+			<ul>
+				<li><g:link class="list" controller="visit" action="dailyreport">Daily Visits Report</g:link></li>
+			</ul>
+		</div>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>		
 		<div id="page-body" role="main">	
-		<h1>Reports</h1>
+		<h1>Summary Report</h1>
 			
 			<fieldset><legend>MONTH-TO-DATE SUMMARY</legend>
 				<div id="statsmsg"></div>
@@ -135,7 +140,7 @@ var cbc_params = {
 				
 				
 			</fieldset>
-			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN }">
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 				<br/>
 				<fieldset><legend>Export to Excel</legend>
 					<div class="filter-div">				

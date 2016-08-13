@@ -26,6 +26,9 @@ class Coupon {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		
     }
+	static mapping = {
+		visits lazy:false
+	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

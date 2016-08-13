@@ -13,6 +13,9 @@ class ReportsController {
 
 	}		
 	def officeSummaryStats(){
+		
+		
+		
 		Office o = Office.list().first()
 	
 		//clients created this month
@@ -46,21 +49,21 @@ class ReportsController {
 				eq("status","Complete")
 				order('idDistinct','desc')				
 			 } //
-		
-		def visitsDailyReport =  Visit.createCriteria().list {
-				
+		/*
+		def visitsDailyReport =  Visit.createCriteria().list {				
 				projections {
 					groupProperty('startyear')
 					groupProperty('startmonth')
-				    property('starttime')					
+				    property('starttime')									
 				    countDistinct('id', 'idDistinct')
-					// sum("totalMinutes")					
+					sum("businesshours")					
 				} 
 				eq("status","Complete")
 				order('starttime','desc')				
 			 }
 		println (visitsDailyReport)
-		def promokids = visitsData.findAll{(it[3] % settings?.visitcount)==0}
+		*/
+		def promokids = visitsData.findAll{(it[3] / settings?.visitcount)>=1}
 		
 		def newvisits = Visit.createCriteria().list {
 			between('dateCreated',startdate, today.toDate() )
@@ -71,9 +74,18 @@ class ReportsController {
 			between('dateCreated',startdate, today.toDate() )
 		}
 		
+		//** COUPONS
 		def new_coupons = Coupon.createCriteria().list{
 			between('dateCreated',startdate, today.toDate() )
 		}
+		def allcoupons = Coupon.list()		
+		def coupon_visits = []
+		
+		allcoupons?.each{c ->
+			coupon_visits.addAll(c?.visits)
+		}
+		
+		//**  SET THE STATS		
 		OfficeSummaryStats ostats = new OfficeSummaryStats()
 		ostats.startdate=new Date()
 		ostats.enddate = new Date()
@@ -88,7 +100,7 @@ class ReportsController {
 		ostats.statsdata.num_visits = Visit?.createCriteria().list {eq("status", "Complete")}?.size()
 		ostats.statsdata.num_notifications = notifications?.size()
 		ostats.statsdata.num_promo_children = promokids?.size()
-		ostats.statsdata.num_coupons = Coupon.list().size()
+		ostats.statsdata.num_coupons = allcoupons.size()
 		ostats.statsdata.num_new_coupons = new_coupons?.size()
 		
 		render ostats as JSON
@@ -99,7 +111,7 @@ class ReportsController {
 		def enddate = params?.endDate_open
 		
 		if(startdate != null & startdate != "") startdate = parseDate(startdate,"dd-MMM-yyyy") else startdate = new DateTime().minusMonths(24).toDate()
-		if(enddate != null  & startdate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
+		if(enddate != null  & enddate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
 		
 		// ** VISITS
 		def visitList = Visit.createCriteria().list(params){
@@ -108,17 +120,21 @@ class ReportsController {
 			}
 		}
 				
-		def visitHeaders = ['Child Name','Duration','Check-In','Check-Out','Age','Date of Birth','Gender','Status','Visit Contact No.',
+		def visitHeaders = ['Child Name','Client Type','Duration','Check-In','Check-Out','Age','Date of Birth','Gender','Status','Visit Contact No.',
 			'Parent Name','Mobile No.','Membership No.','Parent Email','Access Number',
 			'Emergency Contact','Emergency Contact No.',
-			'Item Id','Child Id', 'Parent Id']
-		def withVisitProperties = ['child.person.fullname','duration.businesshours','starttime','endtime','child.person.age','child.person.birthdate','child.person.gender','status','contactno',
+			'Item Id','Child Id', 'Parent Id','Coupon Id','Coupon Ref','Office']
+		def withVisitProperties = ['child.person.fullname','child.parent.clienttype','duration.businesshours','starttime','endtime','child.person.age','child.person.birthdate','child.person.gender','status','contactno',
 			'child.parent.person1.fullname','child.parent.person1.mobileno','child.parent.membershipno','child.parent.person1.email','child.fullaccessnumber',
 			'child.parent.person2.fullname','child.parent.person2.mobileno',
-			'id','child.id','child.parent.id']		
+			'id','child.id','child.parent.id','couponid','couponref','creatoroffice']
 		
 		// ** COUPONS
-		def couponsList = Coupon.list()		
+		def couponsList = Coupon.list()	
+		def coupon_visits = []		
+		couponsList?.each{c ->
+			coupon_visits.addAll(c?.visits)
+		}
 		def couponsHeaders = ['Client Name','Membership No.',
 			'Coupon No.',
 			'Max Visit Hours',
@@ -168,6 +184,10 @@ class ReportsController {
 			sheet('Coupons').with {
 				fillHeader(couponsHeaders)
 				add(couponsList*.toMap(), withCouponsProperties)
+			}
+			sheet('Coupon Visits').with {
+				fillHeader(visitHeaders)
+				add(coupon_visits*.toMap(), withVisitProperties)
 			}
 		/*	sheet('Child List').with{
 				fillHeader(childHeaders)

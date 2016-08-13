@@ -1,7 +1,7 @@
 package cland.membership
 
 import cland.membership.security.Person
-
+import cland.membership.lookup.Keywords;
 import java.util.Date;
 
 import org.joda.time.*
@@ -30,10 +30,11 @@ class Visit {
 	Integer startmonth
 	Integer startyear
 	Integer startday
-	Long totalminutes
+	Keywords promotion
+	
 	static transients = ["createdByName","lastUpdatedByName","visitPhotoId",
 		"durationDays","durationHours","durationMinutes","durationText","totalMinutes",
-		"isCancelled","isCompleted","isActive"]
+		"isCancelled","isCompleted","isActive","visitHours"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
@@ -42,12 +43,13 @@ class Visit {
 		photoKey nullable:true
 		selectedHours nullable:true
 		office nullable:true
+		promotion nullable:true
     }
 	static mapping = {
 		startday formula:'DAYOFMONTH(starttime)'
 		startweek formula: 'WEEK(starttime)'
 		startmonth formula: 'MONTH(starttime)'
-		startyear formula: 'YEAR(starttime)'		
+		startyear formula: 'YEAR(starttime)'				
 		}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
@@ -90,6 +92,7 @@ class Visit {
 			visitno:visitNo,
 			contactno:contactNo,
 			createdbyname:getCreatedByName(),
+			creatoroffice:getCreatorOffice(),
 			lastupdatedbyname:getLastUpdatedByName(),
 			photokey:photoKey,
 			visitphotoid:visitPhotoId,
@@ -112,6 +115,15 @@ class Visit {
 		photokey:photoKey,
 		category:(status==null?"Unknown":status)]
 	}
+	def reportMap(){
+		return [id:id,
+		datestring:starttime?.format("dd-MMM-yyyy"),
+		year :startyear,
+		month:startmonth,
+		day:startday,
+		week:startweek,
+		businesshours:getVisitHours()]
+	}
 	String toString(){
 		return starttime?.format("dd-MMM-yyyy") + " " + starttime?.format("HH:mm") + " to " + endtime?.format("HH:mm")
 	}
@@ -124,6 +136,10 @@ class Visit {
 		return (user==null?"unknown":user?.toString())
 	}
 	
+	String getCreatorOffice(){
+		Person user = Person.get(createdBy)
+		return (user==null?"unknown":user?.office)
+	}
 	Integer getDurationDays(){
 		return getDurationPeriod().getDays()
 	}

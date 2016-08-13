@@ -724,6 +724,8 @@ class ParentController {
 				}
 	}
 	
+	
+	
 	@Transactional
 	def newclientajax(){
 		println ("======================================")

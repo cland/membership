@@ -111,6 +111,12 @@
 		</label>
 		<g:field name="minmodulo" type="text" value="${settingsInstance.minmodulo}"/>	
 	</div>
+	<div class="fieldcontain ${hasErrors(bean: settingsInstance, field: 'reportminmonth', 'error')} ">
+		<label for="reportminmonth">
+			<g:message code="settings.reportminmonth.label" default="Report range: go back X months if not specified." />			
+		</label>
+		<g:field name="reportminmonth" type="text" value="${settingsInstance.reportminmonth}"/>	
+	</div>
 </sec:ifAnyGranted>
 
 
