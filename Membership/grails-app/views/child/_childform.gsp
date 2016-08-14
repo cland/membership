@@ -134,21 +134,21 @@
 						<th>Time-in</th>
 						<th>Time-out</th>
 						<th>Duration</th>
+						<th>Effective Hours</th>
 						<th>Contact No.</th>
-						<th>Status</th>
-						<th>Selected Hours</th>
+						<th>Status</th>						
 						<th>Wrist Band No.</th>							
 					</tr>
 				</thead>
 				<g:each in="${visits}" var="c">
 					<tr>								
 						<td>${c?.starttime?.format("dd MMM yyyy")}</td>
-						<td>${c?.starttime?.format("hh:mm")}</td>
+						<td>${c?.starttime?.format("HH:mm")}</td>
 						<td>${c?.endtime?.format("HH:mm")}</td>
 						<td>${c?.durationText}</td>
+						<td>${c?.visitHours}</td>
 						<td>${c?.contactNo}</td>
-						<td>${c?.status}</td>
-						<td>${c?.selectedHours}</td>
+						<td>${c?.status}</td>						
 						<td> ${c?.visitNo }
 							
 						</td>

@@ -43,7 +43,7 @@
 					
 						<td><g:link controller="child" action="show" id="${v?.child?.id}">${v?.child?.person }</g:link></td>						
 						<td>${v?.starttime?.format("dd MMM yyyy")}</td>
-						<td>${v?.starttime?.format("hh:mm")}</td>
+						<td>${v?.starttime?.format("HH:mm")}</td>
 						<td>${v?.endtime?.format("HH:mm")}</td>
 						<td>${v?.durationText}</td>
 						<td>${v?.getVisitHours()}</td>

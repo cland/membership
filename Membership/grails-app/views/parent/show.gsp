@@ -57,9 +57,9 @@
 								<th>Time-in</th>
 								<th>Time-out</th>
 								<th>Duration</th>
+								<th>Effective Hours</th>
 								<th>Contact No.</th>
-								<th>Status</th>	
-								<th>Selected Hours</th>
+								<th>Status</th>									
 								<th>Wrist Band No.</th>
 								<th>Actions</th>							
 							</tr>
@@ -69,12 +69,12 @@
 								<tr>
 									<td><g:link controller="child" action="show" id="${child?.id}">${child?.person }</g:link></td>						
 									<td>${c?.starttime?.format("dd MMM yyyy")}</td>
-									<td>${c?.starttime?.format("hh:mm")}</td>
+									<td>${c?.starttime?.format("HH:mm")}</td>
 									<td>${c?.endtime?.format("HH:mm")}</td>
 									<td>${c?.durationText}</td>
+									<td>${c?.visitHours}</td>
 									<td>${c?.contactNo}</td>
-									<td id="row-visit-status-${c?.id}" class="status-${c?.status }">${c?.status}</td>
-									<td>${c?.selectedHours}</td>
+									<td id="row-visit-status-${c?.id}" class="status-${c?.status }">${c?.status}</td>									
 									<td>
 										${c?.visitNo }																
 									</td>
@@ -164,7 +164,7 @@
 													<th>Time-in</th>
 													<th>Time-out</th>
 													<th>Duration</th>
-													<th>Contact No.</th>
+													<th>Effective Hours</th>
 													<th>Status</th>
 													<th>Visit Photo</th>
 													<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">	
@@ -177,10 +177,10 @@
 												<td>${j+1 }</td>
 												<td><g:link controller="child" action="show" id="${v?.child?.id}">${v?.child?.person }</g:link></td>						
 												<td>${v?.starttime?.format("dd MMM yyyy")}</td>
-												<td>${v?.starttime?.format("hh:mm")}</td>
+												<td>${v?.starttime?.format("HH:mm")}</td>
 												<td>${v?.endtime?.format("HH:mm")}</td>
 												<td>${v?.durationText}</td>
-												<td>${v?.contactNo}</td>
+												<td>${v?.visitHours}</td>
 												<td>${v?.status}</td>						
 												<td>
 													<attachments:each bean="${v}">
