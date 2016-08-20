@@ -45,10 +45,14 @@
 			</div>
 			<table class="inner-table">
 			<thead>
-					<tr>
+					<tr id="daily-report-header">
 						<th>Date</th>
 						<th>Hours</th>
-						<th>Visits</th>					
+						<th>Coupon Hrs Used</th>
+						<th>Visits</th>							
+						<th>Coupon Visits</th>
+						<th>Client Type: Gym Member</th>
+						<th>Client Type: Standard</th>									
 					</tr>
 				</thead>
 				<tbody id="dailyreportdata">
@@ -113,17 +117,22 @@
 				 
 				 var _key = elem.datestring
 				 var _hours = elem.businesshours
+				 
 				 var _visitcount = elem
-				 var thisentry = (jsonData[_key] ? jsonData[_key] : {"hours":0,"visitcount":0})
+				 var thisentry = (jsonData[_key] ? jsonData[_key] : {"hours":0,"visitcount":0,"couponhrs":0,"couponvisits":0,"Gym Member":0,"Standard":0})
 				// console.log(i + " : " + _key)
 				 thisentry["hours"] = thisentry["hours"] + _hours;
 				 thisentry["visitcount"] = thisentry["visitcount"] + 1; 
-				 
+				 if(elem.coupon!=null){					 
+					 thisentry["couponhrs"] = thisentry["couponhrs"] + elem.businesshours
+					 thisentry["couponvisits"] = thisentry["couponvisits"] + 1;
+				 }
+				 thisentry[elem.clienttype.name] = (thisentry[elem.clienttype.name]? thisentry[elem.clienttype.name] + 1: 1);
 				 jsonData[_key] = thisentry 
 			 });
 
-			 $.each(jsonData,function(i,row){				 				
-				 _tbody.append("<tr><td>" + i + "</td><td>" + row.hours + "</td><td>" + row.visitcount + "</td></tr>")				 			
+			 $.each(jsonData,function(i,row){			
+				 _tbody.append("<tr><td>" + i + "</td><td>" + row.hours + "</td><td>" + row.couponhrs + "</td><td>" + row.visitcount + "</td><td>" + row.couponvisits + "</td><td>" + row["Gym Member"] + "</td><td>" + row["Standard"] + "</td></tr>")				 			
 				});
 				_waitrow.hide();	
 		} //end 

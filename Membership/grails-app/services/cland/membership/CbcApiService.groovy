@@ -251,4 +251,12 @@ class CbcApiService {
 		}
 		return false
 	}
+	Coupon findCouponFor(Visit visit){
+		def coupon = Coupon.createCriteria().get{
+			visits {
+				idEq(visit?.id)
+			}
+		}
+		return coupon
+	}
 }//end class

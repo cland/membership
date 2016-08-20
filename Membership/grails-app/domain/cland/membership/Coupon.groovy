@@ -54,6 +54,17 @@ class Coupon {
 			membershipno:parent?.membershipNo,
 			params:params]
 	}
+	def toReportMap(){
+		[id:id,
+			refno:refNo,
+			startdate:startDate?.format("dd MMM yyyy"),
+			expirydate:expiryDate?.format("dd MMM yyyy"),
+			visitcount:visits?.size(),
+			balance:getVisitsLeft(),
+			maxvisits:maxvisits,
+			parentname:parent?.person1?.fullname,
+			membershipno:parent?.membershipNo]
+	}
 	def toAutoCompleteMap(){		
 		return [id:id,
 		label:"Coupon ${refNo} [${startDate}]",

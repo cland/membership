@@ -104,7 +104,8 @@ class Visit {
 				selectedhours: selectedHours,
 				totalminutes:getTotalMinutes(),
 				businesshours:getVisitHours()
-				],
+				],			
+			coupon:cbcApiService.findCouponFor(this)?.toReportMap(),
 			params:params]
 	}
 	def toAutoCompleteMap(){		
@@ -122,7 +123,11 @@ class Visit {
 		month:startmonth,
 		day:startday,
 		week:startweek,
-		businesshours:getVisitHours()]
+		businesshours:getVisitHours(),
+		clienttype:[id:child?.parent?.clientType?.id,
+			name:child?.parent?.clientType?.name,
+			label:child?.parent?.clientType?.label],
+		coupon:cbcApiService.findCouponFor(this)?.toReportMap()]
 	}
 	String toString(){
 		return starttime?.format("dd-MMM-yyyy") + " " + starttime?.format("HH:mm") + " to " + endtime?.format("HH:mm")

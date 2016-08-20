@@ -4,6 +4,8 @@ import static org.springframework.http.HttpStatus.*
 import cland.membership.security.Person
 import grails.converters.JSON
 import grails.transaction.Transactional
+import java.text.SimpleDateFormat
+import org.joda.time.DateTime
 
 @Transactional(readOnly = true)
 class ChildController {
@@ -206,4 +208,34 @@ class ChildController {
 		def activeVisits = Visit.findAllByStatus("Active")
 		render activeVisits*.toMap() as JSON
 	}
+	def birthdaylist(params){
+		//get all the kids whos is bday is on the way
+		def startdate = params?.startDate
+		def enddate = params?.endDate
+		
+		if(startdate != null & startdate != "") {
+			startdate = parseDate(startdate,"dd-MMM-yyyy")
+		} else {		
+			startdate = new DateTime().toDate()
+		}
+		if(enddate != null  & enddate != "") {
+			enddate = parseDate(enddate,"dd-MMM-yyyy")
+			if(startdate > enddate) enddate = startdate
+			enddate = (new DateTime(enddate).plusDays(1)).toDate()
+		} else {
+			enddate = (new DateTime().plusMonths(1).toDate())
+		}
+		
+		def blist = Child.createCriteria().list {
+			createAlias("person","p")
+			between('p.dateOfBirth', startdate, enddate)
+			
+			order('p.dateOfBirth','asc')
+		}
+		render blist*.toMap() as JSON
+	}
+	private parseDate(date,fmt) {
+		SimpleDateFormat df = new SimpleDateFormat(fmt);
+		return (!date) ? new Date() : df.parse(date)
+   }
 } //end class

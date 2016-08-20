@@ -23,17 +23,27 @@ class VisitController {
 	}
 	
 	def dailyreportdata(params){
+		//Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
 		Settings settings = Settings.list().first()
 		def _status = (params?.status ? params?.status : "Complete")
 		def startdate = params?.startDate_open
 		def enddate = params?.endDate_open
 		
-		if(startdate != null & startdate != "") startdate = parseDate(startdate,"dd-MMM-yyyy") else startdate = new DateTime().minusMonths(settings?.reportminmonth).toDate()
-		if(enddate != null  & enddate != "") enddate = parseDate(enddate,"dd-MMM-yyyy") else enddate = (new Date())
+		if(startdate != null & startdate != "") {
+			startdate = parseDate(startdate,"dd-MMM-yyyy")
+		} else {			
+			def _t = (settings?.reportminmonth ? settings?.reportminmonth : 1)
+			startdate = new DateTime().minusMonths(_t).toDate()			
+		}
+		if(enddate != null  & enddate != "") {
+			enddate = parseDate(enddate,"dd-MMM-yyyy")
+			if(startdate > enddate) enddate = startdate
+			enddate = (new DateTime(enddate).plusDays(1)).toDate()
+		} else enddate = (new Date())
 		
 		def visits = Visit.createCriteria().list(params){
 			eq("status",_status)
-			if(startdate != null & enddate != null){
+			if(startdate != null & enddate != null){				
 				between('starttime', startdate, enddate)
 			}
 			order('starttime','desc')
