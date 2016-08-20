@@ -209,7 +209,7 @@ class ChildController {
 		render activeVisits*.toMap() as JSON
 	}
 	def birthdaylist(params){
-		//get all the kids whos is bday is on the way
+		//get all the kids whose is birthday is on the way
 		def startdate = params?.startDate
 		def enddate = params?.endDate
 		
@@ -223,14 +223,29 @@ class ChildController {
 			if(startdate > enddate) enddate = startdate
 			enddate = (new DateTime(enddate).plusDays(1)).toDate()
 		} else {
-			enddate = (new DateTime().plusMonths(1).toDate())
+			enddate = (new DateTime().plusMonths(2).toDate())
 		}
+		
+		def startyear = new DateTime(startdate).getYear()
+		def endyear = new DateTime(enddate).getYear()
+		def startdayofyear = (new DateTime(startdate)).dayOfYear().get()
+		def enddayofyear = (new DateTime(enddate)).dayOfYear().get()
 		
 		def blist = Child.createCriteria().list {
 			createAlias("person","p")
-			between('p.dateOfBirth', startdate, enddate)
+			//between('p.birthmonth', startdate?.getCalendarDate().getMonth(), enddate?.getCalendarDate().getMonth())
 			
-			order('p.dateOfBirth','asc')
+			if(startyear == endyear){
+				ge('p.birthdayofyear',startdayofyear)						
+				le('p.birthdayofyear',enddayofyear) //if same year as start year
+			}else if(startyear < endyear){
+				or{
+					between('p.birthdayofyear',startdayofyear,new DateTime(parseDate("31-Dec-" + startyear.toString(),"dd-MMM-yyyy")).dayOfYear().get())
+					between('p.birthdayofyear',new DateTime(parseDate("01-Jan-" + endyear.toString(),"dd-MMM-yyyy")).dayOfYear().get(),enddayofyear)
+				}
+			}		
+			order('p.birthmonth','asc')
+			order('p.birthday','asc')
 		}
 		render blist*.toMap() as JSON
 	}

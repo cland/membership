@@ -38,6 +38,11 @@ class Person implements Serializable {
 	String mobileNo
 	String telNo
 	Date dateOfBirth
+	Integer birthweek
+	Integer birthmonth
+	Integer birthyear
+	Integer birthday
+	Integer birthdayofyear
 	//List phones
 	/** Admin Tracking Information **/
 	long createdBy
@@ -70,6 +75,20 @@ class Person implements Serializable {
 		history nullable:true,editable:false
 		telNo nullable:true
 	}
+	static mapping = {
+		
+		birthday formula:'DAYOFMONTH(date_of_birth)'
+		birthweek formula: 'WEEK(date_of_birth)'
+		birthmonth formula: 'MONTH(date_of_birth)'
+		birthyear formula: 'YEAR(date_of_birth)'
+		birthdayofyear formula:'DAYOFYEAR(date_of_birth)'	
+		
+		password column: '`password`'
+		//phones cascade:"all-delete-orphan"
+		office lazy: false
+		dateOfBirth defaultValue: "now()"
+		
+	}
 	Person(String username, String password) {
 		this()
 		this.username = username
@@ -101,13 +120,7 @@ class Person implements Serializable {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
 	}
 
-	
 
-	static mapping = {
-		password column: '`password`'
-		//phones cascade:"all-delete-orphan"
-		office lazy: false
-	}
 	
 	String toString(){
 		return firstName + " " + lastName
@@ -148,7 +161,8 @@ class Person implements Serializable {
 			datelastupdated:lastUpdated?.format("dd-MMM-yyyy"),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName(),
-			birthdate:dateOfBirth?.format("dd-MMM-yyyy"),
+			birthdate:dateOfBirth?.format("dd-MMM"),
+			birthyear:dateOfBirth?.format("yyyy"),
 			isstaff:staffMemberStatus,
 			photoid:getProfilePhotoId(),
 			params:params]
