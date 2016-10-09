@@ -28,6 +28,9 @@ class Child {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
     }
+	static mapping = {
+		person cascade:'all'
+	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

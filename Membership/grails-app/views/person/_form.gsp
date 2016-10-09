@@ -153,7 +153,7 @@
 				</tr>
 			</thead>
 			<tbody id="groups-list">
-			<g:each in="${(params.action=="create"? [] : (personInstance?.authorities?.size() > 0 ? personInstance?.authorities:personInstance?.person?.office?.officeGroups))}" status="i" var="roleGroupInstance">
+			<g:each in="${(params.action=="create"? [] : (personInstance?.authorities?.size() > 0 ? personInstance?.authorities:personInstance?.office?.officeGroups))}" status="i" var="roleGroupInstance">
 				<g:set var="isRoleChecked" value="false" />
 				<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					<g:if test="${personInstance?.authorities?.contains(roleGroupInstance) }">

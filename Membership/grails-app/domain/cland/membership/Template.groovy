@@ -22,7 +22,11 @@ class Template {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		
 		status blank:true, nullable:true
+		
     }
+	static mapping = {
+		body type: 'text'
+	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

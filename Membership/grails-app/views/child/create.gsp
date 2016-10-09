@@ -25,7 +25,7 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:childInstance, action:'save']" >
+			<g:uploadForm url="[resource:childInstance, action:'save']" >
 			<div id="tabs" style="display: none;">
 					<ul>
 						<li><a href="#tab-1">Child Details</a></li>
@@ -50,7 +50,8 @@
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
 				</fieldset>
-			</g:form>
+				</div>
+			</g:uploadForm>
 		</div>
 		<script>
 		$(document).ready(function() {		

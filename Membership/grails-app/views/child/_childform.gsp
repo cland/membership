@@ -14,7 +14,8 @@
 							<div class="cell">
 								<g:if test="${isEditMode }">
 									<g:hiddenField name="person.mobileNo" value="${childInstance?.person?.mobileNo}" />
-									
+									<g:hiddenField name="person.id" value="${childInstance?.person?.id}" />
+									<g:hiddenField name="person.version" value="${childInstance?.person?.version}" />
 									<g:textField name="person.firstName" value="${childInstance?.person?.firstName }"/>
 								</g:if>
 								<g:else>${childInstance?.person?.firstName }</g:else>								
@@ -31,7 +32,7 @@
 							<div class="cell"><label id="">Gender:</label></div>
 							<div class="cell">
 								<g:if test ="${ isEditMode}">
-									<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort() %>
+									<% def gender = cland.membership.lookup.Keywords.findByName("Gender")?.values?.sort{it?.label} %>
 									<g:radioGroup style="margin-top:15px;" 
 										values="${gender?.id}"
 										labels="${gender}"

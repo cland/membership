@@ -125,12 +125,13 @@ class PersonController {
 
         personInstance.delete flush:true
 
-		flash.message = message(code: 'default.deleted.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.id])
-		redirect(controller: "home",action: "index")
+		//flash.message = message(code: 'default.deleted.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.id])
+		//redirect(controller: "home",action: "index")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Person.label', default: 'Person'), personInstance.id])
-                redirect action:"index", method:"GET"
+                //redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "person/index", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }

@@ -143,21 +143,29 @@ class ChildController {
             respond childInstance.errors, view:'edit'
             return
         }
-		/*
-		Person p = Person.get(params?.person?.id)
-		bindData(p, params, [exclude: 'person.dateOfBirth'])
-		bindData(p, ['dateOfBirth': params.person?.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
-		p.properties = params?.person
-		if(!p.save(flush:true)){
-			println(p.errors)
+		//bindData(childInstance?.person, params, [exclude: 'dateOfBirth'])
+		//bindData(childInstance?.person, ['dateOfBirth': params.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
+		try{
+			Person p = Person.get(params?.person?.id)
+			def _personid = p?.id
+			p.properties = params?.person
+			bindData(p, params, [exclude: 'dateOfBirth'])
+			bindData(p, ['dateOfBirth': params.person?.date('dateOfBirth', ['dd-MMM-yyyy'])], [include: 'dateOfBirth'])
+			p.id = _personid
+			if(!p.save(flush:true)){
+				println(p.errors)
+			}
+			childInstance.person = p
+		}catch(Exception e){
+			e.printStackTrace()
 		}
-		*/
+		
         if(!childInstance.save(flush:true)){			
 			println(childInstance?.errors)
 			respond childInstance.errors, view:'edit'
 			return
 		}else{
-			
+
 			attachUploadedFilesTo(childInstance?.person,["profilephoto" + childInstance?.person?.id])
 													
 	        request.withFormat {
