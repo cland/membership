@@ -12,6 +12,7 @@ class Contract {
 	String contractNo
 	Keywords contractType
 	String status
+	Office office
 	/** Admin Tracking Information **/
 	long createdBy
 	long lastUpdatedBy
@@ -22,6 +23,7 @@ class Contract {
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
+		office nullable:true
     }
 	
 	def beforeInsert = {

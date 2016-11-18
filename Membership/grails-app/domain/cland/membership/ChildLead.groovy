@@ -23,7 +23,7 @@ class ChildLead {
 	String telNo
 	Date dateOfBirth
 	Keywords status  // ([AttendanceStatus] Attended/Pending/Cancelled)
-
+	Office office
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -40,6 +40,7 @@ class ChildLead {
 		gender inList: Gender.list(), nullable: true
 		dateOfBirth blank:true, nullable:true		
 		telNo nullable:true
+		office nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()

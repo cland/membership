@@ -21,6 +21,7 @@ class Parent {
 	Date dateCreated
 	Date lastUpdated
 	String history
+	Office office
 	static transients = ["createdByName","lastUpdatedByName"]
 	static hasMany = [children:Child, contracts:Contract, notifications:Notification,coupons:Coupon] 
     static constraints = {
@@ -31,6 +32,7 @@ class Parent {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
 		history nullable:true,editable:false
+		office nullable:true
     }
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()

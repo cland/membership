@@ -13,7 +13,7 @@ class Child {
 	BigInteger accessNumber
 	String comments
 	String medicalComments
-	
+	Office office
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -27,6 +27,7 @@ class Child {
 		medicalComments nullable: true
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false
+		office nullable:true
     }
 	static mapping = {
 		person cascade:'all'

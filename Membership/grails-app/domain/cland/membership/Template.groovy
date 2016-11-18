@@ -17,12 +17,13 @@ class Template {
 	long lastUpdatedBy
 	Date dateCreated
 	Date lastUpdated
+	Office office
 	static transients = ["createdByName","lastUpdatedByName"]
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		
 		status blank:true, nullable:true
-		
+		office nullable:true
     }
 	static mapping = {
 		body type: 'text'

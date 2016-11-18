@@ -14,6 +14,7 @@ class Coupon {
 	Date startDate
 	Date expiryDate
 	String refNo
+	Office office
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -25,6 +26,7 @@ class Coupon {
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		
+		office nullable:true
     }
 	static mapping = {
 		visits lazy:false

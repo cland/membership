@@ -48,7 +48,7 @@ class ParentController {
     def save(Parent parentInstance) {
 		
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
+		Office office = cbcApiService.getOfficeContext() //Office.list().first()
 		
         if (parentInstance == null) {
             notFound()
@@ -112,7 +112,7 @@ class ParentController {
             return
         }
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
+		Office office = cbcApiService.getOfficeContext() //Office.list().first()
 		
 		//need to add the children 
 		def newvisits = [:]
@@ -358,6 +358,7 @@ class ParentController {
 		Map<String, String[]> vars = request.getParameterMap()
 		def _parentid = vars.parentid[0]
 		def parentInstance = Parent.get(_parentid)
+		def current_office = cbcApiService.getOfficeContext() //
 		if(parentInstance){
 			def _refno = vars.refno[0]
 			def _maxvisits = vars.maxvisits[0]
@@ -365,6 +366,7 @@ class ParentController {
 			def _expirydate = vars.expirydate[0]
 	
 			def coupon = new Coupon(refNo:_refno, maxvisits:_maxvisits,startDate:new Date(_startdate),expiryDate:new Date(_expirydate))
+			coupon.office = current_office
 			//if(!coupon.save(flush:true)){
 			//	println(coupon.errors)
 			//	result = [result:"failure",message:"Failed to save coupon!"]
@@ -387,7 +389,7 @@ class ParentController {
 	@Transactional
 	def newclient(){
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
+		Office office = cbcApiService.getOfficeContext()
 		
 		Parent parentInstance = new Parent(params.parent)
 		parentInstance.clientType = Keywords.findByName("Standard")
@@ -578,6 +580,7 @@ class ParentController {
 	}
 	@Transactional
 	def checkin(params){
+		def current_office = cbcApiService.userPrimaryOffice()
 		def result = []
 		def msg = ""		
 		def parentInstance = null
@@ -593,6 +596,7 @@ class ParentController {
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
 				def _visitno = params?.get("visitno" + childInstance?.id)
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno,visitNo:_visitno)
+				visit.office = current_office
 				childInstance.addToVisits(visit)								
 				
 				if(!childInstance.save(flush:true)){
@@ -626,7 +630,8 @@ class ParentController {
 	@Transactional
 	def selfregister(){
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
+		
+		Office office = cbcApiService.getOfficeContext() //Office.list().first()
 		
 		Parent parentInstance = new Parent(params.parent)
 		parentInstance.clientType = Keywords.findByName("Standard")
@@ -737,7 +742,7 @@ class ParentController {
 		println(vars)
 		println ("======================================")
 		def dfmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm")
-		Office office = Office.list().first()
+		Office office = cbcApiService.getOfficeContext() //Office.list().first()
 		
 		Parent parentInstance = new Parent(params.parent)
 		parentInstance.clientType = Keywords.findByName("Standard")

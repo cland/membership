@@ -52,7 +52,12 @@ class CbcApiService {
 		}
 		return user?.person?.office //getPrimaryOffice()
 	} //end function
-	
+	/*
+	 * Returns the office where current event is taking place
+	 */
+	Office getOfficeContext(Person user = null){
+		return getUserPrimaryOffice(user)
+	}
 	def getUserAllowedOffices(Person user = null){
 		if(user == null){
 			user = springSecurityService.getCurrentUser()

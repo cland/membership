@@ -25,7 +25,7 @@ class Booking {
 	Keywords room			// [Room]			red | yellow
 	Keywords partyPackage 	// [PartyPackage]	STANDARD | Wiggly Party
 	Keywords partyTheme		// [PartyTheme]		Fairy | Children's Jungle | Happy Birthday | Princess | Under The Sea
-	
+	Office office
 	/** Admin Tracking Information **/
 	long createdBy
 	long lastUpdatedBy
@@ -43,6 +43,7 @@ class Booking {
 		partyPackage nullable:true
 		partyTheme nullable:true
 		comments nullable:true	
+		office nullable:true
     }
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()

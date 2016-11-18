@@ -20,7 +20,7 @@ class Notification {
 	Double totalPrice
 	Integer totalCount
 	Integer queuedCount
-	
+	Office office
 	long createdBy
 	long lastUpdatedBy
 	Date dateCreated
@@ -29,6 +29,7 @@ class Notification {
     static constraints = {
 		lastUpdatedBy nullable:true, editable:false
 		createdBy nullable:true, editable:false		
+		office nullable:true
     }
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
