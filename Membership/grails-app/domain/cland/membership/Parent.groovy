@@ -66,6 +66,7 @@ class Parent {
 			activecoupon:cbcApiService.findActiveCoupon(this, null, 0),
 			notifications:notifications*.toMap(),
 			createdbyname:getCreatedByName(),
+			office:[id:office?.id,name:office?.name,code:office?.code],
 			lastupdatedbyname:getLastUpdatedByName()]
 	}
 	def toAutoCompleteMap(){

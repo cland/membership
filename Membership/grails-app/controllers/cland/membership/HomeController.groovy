@@ -7,7 +7,8 @@ class HomeController {
 	def groupManagerService
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def index = {
-		if(groupManagerService.currentUser.toString().equalsIgnoreCase("Self Register")){			
+		if(groupManagerService.currentUser.toString().equalsIgnoreCase("Self Register")
+			|| groupManagerService.currentUser.toString().equalsIgnoreCase("Self Register02")){			
 			redirect (url:cbcApiService.getBasePath(request) + "selfregister", permanent:true)
 		}
 	}

@@ -1,7 +1,9 @@
 <%@ page import="cland.membership.SystemRoles" %>
+<g:set var="cbcApiService" bean="cbcApiService"/>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="warn_minutes" value="${settingsInstance?.notifytime }"/>
 <g:set var="done_minutes" value="${settingsInstance?.donetime }"/>
+<g:set var="primaryOffice" value="${cbcApiService?.getUserPrimaryOffice()}"/>
 <% def childcount=settingsInstance?.newchildcount %>
 
 <!DOCTYPE html>
@@ -103,7 +105,7 @@ var cbc_params = {
 				</div>
 			</g:if>			
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
-				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Register Form</legend>			
+				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Register Form: ${primaryOffice?.name}</legend>			
 				<div id="tabs" style="display: none;">
 					<ul style="display:none;">						
 						<li><a href="#tab-1">New Client</a></li>											

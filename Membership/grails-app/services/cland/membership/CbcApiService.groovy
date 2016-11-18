@@ -43,14 +43,14 @@ class CbcApiService {
 	
 	String getUserFullname(Long id){
 		Person user = groupManagerService.getUser(id)
-		if(user) return user?.person.toString()
+		if(user) return user?.toString()
 		return ""
 	}
 	Office getUserPrimaryOffice(Person user = null){
 		if(user == null){
 			user = springSecurityService.getCurrentUser()
 		}
-		return user?.person?.office //getPrimaryOffice()
+		return user?.office //getPrimaryOffice()
 	} //end function
 	/*
 	 * Returns the office where current event is taking place
@@ -64,7 +64,7 @@ class CbcApiService {
 		}
 		if(groupManagerService.isAdmin()) return Office.list()
 		List offices = []
-		offices.add(user?.person?.getPrimaryOffice())
+		offices.add(user?.office)
 		//TODO: Search for office the user is elligible to work with. NB: groups will have the final say if user is actually allowed.
 		
 		return offices
@@ -132,7 +132,7 @@ class CbcApiService {
 		}
 		def results = Office.createCriteria().list(params){
 			createAlias('staff',"s")
-			eq('s.id',user?.person?.id)
+			eq('s.id',user?.id)
 		}
 	}
 	def getStaffForOffice(Office office=null,params){
@@ -150,19 +150,7 @@ class CbcApiService {
 //		tmp.removeAll([null])
 //		return tmp // office?.staff*.getLoginDetails()		
 	} //end getStaffForOffice
-	
-	def getCaseWorkers(Office office, params){
-		office = validateOfficeRights(office)
-		//Set<RoleGroup> grps = getAuthorities()
-		def results = Person.createCriteria().list(params) {
-				person {
-					eq('office.id',office?.id)
-				}
-				
-			//order('office.name','asc')
-		}
-		return results?.findAll{groupManagerService.isOfficeCaseWorker(office, it) == true}
-	}//
+
 	
 	def getClientsForOffice(Office office = null, params){
 		office = validateOfficeRights(office)

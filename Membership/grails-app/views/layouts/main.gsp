@@ -1,4 +1,5 @@
 <%@ page import="cland.membership.SystemRoles" %>
+<g:set var="cbcApiService" bean="cbcApiService"/>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -46,6 +47,11 @@
 					<span style="color:#000;">Logged in as:</span> <sec:loggedInUserInfo field="username" />					
 				</sec:ifLoggedIn> 
 				<sec:ifNotLoggedIn>Anonymous</sec:ifNotLoggedIn>
+				<br>
+					<label><span class="r-arrow"></span></label>
+					<span style="color:#000;">Office: </span>
+					<g:set var="primaryOffice" value="${cbcApiService?.getUserPrimaryOffice()}"/>
+					<g:link controller="office" action="show" id="${primaryOffice?.id}" >${primaryOffice }</g:link>
 			</div>
 		</div>	
 		</div>

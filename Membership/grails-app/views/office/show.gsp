@@ -85,24 +85,7 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${officeInstance?.lastUpdatedByName}">
-				<li class="fieldcontain">
-					<span id="lastUpdatedBy-label" class="property-label"><g:message code="office.lastUpdatedBy.label" default="Last Updated By" /></span>
-					
-						<span class="property-value" aria-labelledby="lastUpdatedBy-label"><g:fieldValue bean="${officeInstance}" field="lastUpdatedByName"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${officeInstance?.createdByName}">
-				<li class="fieldcontain">
-					<span id="createdBy-label" class="property-label"><g:message code="office.createdBy.label" default="Created By" /></span>
-					
-						<span class="property-value" aria-labelledby="createdBy-label"><g:fieldValue bean="${officeInstance}" field="createdByName"/></span>
-					
-				</li>
-				</g:if>
-			
+				
 				<g:if test="${officeInstance?.history}">
 				<li class="fieldcontain">
 					<span id="history-label" class="property-label"><g:message code="office.history.label" default="History" /></span>
@@ -132,34 +115,7 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${officeInstance?.dateCreated}">
-				<li class="fieldcontain">
-					<span id="dateCreated-label" class="property-label"><g:message code="office.dateCreated.label" default="Date Created" /></span>
-					
-						<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${officeInstance?.dateCreated}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${officeInstance?.lastUpdated}">
-				<li class="fieldcontain">
-					<span id="lastUpdated-label" class="property-label"><g:message code="office.lastUpdated.label" default="Last Updated" /></span>
-					
-						<span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${officeInstance?.lastUpdated}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${officeInstance?.staff}">
-				<li class="fieldcontain">
-					<span id="staff-label" class="property-label"><g:message code="office.staff.label" default="Staff" /></span>
-					
-						<g:each in="${officeInstance.staff}" var="s">
-						<span class="property-value" aria-labelledby="staff-label"><g:link controller="person" action="show" id="${s.id}">${s?.encodeAsHTML()}</g:link></span>
-						</g:each>
-					
-				</li>
-				</g:if>
+				
 			
 			</ol>
 			<br/><h1>Groups</h1>

@@ -349,12 +349,14 @@ var cbc_params = {
 					  var deadline = new Date(Date.parse(timein));
 					  var clienttype = el.child.parent.clienttype.name;
 					  var clienttypeflag = "";
+					  var office = el.office.name
+					  var officeid = el.office.id
 					  if(clienttype == "GymMember") clienttypeflag = " <b>(GYM)</b>";
 						  
 					 // deadline.setHours(deadline.getHours() + 2)
 					  var photolink = "${request.contextPath}/attachmentable/show/" + photoid;
 					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
-					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno,clienttypeflag)
+					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno,clienttypeflag,office)
 					  var countup =  true;
 					 
 					  var selected_hr = el.duration.selectedhours;
@@ -375,7 +377,7 @@ var cbc_params = {
 		
 		}
 
-		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno,clienttypeflag){
+		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno,clienttypeflag,office){
 			var lnk = "${request.contextPath}/child/show/" + divid;
 			var html = '<div id="person_' + visit_id + '" class="person-card float-left">' +
 			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
@@ -405,7 +407,7 @@ var cbc_params = {
 				'<div class="details-body">' +
 				  '<span><small><b>WBN:</b> ' + visitno + '</small></span><br/>' +
 				  '<span><small><b>TIME IN:</b> <br/>' + timein + '</small></span><br/>' +
-				  '<span class="hide"><b>Extra:</b> ' + extratime + '</span>' +
+				  '<span class=""><small><b>Office:</b> ' + office + '</small></span>' +
 				  '<br/><span>' +
 					'<input type="submit" class="button2" id="btn_notify_' + divid +'" onclick="sendNotification(\'' + divid + '\',\'' + visit_id + '\')" name="btn_' + divid + '" value="Notify" />' +
 					 '&nbsp;<input type="submit" class="button2" id="btn_checkout_' + visit_id +'" onclick="checkOut(\'' + visit_id + '\',\'Complete\')" name="btn_' + divid + '" value="Check-Out" />' +

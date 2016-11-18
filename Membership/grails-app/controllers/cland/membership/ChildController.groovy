@@ -11,6 +11,7 @@ import org.joda.time.DateTime
 class ChildController {
 	def springSecurityService
 	def cbcApiService
+	def groupManagerService
     static allowedMethods = [save: "POST", update: "POST", delete: "DELETE"]
 
     def index(Integer max) {
@@ -213,7 +214,13 @@ class ChildController {
 	
 	/** CUSTOM FUNCTIONS **/
 	def visits(params){
-		def activeVisits = Visit.findAllByStatus("Active")
+		def office = cbcApiService.getOfficeContext()
+		def activeVisits = null
+		if(groupManagerService.isAdmin()){
+			activeVisits = Visit.findAllByStatus("Active")
+		}else{
+			activeVisits = Visit.findAllByStatusAndOffice("Active",office) //Visit.findAllByStatus("Active")
+		}
 		render activeVisits*.toMap() as JSON
 	}
 	def birthdaylist(params){

@@ -30,9 +30,9 @@
 						<th>Duration</th>
 						<th>Effective Hours</th>
 						<th>Contact No.</th>
-						<th>Status</th>	
-						
+						<th>Status</th>							
 						<th>Wrist Band No.</th>
+						<th>Office</th>
 						<th>Actions</th>
 					
 					</tr>
@@ -52,6 +52,7 @@
 						<td>
 							${v?.visitNo }																
 						</td>
+						<td>${v?.office }</td>
 						<td>
 						<g:link controller="visit" action="show" id="${v?.id}">View</g:link>
 						</td>

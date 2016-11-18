@@ -106,6 +106,7 @@ class Visit {
 				businesshours:getVisitHours()
 				],			
 			coupon:cbcApiService.findCouponFor(this)?.toReportMap(),
+			office:[id:office?.id,name:office?.name,code:office?.code],
 			params:params]
 	}
 	def toAutoCompleteMap(){		
@@ -123,6 +124,7 @@ class Visit {
 		month:startmonth,
 		day:startday,
 		week:startweek,
+		office:[id:office?.id,name:office?.name,code:office?.code],
 		businesshours:getVisitHours(),
 		clienttype:[id:child?.parent?.clientType?.id,
 			name:child?.parent?.clientType?.name,

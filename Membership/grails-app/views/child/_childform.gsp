@@ -120,7 +120,8 @@
 					<attachments:each bean="${activeVisit}">
 						<img src="${request.contextPath}/attachmentable/show/${attachment?.id }" style="width:300px;"/><br/>
 					</attachments:each>
-					<label>Check-in date-time: </label> ${activeVisit?.starttime?.format("dd MMM yyyy HH:mm")}<br/>
+					<label>Check-in date-time: </label> ${activeVisit?.starttime?.format("dd MMM yyyy HH:mm")} <br/>
+					<label>Office: </label> ${activeVisit?.office} <br/>
 					<input type="submit" class="button" id="btn_notify" onclick="sendNotification('${activeVisit?.child?.id}','${activeVisit?.id}')" name="btn_notify" value="Notify" />
 				 	<input type="submit" class="button" id="btn_checkout" onclick="checkOut('${activeVisit?.id}','Complete')" name="btn_checkout" value="Check-Out" />
 				 	<input type="submit" class="button" id="btn_view" onclick="checkOut('${activeVisit?.id}','Cancelled')" name="btn_view" value="Cancel" />
@@ -138,7 +139,8 @@
 						<th>Effective Hours</th>
 						<th>Contact No.</th>
 						<th>Status</th>						
-						<th>Wrist Band No.</th>							
+						<th>Wrist Band No.</th>	
+						<th>Office</th>						
 					</tr>
 				</thead>
 				<g:each in="${visits}" var="c">
@@ -150,9 +152,8 @@
 						<td>${c?.visitHours}</td>
 						<td>${c?.contactNo}</td>
 						<td>${c?.status}</td>						
-						<td> ${c?.visitNo }
-							
-						</td>
+						<td>${c?.visitNo }</td>
+						<td>${c?.office }</td>
 					</tr>
 				</g:each>
 			</table>

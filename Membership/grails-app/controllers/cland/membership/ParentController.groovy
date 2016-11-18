@@ -153,7 +153,8 @@ class ParentController {
 					//DateTime timein = DateTime.parse(params.child.visit.time[index], DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm")) //.parseDateTime(params.child.visit.time[index])
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
 					def _photokey = "visitphoto" + i
-					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey)
+					def _visitno = params.get("child.visit.visitno"+ i)
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey,visitNo:_visitno,office:office)
 					child.addToVisits(visit)
 					
 					//attachUploadedFilesTo(visit,["visitphoto" + index])
@@ -395,6 +396,7 @@ class ParentController {
 		parentInstance.clientType = Keywords.findByName("Standard")
 		def num = cbcApiService.generateIdNumber(new Date(),5)
 		parentInstance.membershipNo = num
+		parentInstance.office = office
 		Person person1 = new Person(params.parent.person1)
 		person1.office = office
 		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase(), person1.lastName.toLowerCase())
@@ -452,6 +454,7 @@ class ParentController {
 				}
 				groupManagerService.addUserToGroup(p,office,"ROLE_USER")
 				child.person = p
+				child.office = office
 				attachUploadedFilesTo(p,["profilephoto" + i])
 				if(parentInstance.children){
 					child.accessNumber = parentInstance.children.size() + 1
@@ -464,7 +467,7 @@ class ParentController {
 					Date timein = dfmt.parse(params.get("child.visit.time"+ i))
 					def _visitno = params.get("child.visit.visitno"+ i)
 					def _photokey = "visitphoto" + i
-					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey,visitNo:_visitno)
+					def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,photoKey:_photokey,visitNo:_visitno,office:office)
 					child.addToVisits(visit)					
 					newvisits.put(p?.id , _photokey)
 				}
@@ -580,7 +583,7 @@ class ParentController {
 	}
 	@Transactional
 	def checkin(params){
-		def current_office = cbcApiService.userPrimaryOffice()
+		def office = cbcApiService.getOfficeContext()
 		def result = []
 		def msg = ""		
 		def parentInstance = null
@@ -596,7 +599,7 @@ class ParentController {
 				Date timein = new SimpleDateFormat("dd-MMM-yyyy HH:mm").parse(_starttime)
 				def _visitno = params?.get("visitno" + childInstance?.id)
 				def visit = new Visit(status:"Active",starttime:timein,timerCheckPoint:timein,contactNo:_contactno,visitNo:_visitno)
-				visit.office = current_office
+				visit.office = office
 				childInstance.addToVisits(visit)								
 				
 				if(!childInstance.save(flush:true)){
@@ -637,6 +640,7 @@ class ParentController {
 		parentInstance.clientType = Keywords.findByName("Standard")
 		def num = cbcApiService.generateIdNumber(new Date(),5)
 		parentInstance.membershipNo = num
+		parentInstance.office = office
 		Person person1 = new Person(params.parent.person1)
 		person1.office = office
 		person1.username = cbcApiService.generateUsername(person1.firstName.toLowerCase(), person1.lastName.toLowerCase())
@@ -694,6 +698,7 @@ class ParentController {
 				}
 				groupManagerService.addUserToGroup(p,office,"ROLE_USER")
 				child.person = p
+				child.office = office
 				//attachUploadedFilesTo(p,["profilephoto" + i])
 				if(parentInstance.children){
 					child.accessNumber = parentInstance.children.size() + 1
