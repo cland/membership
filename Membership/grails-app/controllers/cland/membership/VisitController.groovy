@@ -10,12 +10,14 @@ import org.joda.time.DateTime
 
 @Transactional(readOnly = true)
 class VisitController {
-
+	def groupManagerService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 50, 100)
 		if(!params?.sort) params.sort = "starttime"
+		if(!params?.order) params.order = "desc"
         respond Visit.list(params), model:[visitInstanceCount: Visit.count()]
     }
 	def dailyreport(Integer max) {
@@ -24,11 +26,13 @@ class VisitController {
 	
 	def dailyreportdata(params){
 		//Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+		def office = cbcApiService.getOfficeContext()
 		Settings settings = Settings.list().first()
 		def _status = (params?.status ? params?.status : "Complete")
 		def startdate = params?.startDate_open
 		def enddate = params?.endDate_open
-		
+		def seloffice = Office.get(params?.get("office.id"))
+	
 		if(startdate != null & startdate != "") {
 			startdate = parseDate(startdate,"dd-MMM-yyyy")
 		} else {			
@@ -42,9 +46,14 @@ class VisitController {
 		} else enddate = (new Date())
 		
 		def visits = Visit.createCriteria().list(params){
+			
 			eq("status",_status)
 			if(startdate != null & enddate != null){				
 				between('starttime', startdate, enddate)
+			}
+			if(seloffice != null){	
+				createAlias('office','o')
+				eq("o.id",seloffice?.id)
 			}
 			order('starttime','desc')
 		}
