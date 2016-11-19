@@ -1,3 +1,5 @@
+<g:set var="cbcApiService" bean="cbcApiService"/>
+<g:set var="primaryOffice" value="${cbcApiService?.getUserPrimaryOffice()}"/>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="isDebug" value="${settingsInstance?.debug }"/>
 <g:set var="smsTestNumber" value="${settingsInstance?.smsTestNumber }"/>
@@ -180,13 +182,18 @@ var cbc_params = {
 				var _body = $("#" + _id + "_body").text();
 				var _title = $("#" + _id + "_title").text();
 				var _name = $("#inputName").val();
-				if(_name == "") _name = "${childInstance?.parent?.person1 }"				
+				if(_name == "") _name = "${childInstance?.parent?.person1 }";
+
+				var _office = "${primaryOffice?.name}";
+				var _officenum = "${primaryOffice?.contactNumber}"
 				$("#templateId").prop("value",el.prop("value"));
 				$("#inputMessage").val(
 						_body.replace(/{{parentname}}/gi,_name).
 						replace(/{{parentno}}/gi,"${childInstance?.parent?.membershipNo }").
 						replace(/{{childname}}/gi,"${childInstance?.person }").
-						replace(/{{starttime}}/gi,"${starttime }")
+						replace(/{{starttime}}/gi,"${starttime }").
+						replace(/{{office}}/gi,_office).
+						replace(/{{officenumber}}/gi,_officenum)
 						)
 			}
 		}
@@ -240,10 +247,8 @@ var cbc_params = {
 			return false;
 		}
 		function sendToStownCallback(data){
-			$(".send-wait").append("<br/><p style='font-weight:bold;color:green;'>Saving notification...</p>")			
-			console.log(data.response_code + " : " + data.response_msg);
-			//$("#message").html("<p style='font-weight:bold;color:green;'>" + data.response_code + " : " + data.response_msg + "</p>");
-			//TODO: if success full we need to save a record to the notifications database list
+			$(".send-wait").append("<br/><p style='font-weight:bold;color:green;'>Saving notification...</p>")
+			//$("#message").html("<p style='font-weight:bold;color:green;'>" + data.response_code + " : " + data.response_msg + "</p>");			
 			saveNotification(data)
 		}
 		function saveNotification(data){
