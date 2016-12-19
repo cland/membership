@@ -238,7 +238,7 @@ class ChildController {
 			if(startdate > enddate) enddate = startdate
 			enddate = (new DateTime(enddate).plusDays(1)).toDate()
 		} else {
-			enddate = (new DateTime().plusMonths(2).toDate())
+			enddate = (new DateTime().plusMonths(1).toDate())
 		}
 		
 		def startyear = new DateTime(startdate).getYear()
@@ -255,10 +255,13 @@ class ChildController {
 				le('p.birthdayofyear',enddayofyear) //if same year as start year
 			}else if(startyear < endyear){
 				or{
-					between('p.birthdayofyear',startdayofyear,new DateTime(parseDate("31-Dec-" + startyear.toString(),"dd-MMM-yyyy")).dayOfYear().get())
-					between('p.birthdayofyear',new DateTime(parseDate("01-Jan-" + endyear.toString(),"dd-MMM-yyyy")).dayOfYear().get(),enddayofyear)
+					//between('p.birthdayofyear',startdayofyear,new DateTime(parseDate("31-Dec-" + startyear.toString(),"dd-MMM-yyyy")).dayOfYear().get())
+					ge('p.birthdayofyear',startdayofyear)
+					//between('p.birthdayofyear',new DateTime(parseDate("01-Jan-" + endyear.toString(),"dd-MMM-yyyy")).dayOfYear().get(),enddayofyear)
+					le('p.birthdayofyear',enddayofyear)
 				}
-			}		
+			}	
+			//order('p.birthyear','asc')	
 			order('p.birthmonth','asc')
 			order('p.birthday','asc')
 		}
