@@ -263,8 +263,9 @@ class ChildController {
 			}	
 			//order('p.birthyear','asc')	
 			order('p.birthmonth','asc')
-			order('p.birthday','asc')
+			order('p.birthday','asc')					
 		}
+		
 		render blist*.toMap() as JSON
 	}
 	private parseDate(date,fmt) {

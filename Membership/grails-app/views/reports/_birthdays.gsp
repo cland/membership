@@ -21,7 +21,7 @@
 
 <script>
 $(document).ready(function() {	
-	birthdaylist()
+	//birthdaylist()
 });
 
 function birthdaylist(){
@@ -37,7 +37,7 @@ function birthdaylist(){
 		cache: false
 	 })
 	  .done(function(data) {				  	
-			 $.each(data,function(i,elem){
+			 $.each(data,function(i,elem){	 				 
 				 _btnfunc = "sendNotification('" + elem.id + "','0'); return false;";
 				 _notifybtn = '<a href="" class="button2" onclick="' + _btnfunc + '">Send a Message</a>'
 				 _tbody.append("<tr><td>" + elem.person.birthdate + "</td><td><a href='${request.contextPath}/child/show/" + elem.id + "'>" + elem.person.fullname + "</a></td><td>" + elem.person.age + "</td><td>" + elem.person.gender.label + "</td><td>" + elem.visitcount + "</td><td>" + elem.parent.person1.mobileno + "</td><td>" + elem.parent.person1.email + "</td><td>" + _notifybtn + "</td></tr>")

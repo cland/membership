@@ -163,6 +163,8 @@ class Person implements Serializable {
 			lastupdatedbyname:getLastUpdatedByName(),
 			birthdate:dateOfBirth?.format("dd-MMM"),
 			birthyear:dateOfBirth?.format("yyyy"),
+			numbirthmonth:birthmonth,
+			numbirthday :birthday,
 			isstaff:staffMemberStatus,
 			photoid:getProfilePhotoId(),
 			params:params]

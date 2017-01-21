@@ -209,7 +209,8 @@
 		$(".visit-photo-input").hide();
 		$(".child-form-entry").hide();
 		$("#child1").show();
-		$(".child1").prop("required",true);
+		var child1id =".child1"; 		
+		//$(".child1").prop("required",true);
 		$("#rmicon-child1").hide();
 		$(document).on("click","#next-child-btn",function(){
 			var childid = $("#curchild-count").prop("value");
@@ -220,19 +221,36 @@
 			$(".textbox-child" + nxtchild).prop("disabled",false);
 			$("#child-firstname-" + nxtchild).focus();
 			$("#curchild-count").prop("value",nxtchild);
-			
+
+			//then we must ensure first child has required information
+			$(child1id).prop("required",true);			
 		});
 		$(document).on("click",".rm-child-icon",function(){
 			var id = $(this).prop("id").replace(/rmicon-/gi,"");
 			var i = id.replace(/child/gi,"");
-			$("#curchild-count").prop("value",(parseInt(i)-1));
+			var curchildcount = parseInt(i)-1;
+			$("#curchild-count").prop("value",curchildcount);
 			$("#" + id).hide();
 			$("." + id).prop("disabled",true);
 			$(".textbox-" + id).prop("disabled",true);
-			
+
+			if(curchildcount == 1) {
+				setChild1Validation();
+			}
+		});
+		$(document).on("blur",".child1",function(){
+			setChild1Validation();
 		});
 	})
-	
+	function setChild1Validation(){
+		var f = $("#child-firstname-1").prop("value");
+		var l = $("#child-lastname-1").prop("value");
+		if(f !== "" || l !== "") 
+			$(".child1").prop("required",true);
+		else {
+			$(".child1").prop("required",false);
+		}
+	}
 	function sendNotification(_child_id,_visit_id){		
 		 var _link = "${g.createLink(controller: 'harare', action: 'smsdialogcreate')}?cid=" + escape(_child_id) + "&vid=" + _visit_id ;
 	
