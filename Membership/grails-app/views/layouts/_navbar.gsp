@@ -10,6 +10,7 @@
 			</sec:ifAnyGranted>
 			<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER }">
 				<li><a class="list" href="${request.contextPath}/reports/">Reports</a></li>
+				<li><a class="list" href="${request.contextPath}/partner/">Partners</a></li>
 			</sec:ifAnyGranted>
 			<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER }">	
 				<li><a class="list" href="${request.contextPath}/settings/edit/1">Settings</a></li>	
