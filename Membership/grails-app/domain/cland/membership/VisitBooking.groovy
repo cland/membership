@@ -12,6 +12,7 @@ class VisitBooking {
 	//Person person
 	Parent parent
 	Date bookingDate
+	Integer bookingDuration
 	String referenceNo
 	Office office
 	String comments
@@ -31,7 +32,11 @@ class VisitBooking {
 		comments nullable:true
 		office nullable:true
 		referenceNo unique:true
+		bookingDuration min:1, max:5
     }
+	static mapping = {
+		comments type : 'text'
+	}
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

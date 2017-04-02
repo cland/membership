@@ -45,6 +45,10 @@ class Booking {
 		comments nullable:true	
 		office nullable:true
     }
+	
+	static mapping = {
+		comments type : 'text'
+	}
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

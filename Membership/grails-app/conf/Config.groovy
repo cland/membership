@@ -62,16 +62,7 @@ grails {
 }
 
 grails {
-    mail {
-        host = "smtp.gmail.com"
-        port = 465
-        username = "tagumi.solutions@gmail.com"
-        password = "Arthur50"
-        props = ["mail.smtp.auth":"true",
-                "mail.smtp.socketFactory.port":"465",
-                "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-                "mail.smtp.socketFactory.fallback":"false"]
-    }
+    
 }
 
 grails.converters.encoding = "UTF-8"
@@ -112,6 +103,16 @@ environments {
 		}
 		
         grails.logging.jul.usebridge = true
+		mail {
+			host = "smtp.gmail.com"
+			port = 465
+			username = "tagumi.solutions@gmail.com"
+			password = "Arthur50"
+			props = ["mail.smtp.auth":"true",
+					"mail.smtp.socketFactory.port":"465",
+					"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+					"mail.smtp.socketFactory.fallback":"false"]
+		}
     }
     production {
         grails.logging.jul.usebridge = false
@@ -168,3 +169,11 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 
 grails.plugin.springsecurity.logout.postOnly = false
 grails.attachmentable.poster.evaluator = { getPrincipal() }
+
+grails.plugin.springsecurity.useSecurityEventListener = true
+grails.plugin.springsecurity.onAbstractAuthenticationFailureEvent = { e, appCtx ->
+   println "\nERROR auth failed for user $e.authentication.name: $e.exception.message\n"
+}
+log4j = {
+	//debug 'org.springframework.security'
+ }

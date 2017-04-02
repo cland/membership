@@ -31,6 +31,8 @@ class Child {
     }
 	static mapping = {
 		person cascade:'all'
+		medicalComments type: 'text'
+		comments type : 'text'
 	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()

@@ -26,8 +26,9 @@
 		<a href="#show-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
 			<ul>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				
+				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
+					<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
+				</sec:ifAnyGranted>							
 			</ul>
 		</div>
 		<div id="show-parent" class="content scaffold-show" role="main">

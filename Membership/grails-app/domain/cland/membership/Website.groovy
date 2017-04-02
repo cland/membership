@@ -16,4 +16,8 @@ class Website {
 		sendFrom nullable:true
 		subjectTemplate nullable:true
     }
+	
+	static mapping = {
+		bodyTemplate type:'text'
+	}
 }

@@ -30,7 +30,9 @@ class ParentController {
 		params.sort = "person1.lastName"
 		params.order = "asc"
 		params.ignoreCase = true
-        respond Parent.list(params), model:[parentInstanceCount: Parent.count()]
+		if(groupManagerService.isStaff(null,null)){
+			respond Parent.list(params), model:[parentInstanceCount: Parent.count()]
+		}
 		//respond _result, model:[parentInstanceCount: _count]
     }
 

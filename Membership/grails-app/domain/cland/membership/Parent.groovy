@@ -34,6 +34,9 @@ class Parent {
 		history nullable:true,editable:false
 		office nullable:true
     }
+	static mapping = {
+		comments type:'text'
+	}
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

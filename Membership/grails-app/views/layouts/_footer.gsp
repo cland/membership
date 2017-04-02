@@ -22,4 +22,8 @@
 <g:link controller="logout" action="index" >Logout</g:link>
 </sec:ifLoggedIn>
 <br/>
-<div class="copyright"><g:meta name="app.name"/> version: <g:meta name="app.version"/> | <g:copyright startYear="2016"> Crafted by: <span><a href="http://www.tagumiinvestments.com/solutions.html" target="_blank" style="color:green;font-weight:bold;">Tagumi Solutions</a></span></g:copyright> | <span id='time'></span></div>
+<div class="copyright">
+<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
+	<g:meta name="app.name"/> version: <g:meta name="app.version"/> | 
+</sec:ifAnyGranted>
+<g:copyright startYear="2016"> Crafted by: <span><a href="http://www.tagumiinvestments.com/solutions.html" target="_blank" style="color:green;font-weight:bold;">Tagumi Solutions</a></span></g:copyright> | <span id='time'></span></div>

@@ -4,6 +4,37 @@
 
 	<g:set var="isEditMode" value="true"/>
 	<fieldset>
+		<legend>Setup Your Login Details</legend>
+		<div class="table">
+			<div class="row">
+				<div class="cell"><label id="">Email:</label></div>
+				<div class="cell">
+					<span class="property-value" aria-labelledby="home-label">
+						<g:textField type="email" id="parentemail" name="parent.person1.email" value="" required=""  placeholder="Enter a valid email address"/>						
+					</span>
+				</div>	
+						
+			</div>
+			<div class="row">
+				<div class="cell"><label id="">Password:</label></div>
+				<div class="cell">
+					<span class="property-value" aria-labelledby="home-label">
+						<g:field type="password" name="parent.person1.password" required="" value=""/>
+					</span>
+				</div>	
+			</div>
+			<div class="row">	
+				<div class="cell"><label id="">Re-type password:</label></div>
+				<div class="cell">
+					<span class="property-value" aria-labelledby="home-label">
+						<g:field type="password" name="parent.person1.passwordConfirm" required="" value=""/>
+					</span>
+				</div>	
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
 	<legend >Parent/Guardian</legend>
 		<div class="table">
 			<div class="row">
@@ -27,13 +58,15 @@
 						<g:textField name="parent.person1.lastName" required="" value=""/>
 					</span>
 				</div>
-				<div class="cell"><label id="">Email:</label></div>
 				<div class="cell">
-					<span class="property-value" aria-labelledby="home-label">
-						<g:textField type="email" id="parentemail" name="parent.person1.email" value="" required=""/>
-						
-					</span>
-				</div>			
+					<label for="office">
+						<g:message code="person.office.label" default="Preferred Wiggly Toes Centre:" />
+						<span class="required-indicator">*</span>
+					</label>
+				</div>
+				<div class="cell">					
+					<g:select id="office" name="office.id" from="${cland.membership.Office.list()}" optionKey="id" required="" value="1" class="many-to-one" noSelection="['': '']"/>
+				</div>				
 			</div>
 	
 			<div class="row">
@@ -54,6 +87,7 @@
 						</g:radioGroup>
 				</div>			
 			</div>	
+			
 		</div>	
 	</fieldset>
 	<fieldset><legend>Emergency Contact Details</legend>
@@ -79,6 +113,30 @@
 				</div>			
 			</div>
 		</div>		
+	</fieldset>
+	<fieldset><legend>Our Partners</legend>
+		<div class="table">
+			<div class="row">
+				<div class="cell"><label id="">Select one of our partners that you are a member of:</label></div>
+				<div class="cell">
+					<% def partners = cland.membership.Partner.list().sort{it?.name} %>
+						<g:radioGroup required=""
+							values="${partners?.id}"
+							labels="${partners}" 
+							value="1"
+							name="partner.id">
+							${it.radio} <g:message code="${it.label}" />
+						</g:radioGroup>
+				</div>	
+			</div>
+			<div class="row" id="row-membershipno" style="">
+				
+				<div class="cell"><label id="">Enter your membership number:</label></div>
+				<div class="cell">
+					<g:textField class="membershipno" name="MembershipNo" placeholder="Membership Number"  value="" id="membershipno"/>
+				</div>
+			</div>
+		</div>
 	</fieldset>
 	<fieldset><legend>Children</legend>
 		<div class="table">
@@ -120,32 +178,10 @@
 			</div>			
 		</div>
 	</fieldset>
-	<fieldset><legend>Our Partners</legend>
-		<div class="table">
-			<div class="row">
-				<div class="cell"><label id="">Select one of our partners that you are a member of:</label></div>
-				<div class="cell">
-					<% def partners = cland.membership.lookup.Keywords.findByName("PartnerIndustry")?.values?.sort{it?.label} %>
-						<g:radioGroup required=""
-							values="${partners?.name}"
-							labels="${partners}" 
-							name="partnerType">
-							${it.radio} <g:message code="${it.label}" />
-						</g:radioGroup>
-				</div>	
-			</div>
-			<div class="row" id="row-membershipno" style="display:none">
-				
-				<div class="cell"><label id="">Enter your membership number:</label></div>
-				<div class="cell">
-					<g:textField class="membershipno" name="MembershipNo" placeholder="Membership Number"  value="" id="membershipno"/>
-				</div>
-			</div>
-		</div>
-	</fieldset>
+	
 <script>
 	$(document).ready(function(){
-		$("[name='partnerType']:radio").on("click",function(){
+		$("[name='partner.id']:radio").on("click",function(){
 			if($(this).prop("value") != "None"){
 				$("#row-membershipno").show();
 				}else{

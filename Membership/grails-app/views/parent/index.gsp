@@ -1,4 +1,4 @@
-
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Parent" %>
 <!DOCTYPE html>
 <html>
@@ -10,8 +10,10 @@
 	<body>
 		<a href="#list-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
-			<ul>				
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+			<ul>	
+				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">			
+					<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				</sec:ifAnyGranted>
 			</ul>
 		</div>
 		<div id="list-parent" class="content scaffold-list" role="main">

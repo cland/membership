@@ -32,7 +32,9 @@ class Partner {
 		comments nullable: true
 		partnerIndustry nullable:true
     }
-	
+	static mapping = {
+		message type : 'text'
+	}
 	def beforeInsert = {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

@@ -78,13 +78,11 @@ function checkIn(_timein,_contactno, _values){
 		cache: false
 	 })
   .done(function(data) {	 
-	  if(data.result = "success"){		 
-		  if(data.result === "success"){
-			  var panel = $("#livepanel");
-			  panel.html("")
-			  clearSearchForm();
-			  initVisits(panel);
-		  }
+	  if(data.result == "success"){		 
+		  var panel = $("#livepanel");
+		  panel.html("")
+		  clearSearchForm();
+		  initVisits(panel);
 	  }else{
 		  alert("Failed to check in clients: '" + data.message + "'")
 		}

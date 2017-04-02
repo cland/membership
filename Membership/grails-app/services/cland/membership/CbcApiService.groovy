@@ -113,11 +113,20 @@ class CbcApiService {
 	
 	
 	String generateIdNumber(Date birthday,Integer length){
-		String charset = (('A'..'Z') + ('0'..'9')).iterator().join()
-		
+		return generateRandomString(birthday,"yyMMdd",length)
+		/*
+		String charset = (('A'..'Z') + ('0'..'9')).iterator().join()		
 		String randomString = RandomStringUtils.random(length, charset.toCharArray())
 		if(birthday == null) birthday = new Date();
 		return birthday?.format("yyMMdd") + randomString
+		*/
+	}
+	String generateRandomString(Date d, String fmt, Integer length){
+		String charset = (('A'..'Z') + ('0'..'9')).iterator().join()		
+		String randomString = RandomStringUtils.random(length, charset.toCharArray())
+		if(d == null) return randomString;
+		
+		return d?.format(fmt) + randomString
 	}
 	private static int findUpperIndex(int offset, int max, int total) {
 		max = offset + max - 1

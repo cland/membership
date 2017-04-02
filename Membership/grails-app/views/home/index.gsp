@@ -101,6 +101,13 @@ var cbc_params = {
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>	
 			<div class="wait">Loading, please wait...</div>
+			<sec:ifNotGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">
+				<div style="text-align:center">
+					<img alt="Wiggly Toes Creche, Cockburn in partnership with Goodlife Health Clubs" src="http://www.wigglytoesipc.com/images/promo1-goodlife.png">
+					<br/>
+					<input type="button" class="button" onclick="document.location.href='${request.contextPath}/visitBooking/create'" name="bookvisit" value="Book a visit" style="font-size: 1em;"/>
+				</div>
+			</sec:ifNotGranted>
 			<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">		
 			<fieldset style="background: rgb(248, 70, 70) none repeat scroll 0% 0%;">
 				<legend style="background:#fff;border: solid 2px rgb(248, 70, 70)">Quick Check-In Form</legend>			

@@ -1,5 +1,6 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="cland.membership.lookup.*" %>
+<%@ page import="cland.membership.SystemRoles" %>
 <g:set var="person1" value="${parentInstance?.person1}"/>
 <g:set var="person2" value="${parentInstance?.person2}"/>
 <g:set var="isEditMode" value="${mode?.equals("edit") }"/>
@@ -169,9 +170,11 @@
 								<div class="cell border-bottom">
 									<g:textField class="child${index }" name="child.person.firstname${index }" placeholder="First Name"  value="" id="child-firstname-${index }"/><br/>
 									<g:textField class="child${index }" name="child.person.lastname${index }" placeholder="Last Name"  value="" id="child-lastname-${index }"/><br/>
+									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 									<label>Check-in now:</label> 
-									<g:checkBox class="child-checkbox${index }" name="child.checkin${index }" value="Yes" />
-									<g:textField class="child-starttime${index }" name="child.visit.time${index }" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
+										<g:checkBox class="child-checkbox${index }" name="child.checkin${index }" value="Yes" />
+										<g:textField class="child-starttime${index }" name="child.visit.time${index }" placeholder="Date and Time" value="${new Date().format('dd-MMM-yyyy HH:mm')}" id="visit_time${index }" class="datetime-picker"/>
+									</sec:ifAnyGranted>
 								</div>
 								<div class="cell border-bottom">
 									<g:textField class="child${index }" name="child.person.dateOfBirth${index }" placeholder="Date of Birth" id="birth-date${index }" class="datepick_single_past" value=""/>						
@@ -183,11 +186,15 @@
 										name="child.person.gender${index }">
 										${it.radio} <g:message code="${it.label}" />
 									</g:radioGroup>
-									<br/><span class="visit-wbn-input"><br/><g:textField class="child-wbn${index }" name="child.visit.visitno${index }" placeholder="Wrist Band No."  value="" id="visit-visitno-${index }"/></span>
+									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
+										<br/><span class="visit-wbn-input"><br/><g:textField class="child-wbn${index }" name="child.visit.visitno${index }" placeholder="Wrist Band No."  value="" id="visit-visitno-${index }"/></span>
+									</sec:ifAnyGranted>
 								</div>
 								<div class="cell border-bottom">
+									<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 									<label>Profile Photo:</label> <input type="file" name="profilephoto${index }"/><br/>
 									<span class="visit-photo-input"><label>Full Body Photo:</label> <input type="file" name="visitphoto${index }"/><br/></span>
+									</sec:ifAnyGranted>
 									
 								</div>			
 							</div>

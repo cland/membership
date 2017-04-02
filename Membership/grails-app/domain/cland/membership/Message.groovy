@@ -22,6 +22,7 @@ class Message {
 	String outcome
 	Date dateCreated
 	Date lastUpdated
+	String hashcode
     static constraints = {
 		sendCopyTo nullable:true
 		sendBlindCopyTo nullable:true
@@ -30,4 +31,7 @@ class Message {
 		dateSent nullable:true	
 		sendFrom nullable:true	
     }
+	static mapping = {
+		message type : 'text'
+	}
 }

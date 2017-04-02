@@ -22,17 +22,8 @@
 			<table>
 			<thead>
 					<tr>
-					
-						<g:sortableColumn property="partnerCode" title="${message(code: 'partner.partnerCode.label', default: 'Partner Code')}" />
-					
-						<g:sortableColumn property="lastUpdatedBy" title="${message(code: 'partner.lastUpdatedBy.label', default: 'Last Updated By')}" />
-					
-						<g:sortableColumn property="createdBy" title="${message(code: 'partner.createdBy.label', default: 'Created By')}" />
-					
-						<g:sortableColumn property="history" title="${message(code: 'partner.history.label', default: 'History')}" />
-					
-						<g:sortableColumn property="comments" title="${message(code: 'partner.comments.label', default: 'Comments')}" />
-					
+						<g:sortableColumn property="partnerCode" title="${message(code: 'partner.name.label', default: 'Name')}" />
+						<g:sortableColumn property="partnerCode" title="${message(code: 'partner.partnerCode.label', default: 'Partner Code')}" />											
 						<th><g:message code="partner.partnerIndustry.label" default="Partner Industry" /></th>
 					
 					</tr>
@@ -41,16 +32,9 @@
 				<g:each in="${partnerInstanceList}" status="i" var="partnerInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
+						<td><g:link action="show" id="${partnerInstance.id}">${fieldValue(bean: partnerInstance, field: "name")}</g:link></td>
 						<td><g:link action="show" id="${partnerInstance.id}">${fieldValue(bean: partnerInstance, field: "partnerCode")}</g:link></td>
-					
-						<td>${fieldValue(bean: partnerInstance, field: "lastUpdatedBy")}</td>
-					
-						<td>${fieldValue(bean: partnerInstance, field: "createdBy")}</td>
-					
-						<td>${fieldValue(bean: partnerInstance, field: "history")}</td>
-					
-						<td>${fieldValue(bean: partnerInstance, field: "comments")}</td>
-					
+										
 						<td>${fieldValue(bean: partnerInstance, field: "partnerIndustry")}</td>
 					
 					</tr>

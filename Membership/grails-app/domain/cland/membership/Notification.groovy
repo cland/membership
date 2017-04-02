@@ -31,6 +31,9 @@ class Notification {
 		createdBy nullable:true, editable:false		
 		office nullable:true
     }
+	static mapping = {
+		body type : 'text'
+	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId

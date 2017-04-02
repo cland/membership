@@ -41,6 +41,9 @@ class Settings {
 		minmodulo nullable:true
 		reportminmonth nullable:true
     }
+	static mapping = {
+		description type : 'text'
+	}
 	def beforeInsert() {
 		long curId = groupManagerService.getCurrentUserId()
 		if(newchildcount == null) newchildcount = 3

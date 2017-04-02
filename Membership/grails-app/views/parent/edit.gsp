@@ -1,4 +1,5 @@
 <%@ page import="cland.membership.Parent" %>
+<%@ page import="cland.membership.SystemRoles" %>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <% def childcount=settingsInstance?.newchildcount %>
 <!DOCTYPE html>
@@ -12,9 +13,11 @@
 	<body>
 		<a href="#edit-parent" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
-			<ul>				
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+			<ul>
+				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">			
+					<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
+					<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				</sec:ifAnyGranted>
 			</ul>
 		</div>
 		<div id="edit-parent" class="content scaffold-edit" role="main">

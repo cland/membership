@@ -18,6 +18,7 @@ class PartnerContract {
 	String comments
 	
 	Parent parent
+	Partner partner
 	String membershipNo
 	boolean isUserVerified
 	boolean isValidPartnerMember

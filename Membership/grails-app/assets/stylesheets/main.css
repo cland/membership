@@ -468,10 +468,12 @@ th.sortable a,  {
 
 th.asc a {
 	background-image: url(../images/skin/sorted_asc.gif);
+	background-repeat: no-repeat;
 }
 
 th.desc a {
 	background-image: url(../images/skin/sorted_desc.gif);
+	background-repeat: no-repeat;
 }
 
 .odd {
