@@ -37,17 +37,7 @@ class SelfController {
 
 	}
 	def register(){
-		Long pnt = 18L
-		Long partnerid = 1L
-		def partnerContractInstance = PartnerContract.createCriteria().get{
-			parent{
-				idEq(pnt)
-			}
-			partner{
-				idEq(partnerid)
-			}
-		}
-		println("parnter contract: " + partnerContractInstance)
+		
 	}
 	@Transactional
 	def verify(params){
@@ -280,7 +270,7 @@ class SelfController {
 		
 		//create the partner contract
 		try{
-		def partner = Partner.get(params?.partner?.id)
+		def partner = Partner.get(Long.parseLong(params?.partner.id))
 		def contract = new PartnerContract()
 			contract.partner = partner
 			contract.parent = parentInstance
@@ -322,8 +312,8 @@ class SelfController {
 		
 		def realPersonHash = vars.border[0]
 		def testHash = rpHash(captcha + salt)
-		def partnerid = vars.membershipno[0]
-		def membershipNo = vars.partnerid[0]
+		def membershipNo = vars.membershipno[0]
+		def partnerid  = vars.partnerid[0]
 		if (testHash.equals(realPersonHash)) {			
 			// Now check if email is available
 			try{
@@ -342,7 +332,7 @@ class SelfController {
 						
 						//create the partner contract
 						try{
-							def partner = Partner.get(partnerid)
+							def partner = Partner.get(Long.parseLong(partnerid))
 							def contract = new PartnerContract()
 							contract.partner = partner
 							contract.parent = parent

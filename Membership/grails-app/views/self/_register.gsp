@@ -19,7 +19,7 @@
 				<div class="cell"><label id="">Password:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:field type="password" name="parent.person1.password" required="" value=""/>
+						<g:field type="password" name="parent.person1.password" required="" value="" id="pwd"/>
 					</span>
 				</div>	
 			</div>
@@ -27,8 +27,8 @@
 				<div class="cell"><label id="">Re-type password:</label></div>
 				<div class="cell">
 					<span class="property-value" aria-labelledby="home-label">
-						<g:field type="password" name="parent.person1.passwordConfirm" required="" value=""/>
-					</span>
+						<g:field type="password" name="parent.person1.passwordConfirm" required="" value="" id="pwd-confirm"/>
+					</span> <span class="error" id="pwd-msg" style="font-weight:bold;color:red;font-size:0.8em;display:none;">Passwords do not match!</span>
 				</div>	
 			</div>
 		</div>
@@ -133,7 +133,7 @@
 				
 				<div class="cell"><label id="">Enter your membership number:</label></div>
 				<div class="cell">
-					<g:textField class="membershipno" name="MembershipNo" placeholder="Membership Number"  value="" id="membershipno"/>
+					<g:textField class="membershipno" name="membershipNo" placeholder="Membership Number"  value="" id="membershipno"/>
 				</div>
 			</div>
 		</div>
@@ -188,6 +188,26 @@
 					$("#row-membershipno").hide();
 					}
 			});
-		
-		});
+
+		$("#pwd-confirm").on("change",function(){
+			confirmPassword($("#pwd"), $(this))
+		})
+		$("#pwd").on("change",function(){
+			confirmPassword($("#pwd-confirm"), $(this))
+		})	
+	});
+	var confirmPassword = function(pEl, pcEl){
+		var p = pEl.prop("value");
+		var pc =pcEl.prop("value") 
+		var m = $("#pwd-msg")
+		if(pc != p & p !="" & pc != ""){
+			pcEl.css("border","solid 1px red").css("color","red").css("font-weight","bold").focus();
+			pEl.css("border","solid 1px red").css("color","red").css("font-weight","bold").focus();
+			m.show();
+		}else if(p == pc & p !="" & pc != ""){
+			pcEl.css("border","solid 1px green").css("color","black").css("font-weight","bold").focus();
+			pEl.css("border","solid 1px green").css("color","black").css("font-weight","bold").focus();
+			m.hide();
+		}	
+	}
 </script>

@@ -48,7 +48,7 @@
 				<li class="fieldcontain">
 					<span id="office-label" class="property-label"><g:message code="visitBooking.office.label" default="Wiggly Toes Play Centre" /></span>
 					
-						<span class="property-value" aria-labelledby="office-label"><g:link controller="office" action="show" id="${visitBookingInstance?.office?.id}">${visitBookingInstance?.office?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="office-label">${visitBookingInstance?.office?.encodeAsHTML()}</span>
 					
 				</li>
 				</g:if>

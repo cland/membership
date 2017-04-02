@@ -1,4 +1,4 @@
-
+<%@ page import="cland.membership.SystemRoles" %>
 <%@ page import="cland.membership.Office" %>
 <!DOCTYPE html>
 <html>
@@ -118,6 +118,7 @@
 				
 			
 			</ol>
+			<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">				
 			<br/><h1>Groups</h1>
 					<div>
 						<table>
@@ -143,6 +144,7 @@
 						</tbody>
 						</table>
 					</div>
+			</sec:ifAnyGranted>
 			<g:form url="[resource:officeInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${officeInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
