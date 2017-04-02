@@ -93,7 +93,7 @@ class SelfController {
 						e.printStackTrace()
 					}
 					
-					redirect (url:cbcApiService.getBasePath(request) + "login", permanent:true)
+					redirect (url:cbcApiService.getBasePath(request) + "login/auth", permanent:true)
 				}else{
 					render "ST3: Invalid request! "
 					return
@@ -152,7 +152,7 @@ class SelfController {
 					}catch(Exception e){ //TODO fix this and implement better
 						println(e.getMessage())
 					}
-					redirect (url:cbcApiService.getBasePath(request) + "login", permanent:true)
+					redirect (url:cbcApiService.getBasePath(request) + "login/auth", permanent:true)
 				}else{
 					render "ST3: Invalid request! "
 					return
@@ -271,6 +271,7 @@ class SelfController {
 		//create the partner contract
 		try{
 		def partner = Partner.get(Long.parseLong(params?.partner.id))
+		
 		def contract = new PartnerContract()
 			contract.partner = partner
 			contract.parent = parentInstance
@@ -325,7 +326,9 @@ class SelfController {
 					def parent = Parent.findByPerson1(person)
 					if(parent != null){
 						parent.clientType = Keywords.findByName("GymMember")
-						parent.save(flush:true)
+						if(!parent.save(flush:true)){
+							println(parent.errors)
+						}
 						def pwd = cbcApiService.generateRandomString(null, "", 8)
 						person.password = pwd
 						person.username = person.email
@@ -333,17 +336,27 @@ class SelfController {
 						//create the partner contract
 						try{
 							def partner = Partner.get(Long.parseLong(partnerid))
-							def contract = new PartnerContract()
-							contract.partner = partner
-							contract.parent = parent
-							contract.membershipNo=membershipNo
-							contract.contractNo = cbcApiService.generateRandomString(new Date(), "yymmdd", 4)
-							contract.isUserVerified = false			//set to true when user response the email link with hashcode
-							contract.isValidPartnerMember = false	//set to true when user presents membership card at a Wiggly Toe Centre
-							contract.dateRegistered = new Date()
-							contract.comments = "created via self service by user"
-							if(!contract.save(flush:true)){
-								println(contract.errors)
+							def contract = PartnerContract.createCriteria().get{
+								parent{
+									idEq(parent?.id)
+								}
+								partner{
+									idEq(partner?.id)
+								}
+							}
+							if(contract == null){
+								contract = new PartnerContract()
+								contract.partner = partner
+								contract.parent = parent
+								contract.membershipNo=membershipNo
+								contract.contractNo = cbcApiService.generateRandomString(new Date(), "yymmdd", 4)
+								contract.isUserVerified = false			//set to true when user response the email link with hashcode
+								contract.isValidPartnerMember = false	//set to true when user presents membership card at a Wiggly Toe Centre
+								contract.dateRegistered = new Date()
+								contract.comments = "created via self service by user"
+								if(!contract.save(flush:true)){
+									println(contract.errors)
+								}
 							}
 						}catch(Exception e){
 							//TODO handle the partner contract section better

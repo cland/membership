@@ -75,14 +75,16 @@
 				<div class="cell"><label id="">Client type:</label></div>
 				<div class="cell">
 					<g:if test="${isEditMode }">
-					<% def ctypes = cland.membership.lookup.Keywords.findByName("ClientTypes")?.values?.sort{it?.id} %>
-						<g:radioGroup 
-							value="${parentInstance?.clientType?.id }"
-							values="${ctypes?.id}"
-							labels="${ctypes}" 
-							name="clientType">
-							${it.radio} <g:message code="${it.label}" />
-						</g:radioGroup>
+						<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
+							<% def ctypes = cland.membership.lookup.Keywords.findByName("ClientTypes")?.values?.sort{it?.id} %>
+							<g:radioGroup 
+								value="${parentInstance?.clientType?.id }"
+								values="${ctypes?.id}"
+								labels="${ctypes}" 
+								name="clientType">
+								${it.radio} <g:message code="${it.label}" />
+							</g:radioGroup>
+						</sec:ifAnyGranted>
 					</g:if><g:else>${parentInstance?.clientType?.toString() }</g:else>
 				</div>
 				<div class="cell"></div>
@@ -149,7 +151,12 @@
 					<td>${activeVisit?.office?.name }</td>
 					<td>${c?.lastVisit?.starttime?.format("dd MMM yyyy") }</td>
 					<td>${c?.lastVisit?.office?.name }</td>
-					<td><a href="" class="button2" onclick="sendNotification('${c?.id}','0'); return false;">Notify</a></td>
+					<td>
+						<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
+							<a href="" class="button2" onclick="sendNotification('${c?.id}','0'); return false;">Notify</a>
+						</sec:ifAnyGranted>
+						
+					</td>
 				</tr>
 			</g:each>
 		</table>

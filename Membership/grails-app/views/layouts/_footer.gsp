@@ -2,11 +2,10 @@
 
 <a href="${request.contextPath}/">Home</a> |
 <sec:ifNotLoggedIn>
-<g:link controller="login" action="index" >Login</g:link> |
+<g:link controller="login" action="auth" >Login</g:link> |
 </sec:ifNotLoggedIn>
 <sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 	<g:link url="${resource(dir:'admin', file:'technical')}">Technical</g:link>  |
-	<g:link url="${resource(dir:'office', file:'index')}">Offices</g:link>  |
 </sec:ifAnyGranted>
 <sec:ifLoggedIn>
 
@@ -15,6 +14,7 @@
 	<g:link url="${resource(dir:'person', file:'index')}">People</g:link>  |
 	<g:link url="${resource(dir:'visit', file:'index')}">All Visits</g:link>  |
 	<g:link url="${resource(dir:'/', file:'selfregister')}">Self Register</g:link>  |
+	<g:link url="${resource(dir:'partner', file:'index')}">Partners</g:link>  |
 </sec:ifAnyGranted>
 
 

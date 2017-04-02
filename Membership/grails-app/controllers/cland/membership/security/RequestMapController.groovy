@@ -8,6 +8,8 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class RequestMapController {
 	def springSecurityService
+	def groupManagerService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -40,7 +42,8 @@ class RequestMapController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'requestMap.label', default: 'RequestMap'), requestMapInstance.id])
-                redirect requestMapInstance
+                //redirect requestMapInstance
+				redirect (url:cbcApiService.getBasePath(request) + "requestMap/show/" + requestMapInstance?.id, permanent:true)
             }
             '*' { respond requestMapInstance, [status: CREATED] }
         }
@@ -67,7 +70,8 @@ class RequestMapController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'RequestMap.label', default: 'RequestMap'), requestMapInstance.id])
-                redirect requestMapInstance
+                //redirect requestMapInstance
+				redirect (url:cbcApiService.getBasePath(request) + "requestMap/show/" + requestMapInstance?.id, permanent:true)
             }
             '*'{ respond requestMapInstance, [status: OK] }
         }
@@ -86,7 +90,8 @@ class RequestMapController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'RequestMap.label', default: 'RequestMap'), requestMapInstance.id])
-                redirect action:"index", method:"GET"
+                //redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "requestMap/", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }

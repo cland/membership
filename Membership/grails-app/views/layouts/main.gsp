@@ -50,7 +50,7 @@
 				<br>
 				<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 					<label><span class="r-arrow"></span></label>
-					<span style="color:#000;">Office: </span>
+					<span style="color:#000;">Location: </span>
 					<g:set var="primaryOffice" value="${cbcApiService?.getUserPrimaryOffice()}"/>
 					<g:link controller="office" action="show" id="${primaryOffice?.id}" >${primaryOffice }</g:link>
 				</sec:ifAnyGranted>

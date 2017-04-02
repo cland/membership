@@ -261,4 +261,13 @@ class CbcApiService {
 		}
 		return coupon
 	}
+	Parent findParentFor(Person p){
+		if(p == null) p = groupManagerService.getCurrentUser()
+		def parent = Parent.createCriteria().get{
+			person1{
+				idEq(p?.id)
+			}
+		}
+		return parent
+	}
 }//end class

@@ -7,7 +7,9 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class PartnerContractController {
-
+	def springSecurityService
+	def groupManagerService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -40,7 +42,8 @@ class PartnerContractController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'partnerContract.label', default: 'PartnerContract'), partnerContractInstance.id])
-                redirect partnerContractInstance
+                //redirect partnerContractInstance
+				redirect (url:cbcApiService.getBasePath(request) + "partnerContract/show/" + partnerContractInstance?.id, permanent:true)
             }
             '*' { respond partnerContractInstance, [status: CREATED] }
         }
@@ -67,7 +70,8 @@ class PartnerContractController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'PartnerContract.label', default: 'PartnerContract'), partnerContractInstance.id])
-                redirect partnerContractInstance
+                //redirect partnerContractInstance
+				redirect (url:cbcApiService.getBasePath(request) + "partnerContract/show/" + partnerContractInstance?.id, permanent:true)
             }
             '*'{ respond partnerContractInstance, [status: OK] }
         }
@@ -87,6 +91,7 @@ class PartnerContractController {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'PartnerContract.label', default: 'PartnerContract'), partnerContractInstance.id])
                 redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "partnerContract/", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }

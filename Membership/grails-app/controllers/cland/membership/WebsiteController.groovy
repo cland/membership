@@ -7,7 +7,9 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class WebsiteController {
-
+	def springSecurityService
+	def groupManagerService
+	def cbcApiService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -40,7 +42,8 @@ class WebsiteController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'website.label', default: 'Website'), websiteInstance.id])
-                redirect websiteInstance
+                //redirect websiteInstance
+				redirect (url:cbcApiService.getBasePath(request) + "website/show/" + websiteInstance?.id, permanent:true)
             }
             '*' { respond websiteInstance, [status: CREATED] }
         }
@@ -67,7 +70,8 @@ class WebsiteController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Website.label', default: 'Website'), websiteInstance.id])
-                redirect websiteInstance
+                //redirect websiteInstance
+				redirect (url:cbcApiService.getBasePath(request) + "website/show/" + websiteInstance?.id, permanent:true)
             }
             '*'{ respond websiteInstance, [status: OK] }
         }
@@ -86,7 +90,8 @@ class WebsiteController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Website.label', default: 'Website'), websiteInstance.id])
-                redirect action:"index", method:"GET"
+                //redirect action:"index", method:"GET"
+				redirect (url:cbcApiService.getBasePath(request) + "website/", permanent:true)
             }
             '*'{ render status: NO_CONTENT }
         }

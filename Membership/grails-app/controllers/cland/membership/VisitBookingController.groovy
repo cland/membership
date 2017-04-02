@@ -63,8 +63,9 @@ class VisitBookingController {
 		if(params?.children == null){
 			visitBookingInstance.errors.rejectValue("Children", "cuserr1", "Select 1 or more children")			
 		}
+		
 		if(selectedtime < timenow){
-			visitBookingInstance.errors.rejectValue("bookingDate", "cuserr1", "Booking for a visit today should be at least 1 hour from now.")			
+			visitBookingInstance.errors.rejectValue("bookingDate", "cuserr1", "Booking a visit for today should be at least 1 hour from now.")			
 		}
 		
 		if(visitBookingInstance.hasErrors()){
