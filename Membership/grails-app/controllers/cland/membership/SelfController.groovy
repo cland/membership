@@ -39,6 +39,9 @@ class SelfController {
 	def register(){
 		
 	}
+	def register2(){
+	
+}
 	@Transactional
 	def verify(params){
 		//verify the hash code
