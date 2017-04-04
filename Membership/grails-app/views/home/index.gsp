@@ -103,7 +103,7 @@ var cbc_params = {
 			<div class="wait">Loading, please wait...</div>
 			<sec:ifNotGranted roles="${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_ASSISTANT },${SystemRoles.ROLE_MANAGER }">
 				<div style="text-align:center">
-					<img alt="Wiggly Toes Creche, Cockburn in partnership with Goodlife Health Clubs" src="http://www.wigglytoesipc.com/images/promo1-goodlife.png">
+					<img class="img-responsive" alt="Wiggly Toes Creche, Cockburn in partnership with Goodlife Health Clubs" src="http://www.wigglytoesipc.com/images/promo1-goodlife.png">
 					<br/>
 					<input type="button" class="button" onclick="document.location.href='${request.contextPath}/visitBooking/create'" name="bookvisit" value="Book a visit" style="font-size: 1em;"/>
 				</div>

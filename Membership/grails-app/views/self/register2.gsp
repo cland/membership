@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="resmain"/>
+		<meta name="layout" content="main"/>
 		<title>Register: Wiggly Toes IPC Membership System</title>
 		<script type="text/javascript">
 //<![CDATA[

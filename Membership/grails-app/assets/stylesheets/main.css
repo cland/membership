@@ -40,7 +40,7 @@ body {
 	background: #ffffff;
 	color: #333333;
 	margin: 0 auto;
-	max-width: 960px;
+	max-width: 1160px;
 	overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
 	   -moz-box-shadow: 0 0 0.3em #fcc0c0;
 	-webkit-box-shadow: 0 0 0.3em #fcc0c0;
@@ -855,3 +855,42 @@ div.row.headrow .cell{
 .realperson-disabled .realperson-regen {
 	cursor: default;
 }
+.responsive-fieldset {display:table-cell; width: 98%}
+.img-responsive {width:60%}
+
+.button1-large {
+		border: solid 1px;
+    	font-size: large;
+    	padding: 10px;
+    	margin-top:10px;
+    	background-color: #f9b99b;
+	    border: none;
+	    border-radius: 10px;
+	    box-shadow: 0 1px #ccc;
+	    font-weight: bold;
+    }
+    .button1-medium{
+    	border: solid 1px;
+    	font-size: medium;
+    	padding: 8px;
+    	background-color: #f9b99b;
+	    border: none;
+	    border-radius: 5px;
+	    box-shadow: 0 1px #ccc;
+	    font-weight: bold;
+    }
+    .table {	  
+	  display: table;
+	  width:100%;
+	  margin: 0 0 1.2em 0;
+	  padding: 2px;
+	}
+	.table-2col > .row > .cell {
+		width: 50%;
+	}
+	.cell-3 {
+		width: 33.3%;
+	}
+	.cell-4 {
+		width: 25%;
+	}

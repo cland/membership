@@ -1,6 +1,7 @@
 <%@ page import="cland.membership.Child" %>
 <g:set var="isEditMode" value="${mode?.equals("edit") }"/>
 <fieldset><legend></legend>
+
 	<div class="table">
 		<div class="row">
 			<div class="cell"></div>
