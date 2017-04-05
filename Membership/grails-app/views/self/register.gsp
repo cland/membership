@@ -71,7 +71,7 @@ var cbc_params = {
 						</div>
 						<div class="form-group col-sm-4" style="margin-top:40px;" id="membershipno">
 							<p>Enter your <span style="font-weight:bold;color:#46b5e1;"> Goodlife Health Clubs</span> membership number:</p>
-							<input type="text" class="form-control" style="width:98%;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="membership-no" name="membershipno" placeholder="Membership Number">
+							<input type="text" class="form-control" style="width:98%;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="reset-membership-no" name="membershipno" placeholder="Membership Number">
 						</div>
 						<div class="form-group col-sm-4" style="margin-top:40px;" id="captcha-group">
 							<input type="text" class="is_realperson form-control" style="width:98%;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="defaultReal" name="defaultReal" placeholder="Enter letters displayed above.">
@@ -96,24 +96,47 @@ var cbc_params = {
 <br/><br/>
 
 	<script>
+		String.prototype.isNumber = function(){return /^\d+$/.test(this);}
 		function submitForm(){
+			var msgEl = $("#errors-div");
 			var _email = $("#parentemail").prop("value");
 			var _result = validateEmail(_email);			
+			var _memEl = $("#membershipno");			
+			var _membershipno = validateMemNo(_memEl.prop("value"));
 			
-			if(_result){
-				$(".wait").show();$("#form-div").hide();
-				return true
+			
+			if(!_result){
+				//problem with email
+				msgEl.html("<b>Please provide a valid email address.</b>");
+				$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
+				msgEl.show();
+				return false;
 			}
-			//problem with email
-			$("#errors-div").html("<b>Please provide a valid email address.</b>");
-			$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
-			$("#errors-div").show();
-			return false;
+			
+
+			if(_membershipno == ""){
+				msgEl.html("<b>Please provide a valid membership number.</b>");
+				_memEl.css("background","red").css("color","yellow").css("font-weight","bold").focus();
+				msgEl.show();							
+				return false;
+			}
+			$(".wait").show();$("#form-div").hide();
+			return true;
+		
+		}
+		function validateMemNo(value){
+			if(value==undefined) return "";
+			if(!value.toLowerCase().startsWith("guc")) return "";
+			var tmp = value.replace("guc","")
+			if(tmp.isNumber() & tmp.length == 5) return value;
+			return "";
 		}
 		function submitFormReset(){
 			var msgEl = $("#errors-div")
 			var _email = $("#person-email").prop("value");
-			var _result = validateEmail(_email);			
+			var _result = validateEmail(_email);
+			var _memEl = $("#reset-membership-no");			
+			var _membershipno = validateMemNo(_memEl.prop("value"));
 			
 			if(!_result){
 				//problem with email
@@ -127,6 +150,14 @@ var cbc_params = {
 			var el=$("#defaultReal");var _b='getHash'; el.removeClass("error-input");
 		
 			//$("#border").prop("value",el.realperson(_b));$("#catpcha").prop("value",el.val());
+			
+			if(_membershipno == ""){
+				msgEl.html("<b>Please provide a valid membership number.</b>");
+				_memEl.css("background","red").css("color","yellow").css("font-weight","bold").focus();
+				msgEl.show();							
+				return false
+			}
+			
 			if(el.val() == ""){
 				msgEl.append("<b>Please enter the letters on the CAPTCHA to verify that you are a real person</b>");
 				$("#defaultReal").css("background","red").css("color","yellow").css("font-weight","bold").focus();
@@ -140,7 +171,7 @@ var cbc_params = {
 			var data = {
 					  'source': 'pub-html',
 					  'resetemail':_email,
-					  'membershipno':$("#membership-no").prop("value"),
+					  'membershipno':_membershipno,
 					  'border':$("#border").prop("value"),
 					  'captcha': el.prop("value"),
 					  'sitename':'wigglytoesipc',	

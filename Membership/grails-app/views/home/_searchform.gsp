@@ -4,18 +4,18 @@
 		<div>
 			<div id="group-finder-div">
 				<asset:image src="spinner.gif" class="spinner-wait" id="spinner-wait-search" title="Searching, please wait..." alt="Searching, please wait...!"/>
-				<input style="width:48.5em;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="person-clients" name="query" value="" placeholder="Search for lastname or membership no.">
+				<input style="width:98%;padding:10px;border-color:rgba(8, 7, 7, 0.52);" id="person-clients" name="query" value="" placeholder="Search for lastname or membership no.">
 			</div>
-		
+		<div style="overflow-x:auto;">
 			<table id="child-table" style="display:none">
-			<thead>
+				<thead>
+					
+				</thead>
+				<tbody id="child-list">
 				
-			</thead>
-			<tbody id="child-list">
-			
-			</tbody>
+				</tbody>
 			</table>
-			
+			</div>
 		</div>
 		
 		<script type="text/javascript">

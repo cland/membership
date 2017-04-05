@@ -128,14 +128,14 @@
 				<tr>
 					<th>First Name</th>
 					<th>Last Name</th>
-					<th>Date Of Birth</th>
-					<th>Gender</th>
+					<th class="col-not-important">Date Of Birth</th>
+					<th class="col-not-important">Gender</th>
 					<th>Total Visits</th>
-					<th>Checked-In?</th>
-					<th>Office</th>
-					<th>Last Visit</th>
-					<th>Last Office</th>
-					<th>Action</th>
+					<th class="col-not-important">Checked-In?</th>
+					<th class="col-not-important">Office</th>
+					<th class="col-not-important">Last Visit</th>
+					<th class="col-not-important">Last Office</th>
+					<th class="col-not-important">Action</th>
 				</tr>
 			</thead>
 			<g:each in="${parentInstance.children?.sort{it?.person.firstName}}" var="c">
@@ -144,14 +144,14 @@
 					<td><span class="property-value" aria-labelledby="children-label"><g:link controller="child" action="show" id="${c.id}">${c?.person?.firstName}</g:link></span>
 					</td>
 					<td>${c?.person?.lastName}</td>
-					<td>${c?.person?.dateOfBirth?.format("dd MMM yyyy")}</td>
-					<td>${c?.person?.gender}</td>
+					<td class="col-not-important">${c?.person?.dateOfBirth?.format("dd MMM yyyy")}</td>
+					<td class="col-not-important">${c?.person?.gender}</td>
 					<td>${c?.getVisitCount()}</td>
-					<td><g:formatBoolean boolean="${c?.isActive() }" false="No" true="Yes"/></td>
-					<td>${activeVisit?.office?.name }</td>
-					<td>${c?.lastVisit?.starttime?.format("dd MMM yyyy") }</td>
-					<td>${c?.lastVisit?.office?.name }</td>
-					<td>
+					<td class="col-not-important"><g:formatBoolean boolean="${c?.isActive() }" false="No" true="Yes"/></td>
+					<td class="col-not-important">${activeVisit?.office?.name }</td>
+					<td class="col-not-important">${c?.lastVisit?.starttime?.format("dd MMM yyyy") }</td>
+					<td class="col-not-important">${c?.lastVisit?.office?.name }</td>
+					<td class="col-not-important">
 						<sec:ifAnyGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 							<a href="" class="button2" onclick="sendNotification('${c?.id}','0'); return false;">Notify</a>
 						</sec:ifAnyGranted>

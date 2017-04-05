@@ -39,11 +39,11 @@
 			<div id="tabs" style="display: none;">
 					<ul>
 						<li><a href="#tab-1">Details</a></li>
-						<li><a href="#tab-2">All Visits</a></li>
+						<li class="col-not-important"><a href="#tab-2">All Visits</a></li>
 						<li style="display:none;"><a href="#tab-3">Supporting Documents</a></li>
-						<li><a href="#tab-4">Notifications</a></li>
-						<li><a href="#tab-5">Coupons</a></li>
-						<li><a href="#tab-6">Manage Profile Photos</a></li>
+						<li class="col-not-important"><a href="#tab-4">Notifications</a></li>
+						<li class="col-not-important"><a href="#tab-5">Coupons</a></li>
+						<li class="col-not-important"><a href="#tab-6">Manage Profile Photos</a></li>
 					</ul>
 				<div id="tab-1">
 					<g:render template="client" bean="${parentInstance}" var="parentInstance" model="[mode:'read']"></g:render>

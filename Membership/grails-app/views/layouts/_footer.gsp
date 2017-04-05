@@ -3,6 +3,7 @@
 <a href="${request.contextPath}/">Home</a> |
 <sec:ifNotLoggedIn>
 <g:link controller="login" action="auth" >Login</g:link> |
+<g:link controller="self" action="register" >Reset password or Register</g:link> |
 </sec:ifNotLoggedIn>
 <sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 	<g:link url="${resource(dir:'admin', file:'technical')}">Technical</g:link>  |

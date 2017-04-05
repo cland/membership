@@ -6,7 +6,9 @@
 		<g:message code="visitBooking.bookingDate.label" default="Date" />
 		<span class="required-indicator">*</span>
 	</label>	
+	
 	<g:textField name="bookingDate" required="" id="booking-date" class="datepick_single_past" value="${visitBookingInstance?.bookingDate?.format('dd-MMM-yyyy HH:mm')}"/>
+	
 </div>
 <div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'bookingDuration', 'error')} required">
 	<label for="bookingDuration">

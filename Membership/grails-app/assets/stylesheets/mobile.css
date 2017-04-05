@@ -55,6 +55,16 @@
     .rm-child-icon{
     	width:150%;
     }
+    .col-not-important{display:none;}
+    table.inner-table th{
+    	font-size:0.9em;
+    }
+    .ui-tabs .ui-tabs-panel {
+    	padding:1em 0;
+    }
+    tr>td:first-child, tr>th:first-child{padding-left:0;}
+    table.inner-table td {font-size:0.9em;}
+    .footer{font-size:1.1em;}
 	.nav {
 		padding: 0.5em;
 	}

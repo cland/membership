@@ -22,9 +22,9 @@
 			<table class="inner-table">
 			<thead>
 					<tr>
-						<g:sortableColumn property="bookingDate" title="${message(code: 'visitBooking.bookingDate.label', default: 'Date/Time')}" />
-						<g:sortableColumn property="bookingDuration" title="${message(code: 'visitBooking.bookingDuration.label', default: 'Hours')}" />
-						<th><g:message code="visitBooking.office.label" default="Play Centre" /></th>
+						<g:sortableColumn property="bookingDate" title="${message(code: 'visitBooking.bookingDate.label', default: 'Date/Time')}"/>
+						<g:sortableColumn property="bookingDuration" title="${message(code: 'visitBooking.bookingDuration.label', default: 'Hours')}" class="col-not-important"/>
+						<th class="col-not-important"><g:message code="visitBooking.office.label" default="Play Centre" /></th>
 						<g:sortableColumn property="referenceNo" title="${message(code: 'visitBooking.referenceNo.label', default: 'Reference No')}" />
 						<g:sortableColumn property="dateCreated" title="${message(code: 'visitBooking.children.label', default: 'Child')}" />
 					</tr>
@@ -34,8 +34,8 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${visitBookingInstance.id}">${visitBookingInstance?.bookingDate?.format('dd-MMM-yyyy HH:mm')}Hrs</g:link></td>
-						<td>${fieldValue(bean: visitBookingInstance, field: "bookingDuration")}</td>					
-						<td>${fieldValue(bean: visitBookingInstance, field: "office")}</td>	
+						<td class="col-not-important">${fieldValue(bean: visitBookingInstance, field: "bookingDuration")}</td>					
+						<td class="col-not-important">${fieldValue(bean: visitBookingInstance, field: "office")}</td>	
 						<td>${fieldValue(bean: visitBookingInstance, field: "referenceNo")}</td>				
 						<td>${visitBookingInstance?.children*.toString()}</td>					
 					</tr>

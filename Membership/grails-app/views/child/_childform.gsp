@@ -135,12 +135,12 @@
 						<th>Date</th>
 						<th>Time-in</th>
 						<th>Time-out</th>
-						<th>Duration</th>
-						<th>Effective Hours</th>
-						<th>Contact No.</th>
+						<th class="col-not-important">Duration</th>
+						<th><span class="col-not-important">Effective </span>Hours</th>
+						<th class="col-not-important">Contact No.</th>
 						<th>Status</th>						
-						<th>Wrist Band No.</th>	
-						<th>Office</th>						
+						<th class="col-not-important">Wrist Band No.</th>	
+						<th class="col-not-important">Office</th>						
 					</tr>
 				</thead>
 				<g:each in="${visits}" var="c">
@@ -148,12 +148,12 @@
 						<td>${c?.starttime?.format("dd MMM yyyy")}</td>
 						<td>${c?.starttime?.format("HH:mm")}</td>
 						<td>${c?.endtime?.format("HH:mm")}</td>
-						<td>${c?.durationText}</td>
+						<td class="col-not-important">${c?.durationText}</td>
 						<td>${c?.visitHours}</td>
-						<td>${c?.contactNo}</td>
+						<td class="col-not-important">${c?.contactNo}</td>
 						<td>${c?.status}</td>						
-						<td>${c?.visitNo }</td>
-						<td>${c?.office }</td>
+						<td class="col-not-important">${c?.visitNo }</td>
+						<td class="col-not-important">${c?.office }</td>
 					</tr>
 				</g:each>
 			</table>

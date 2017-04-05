@@ -44,7 +44,7 @@
 			
 			<div id="current-user"> <label><span class="r-arrow"></span> </label>
 				<sec:ifLoggedIn>
-					<span style="color:#000;">Logged in as:</span> <sec:loggedInUserInfo field="username" />					
+					<span style="color:#000;text-transform: none;">Logged in as:</span> <sec:loggedInUserInfo field="username" />					
 				</sec:ifLoggedIn> 
 				<sec:ifNotLoggedIn>Anonymous</sec:ifNotLoggedIn>
 				<br>
