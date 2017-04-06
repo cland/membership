@@ -12,6 +12,7 @@
 					<span class="property-value" aria-labelledby="home-label">
 						<g:textField type="email" id="parentemail" name="parent.person1.email" value="" required=""  placeholder="Enter a valid email address"/>						
 					</span>
+					<span class="error" id="reg-email-msg" style="color:red;font-size:0.8em;display:none;">This username is not available!</span>
 				</div>	
 						
 			</div>
@@ -234,8 +235,8 @@
 			pEl.css("border","solid 1px red").css("color","red").css("font-weight","bold").focus();
 			m.show();
 		}else if(p == pc & p !="" & pc != ""){
-			pcEl.css("border","solid 1px green").css("color","black").css("font-weight","bold").focus();
-			pEl.css("border","solid 1px green").css("color","black").css("font-weight","bold").focus();
+			pcEl.css("border","solid 1px green").css("color","black").css("font-weight","bold");
+			pEl.css("border","solid 1px green").css("color","black").css("font-weight","bold");
 			m.hide();
 		}	
 	}

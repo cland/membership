@@ -126,8 +126,10 @@ var cbc_params = {
 		}
 		function validateMemNo(value){
 			if(value==undefined) return "";
+			
 			if(!value.toLowerCase().startsWith("guc")) return "";
-			var tmp = value.replace("guc","")
+			var tmp = value.toLowerCase().replace("guc","")
+			
 			if(tmp.isNumber() & tmp.length == 5) return value;
 			return "";
 		}
@@ -262,8 +264,8 @@ var cbc_params = {
 			});
 
 			$(document).on("change","#parentemail",function(){
-				checkEmailAddress($(this).prop("value"))
-				})
+				checkEmailAddress($(this).prop("value"),checkEmailRegisterCallback)
+			})
 			
 			$("#tabs").tabs(
 					{
@@ -350,25 +352,14 @@ var cbc_params = {
 			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$/;
 			return emailReg.test( $email );
 		}
-		function checkEmailAddress(email){
+		function checkEmailAddress(email, callback){
 			var jqxhr = $.ajax({ 
 				url: "${request.contextPath}/self/validateEmail?e=" + email,
 				method:"GET",
 				cache: false
 			 })
 		  .done(function(data) {	 
-			  if(data.result == "success"){		 
-					if(data.ison){
-						$("#errors-div").html("<b>This username or email address is not available!</b>");
-						$("#parentemail").css("background","red").css("color","yellow").css("font-weight","bold").focus();
-						$("#errors-div").show();
-					}else{
-						$("#parentemail").css("background","white").css("color","black").css("font-weight","normal");
-						$("#errors-div").hide();
-					}
-			  }else{
-				  alert("Failed to check the email address'")
-				}
+			  callback(data)
 		  })
 		  .fail(function() {
 		    alert( "error" );
@@ -377,7 +368,27 @@ var cbc_params = {
 			  $(".wait").hide();
 		  });
 		}
-
+		function checkEmailRegisterCallback(data){
+			
+			var _thisEl = $("#parentemail");
+			var _thisMsg = $("#reg-email-msg")
+			if(data.result == "success"){		 
+				if(data.ison){
+					_thisMsg.html("<br/>Selected username '<b>" + _thisEl.prop("value") + "</b>' is not available!");
+					_thisEl.css("background","red").css("color","yellow").css("font-weight","bold");
+					_thisEl.prop("value","")
+					_thisMsg.show();
+				}else{
+					_thisEl.css("background","white").css("color","black").css("font-weight","normal");
+					_thisMsg.hide();
+				}
+		  }else{
+			  alert("Failed to check the email address'")
+			}
+		}
+		function checkEmailResetCallback(data){
+			
+		}
 		function onResetSuccess(data){
 			console.log("Success...")
 			console.log(data.result)
