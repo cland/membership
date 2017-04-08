@@ -23,6 +23,7 @@
 			<table>
 			<thead>
 					<tr>
+						<g:sortableColumn property="sendTo" title="${message(code: 'website.sitename.label', default: 'Name')}" />
 						<g:sortableColumn property="sendTo" title="${message(code: 'website.sendTo.label', default: 'Send To')}" />
 						<g:sortableColumn property="sendBlindCopyTo" title="${message(code: 'website.sendBlindCopyTo.label', default: 'Send Blind Copy To')}" />					
 						<g:sortableColumn property="sendFrom" title="${message(code: 'website.sendFrom.label', default: 'Send From')}" />
@@ -36,7 +37,7 @@
 				<tbody>
 				<g:each in="${websiteInstanceList}" status="i" var="websiteInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						
+						<td>${fieldValue(bean: websiteInstance, field: "sitename")}</td>
 						<td><g:link action="show" id="${websiteInstance.id}">${fieldValue(bean: websiteInstance, field: "sendTo")}</g:link></td>					
 						<td>${fieldValue(bean: websiteInstance, field: "sendBlindCopyTo")}</td>
 						<td>${fieldValue(bean: websiteInstance, field: "sendFrom")}</td>					

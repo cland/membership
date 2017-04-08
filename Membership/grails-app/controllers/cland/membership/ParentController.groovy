@@ -606,7 +606,7 @@ class ParentController {
 				
 				if(!childInstance.save(flush:true)){
 					println(childInstance.errors)
-					msg = msg + "Child '" + value + "' failed to save! "
+					msg = msg + "Child '" + childInstance + "' failed to save! "
 				}
 				//add the coupon if available - moved this to point of check-out
 				/*

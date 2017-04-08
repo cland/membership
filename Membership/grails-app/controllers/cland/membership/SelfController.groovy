@@ -326,11 +326,11 @@ class SelfController {
 					result=[result:"failed",message:"Email ['" + clientkey + "'] not found in our system. Please contact any Wiggly Toes IPC center for assistance."]
 				}else{
 					//get the parent
-					def parent = Parent.findByPerson1(person)
-					if(parent != null){
-						parent.clientType = Keywords.findByName("GymMember")
-						if(!parent.save(flush:true)){
-							println(parent.errors)
+					def parentInstance = Parent.findByPerson1(person)
+					if(parentInstance != null){
+						parentInstance.clientType = Keywords.findByName("GymMember")
+						if(!parentInstance.save(flush:true)){
+							println(parentInstance.errors)
 						}
 						def pwd = cbcApiService.generateRandomString(null, "", 8)
 						person.password = pwd
@@ -338,19 +338,19 @@ class SelfController {
 						
 						//create the partner contract
 						try{
-							def partner = Partner.get(Long.parseLong(partnerid))
+							def partnerInstance = Partner.get(Long.parseLong(partnerid))
 							def contract = PartnerContract.createCriteria().get{
 								parent{
-									idEq(parent?.id)
+									idEq(parentInstance?.id)
 								}
 								partner{
-									idEq(partner?.id)
+									idEq(partnerInstance?.id)
 								}
 							}
 							if(contract == null){
 								contract = new PartnerContract()
-								contract.partner = partner
-								contract.parent = parent
+								contract.partner = partnerInstance
+								contract.parent = parentInstance
 								contract.membershipNo=membershipNo
 								contract.contractNo = cbcApiService.generateRandomString(new Date(), "yymmdd", 4)
 								contract.isUserVerified = false			//set to true when user response the email link with hashcode
@@ -363,12 +363,13 @@ class SelfController {
 							}
 						}catch(Exception e){
 							//TODO handle the partner contract section better
-							e.printStackTrace()
+							println (e.getMessage())
+							//e.printStackTrace()
 						}
 						
-						
+						println (">> Sending mail... ")
 						if(sendEmail(person, "Reset", pwd)){
-							print "Error: Failed to Save and Sent Message"
+							print "Mail Sent!!!"
 						}
 						result = ["result":"success","id": person.id]
 					}else{
@@ -458,7 +459,7 @@ class SelfController {
 		 */
 		try{
 			def _body = m.message
-						
+				
 			mailService.sendMail {
 				to m.sendTo
 				bcc m.sendBlindCopyTo

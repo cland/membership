@@ -92,8 +92,24 @@ grails.hibernate.osiv.readonly = false
 println ("Configuring taglet '${appName}', on '" + System.properties["os.name"] + "'")
 grails.attachmentable.maxInMemorySize = 1024
 grails.attachmentable.maxUploadSize = 31457280
+
+grails {
+	mail {
+		host = "smtp.gmail.com"
+		port = 465
+		username = "play@wigglytoesipc.com"
+		password = "Baldivis=123"
+		props = ["mail.smtp.auth":"true",
+				"mail.smtp.socketFactory.port":"465",
+				"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+				"mail.smtp.socketFactory.fallback":"false"]
+	}
+}
+
 environments {
+	
     development {
+		
 		if (System.properties["os.name"] == "Linux") {
 			println(System.properties["os.name"] + " appname: " + appName)
 			grails.attachmentable.uploadDir = "file:~" + File.separator + "temp"
@@ -103,16 +119,7 @@ environments {
 		}
 		
         grails.logging.jul.usebridge = true
-		mail {
-			host = "smtp.gmail.com"
-			port = 465
-			username = "tagumi.solutions@gmail.com"
-			password = "Arthur50"
-			props = ["mail.smtp.auth":"true",
-					"mail.smtp.socketFactory.port":"465",
-					"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-					"mail.smtp.socketFactory.fallback":"false"]
-		}
+		
     }
     production {
         grails.logging.jul.usebridge = false

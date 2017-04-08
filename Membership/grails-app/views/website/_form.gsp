@@ -1,6 +1,13 @@
 <%@ page import="cland.membership.Website" %>
 
+<div class="fieldcontain ${hasErrors(bean: websiteInstance, field: 'sitename', 'error')} required">
+	<label for="sitename">
+		<g:message code="website.sitename.label" default="Sitename" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:textField name="sitename" required="" value="${websiteInstance?.sitename}"/>
 
+</div>
 
 <div class="fieldcontain ${hasErrors(bean: websiteInstance, field: 'sendCopyTo', 'error')} ">
 	<label for="sendCopyTo">
@@ -56,14 +63,7 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: websiteInstance, field: 'sitename', 'error')} required">
-	<label for="sitename">
-		<g:message code="website.sitename.label" default="Sitename" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:textField name="sitename" required="" value="${websiteInstance?.sitename}"/>
 
-</div>
 
 <div class="fieldcontain ${hasErrors(bean: websiteInstance, field: 'siteurl', 'error')} required">
 	<label for="siteurl">
