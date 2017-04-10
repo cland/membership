@@ -72,15 +72,17 @@ class Parent {
 			office:[id:office?.id,name:office?.name,code:office?.code],
 			lastupdatedbyname:getLastUpdatedByName()]
 	}
-	def toAutoCompleteMap(){
-		return [id:id,
+	def toAutoCompleteMap(def extraObject=null, String objName=""){
+		def data = [id:id,
 		label:person1.toString() + " (" + relationship + ") | " + person1?.email,
 		value:id,
 		contactno:person1?.mobileNo,
 		childlist:children*.toMap(),
 		activecoupon:(cbcApiService.findActiveCoupon(this, null, 0))?.toMap(),
-		office:[name: person1?.office?.name,id:person1?.office?.id],
+		office:[name: person1?.office?.name,id:person1?.office?.id],		
 		category:(relationship != null ? relationship?.toString() : "Client")]
+		if(extraObject != null & objName != "") data.put(objName, extraObject)
+		return data	
 	}
 	String getCreatedByName(){
 		Person user = Person.get(createdBy)

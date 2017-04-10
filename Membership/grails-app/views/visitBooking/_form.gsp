@@ -44,6 +44,12 @@
 		</label>	
 		<g:select id="parent" name="parent.id" from="${cland.membership.Parent.list()}" optionKey="id" required="" value="${visitBookingInstance?.parent?.id}" class="many-to-one"/>			
 	</div>
+	<div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'status', 'error')} required">
+		<label for="status">
+			<g:message code="visitBooking.status.label" default="Status" />
+		</label>	
+	<g:textField name="status" id="status" value="${visitBookingInstance?.status}"/>
+</div>
 </sec:ifAnyGranted>
 <sec:ifNotGranted roles="${SystemRoles.ROLE_ADMIN },${SystemRoles.ROLE_DEVELOPER },${SystemRoles.ROLE_MANAGER },${SystemRoles.ROLE_ASSISTANT }">
 	<input type="hidden" id="parent" name="parent.id" value="${visitBookingInstance?.parent?.id}"/>

@@ -1,19 +1,15 @@
 package cland.membership
 
 import javax.servlet.http.HttpServletRequest;
-
 import javassist.expr.Instanceof;
 import grails.plugin.springsecurity.*
-
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
 //import org.codehaus.groovy.grails.plugins.springsecurity.*
 import org.grails.datastore.gorm.finders.MethodExpression.IsEmpty;
-
+import org.joda.time.DateTime
 import cland.membership.location.*
 import cland.membership.security.*
-
 import com.sun.org.apache.xalan.internal.xsltc.compiler.ForEach;
-
 import org.apache.commons.lang.RandomStringUtils
 
 /**
@@ -269,5 +265,20 @@ class CbcApiService {
 			}
 		}
 		return parent
+	}
+	def findVisitBookingFor(Parent p, Date visitdate, Office officeInstance){
+		DateTime today = new DateTime(visitdate)
+		def bookingInstance = VisitBooking.createCriteria().list{
+			parent {
+				idEq(p.id)
+			}
+			office{
+				idEq(officeInstance?.id)
+			}
+			ge("bookingDate",today.minusHours(3).toDate())
+			le("bookingDate",today.plusHours(3).toDate())
+			eq("status","new")
+			order('bookingDate','asc')
+		}
 	}
 }//end class

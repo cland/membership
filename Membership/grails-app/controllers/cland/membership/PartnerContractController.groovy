@@ -3,6 +3,7 @@ package cland.membership
 
 
 import static org.springframework.http.HttpStatus.*
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -10,7 +11,7 @@ class PartnerContractController {
 	def springSecurityService
 	def groupManagerService
 	def cbcApiService
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",confirmmembership:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -106,4 +107,35 @@ class PartnerContractController {
             '*'{ render status: NOT_FOUND }
         }
     }
-}
+	
+	@Transactional
+	def confirmmembership(){
+		def result = []
+		def curuser = groupManagerService.getCurrentUser()
+		try{
+			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _id = vars.contractid[0]
+					
+			def contractInstance = PartnerContract.get(_id)
+			if(contractInstance){
+				contractInstance.isValidPartnerMember = true
+				contractInstance.history = contractInstance.history + " >> Updated " + new Date().format("dd-MMM-yyyy HH:mm") + " by " + curuser
+				if(!contractInstance.save(flush:true)){
+					println(contractInstance.errors)
+					result = [result:"failed",message:"Failed to save instance!"]
+				}else{
+					result = [result:"success",message:"Instance updated!"]
+				}
+				
+			}else{
+				result = [result:"notfound",message:"Error: Instance with id '" + _id + "' not found!"]
+			}
+		}catch(Exception e){
+			//e.printStackTrace()
+			println e.getMessage()
+			result = [result:"failure",message:"Error processing action."]
+		}
+		render result as JSON
+	} //
+} //end class

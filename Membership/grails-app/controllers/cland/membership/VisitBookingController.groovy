@@ -3,32 +3,84 @@ package cland.membership
 
 
 import static org.springframework.http.HttpStatus.*
+import grails.converters.JSON
 import grails.transaction.Transactional
+import groovy.ui.HistoryRecord
+
 import java.text.SimpleDateFormat
+
 import org.joda.time.*
 
 @Transactional(readOnly = true)
 class VisitBookingController {
 	def groupManagerService
 	def cbcApiService
-    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE", setstatus:"POST"]
 
     def index(Integer max) {
-		
+		def officeInstance = cbcApiService.getOfficeContext()
+		DateTime today = new DateTime()
         params.max = Math.min(max ?: 20, 100)
+		if(!params?.sort) params.sort = "bookingDate"
+		if(!params?.order) params.order = "asc"
 		if(groupManagerService.isStaff(null,null)){
-			respond VisitBooking.list(params), model:[visitBookingInstanceCount: VisitBooking.count()]
+			params.max = 50
+			if(!params?.sort) params.sort = "bookingDate"
+			if(!params?.order) params.order = "asc"
+						
+			def bookings = VisitBooking.createCriteria().list(params){
+			//	office{
+			//		idEq(officeInstance?.id)
+			//	}
+				ge("bookingDate",today.minusHours(1).toDate())
+			//	le("bookingDate",today.plusHours((24-today.getHourOfDay())).toDate())
+				eq("status","new")
+				order('bookingDate','asc')
+			}
+			
+			respond bookings, model:[visitBookingInstanceCount:bookings.size()]
 		}else{
 			def client = Parent.findByPerson1(groupManagerService.getCurrentUser())
 			def bookings = VisitBooking.createCriteria().list(params){
 				parent{
 					idEq(client?.id)
 				}
+				ge("bookingDate",today.minusHours(1).toDate())
+				eq("status","new")
+				order('bookingDate','asc')
 			}
 			respond bookings, model:[visitBookingInstanceCount:bookings.size()]
 		}		       
     } //end index
 
+	def all(Integer max){
+		def officeInstance = cbcApiService.getOfficeContext()
+		DateTime today = new DateTime()
+		params.max = Math.min(max ?: 20, 100)
+		if(!params?.sort) params.sort = "bookingDate"
+		if(!params?.order) params.order = "asc"
+		if(groupManagerService.isStaff(null,null)){
+			params.max = 50
+			if(!params?.sort) params.sort = "bookingDate"
+			if(!params?.order) params.order = "asc"
+						
+			def bookings = VisitBooking.createCriteria().list(params){			
+				
+			}
+			
+			respond bookings, model:[visitBookingInstanceCount:bookings.size()]
+		}else{
+			def client = Parent.findByPerson1(groupManagerService.getCurrentUser())
+			def bookings = VisitBooking.createCriteria().list(params){
+				parent{
+					idEq(client?.id)
+				}				
+				
+			}
+			respond bookings, model:[visitBookingInstanceCount:bookings.size()]
+		}
+	}
+	
     def show(VisitBooking visitBookingInstance) {
         respond visitBookingInstance
     }
@@ -164,4 +216,37 @@ class VisitBookingController {
             '*'{ render status: NOT_FOUND }
         }
     }
+	
+	@Transactional
+	def setstatus(){
+		def result = []
+		def curuser = groupManagerService.getCurrentUser()
+		try{
+			
+			Map<String, String[]> vars = request.getParameterMap()
+			def _id = vars.bookingid[0]
+			
+			def _status = vars.status[0]
+			
+			def booking = VisitBooking.get(_id)
+			if(booking){
+				booking.status = _status
+				booking.history = booking.history + " >> Updated " + new Date().format("dd-MMM-yyyy HH:mm") + " by " + curuser
+				if(!booking.save(flush:true)){
+					println(booking.errors)
+					result = [result:"failed",message:"Failed to save booking!"]
+				}else{
+					result = [result:"success",message:"Booking updated!"]
+				}
+				
+			}else{
+				result = [result:"notfound",message:"Error: Booking with id '" + _id + "' not found!"]
+			}
+		}catch(Exception e){
+			//e.printStackTrace()
+			println e.getMessage()
+			result = [result:"failure",message:"Error processing action."]
+		}
+		render result as JSON
+	} //
 }

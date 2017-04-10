@@ -1,4 +1,5 @@
 <%@ page import="cland.membership.SystemRoles" %>
+<%@ page import="cland.membership.VisitBooking" %>
 <g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <g:set var="warn_minutes" value="${settingsInstance?.notifytime }"/>
 <g:set var="done_minutes" value="${settingsInstance?.donetime }"/>
@@ -117,7 +118,8 @@ var cbc_params = {
 						<li><a href="#tab-2">New Client</a></li>
 						<sec:ifAnyGranted roles="${SystemRoles.ROLE_DEVELOPER }">
 							<li><a href="#tab-3">Group/Birthday Booking</a></li>	
-						</sec:ifAnyGranted>								
+						</sec:ifAnyGranted>		
+						<li><a href="#tab-4">Today's Visit Bookings</a></li>						
 					</ul>
 					<div id="tab-1">
 						<form id="search_form" name="search_form" action="${request.contextPath}/parent/checkin" enctype="multipart/form-data">
@@ -147,6 +149,9 @@ var cbc_params = {
 							<g:render template="groupclient" model="[settings:settingsInstance]"></g:render>
 						</div>
 					</sec:ifAnyGranted>
+					<div id="tab-4">
+						<g:render template="bookingstoday" model="[visitBookingInstance:visitBookingInstance,visitBookingInstanceList:visitBookingInstanceList,settings:settingsInstance]"></g:render>
+					</div>
 				</div>
 			</fieldset>
 			
@@ -354,16 +359,16 @@ var cbc_params = {
 					  var visitno = el.visitno
 					  var photoid = el.child.person.photoid
 					  var deadline = new Date(Date.parse(timein));
-					  var clienttype = el.child.parent.clienttype.name;
-					  var clienttypeflag = "";
+					  var partnercontractno = "";
+					  if(el.child.parent.partnercontract) partnercontractno = el.child.parent.partnercontract.membershipno;
+					
 					  var office = el.office.name
 					  var officeid = el.office.id
-					  if(clienttype == "GymMember") clienttypeflag = " <b>(GYM)</b>";
-						  
+					    
 					 // deadline.setHours(deadline.getHours() + 2)
 					  var photolink = "${request.contextPath}/attachmentable/show/" + photoid;
 					  if(photoid == null || photoid == "") photolink = "assets/kidface.png"
-					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno,clienttypeflag,office)
+					  addActiveVisit(livepanel, "" + id,visit_id,name,photolink,tel,timein,"--","clock-normal",visitno,partnercontractno,office)
 					  var countup =  true;
 					 
 					  var selected_hr = el.duration.selectedhours;
@@ -384,11 +389,21 @@ var cbc_params = {
 		
 		}
 
-		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno,clienttypeflag,office){
+		function addActiveVisit(el, divid,visit_id,name,photo,tel,timein,extratime, clockstatus,visitno,partnercontractno,office){
 			var lnk = "${request.contextPath}/child/show/" + divid;
-			var html = '<div id="person_' + visit_id + '" class="person-card float-left">' +
+			var clienttypeflag = "";
+			var contract_card_class= "";
+			var contract_info_class="";
+			
+			if(partnercontractno != "") {
+				clienttypeflag = " <div class='tooltip'><b>(GYM)</b><span class='tooltiptext'>" + partnercontractno.toUpperCase() + "</span></div>";
+				contract_card_class= "person-card-contract";
+				contract_info_class="person-info-contract";
+					
+			}
+			var html = '<div id="person_' + visit_id + '" class="person-card float-left ' + contract_card_class + '">' +
 			  '<img class="person-img" src="' + photo + '" alt="Child" />' +
-			  '<div class="person-info">' +
+			  '<div class="person-info ' + contract_info_class + '">' +
 				'<div class="details-title">' +
 				  '<span><a style="color:#fff;" href="' +lnk + '">' + name + '</a></span><br/>' +
 				  '<small>Tel: ' + tel + clienttypeflag + '</small>' +

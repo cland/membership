@@ -27,9 +27,9 @@
 					
 						<th><g:message code="parent.person1.label" default="Name" /></th>
 						<th><g:message code="parent.person1.mobile" default="Contact No." /></th>
-						<th><g:message code="parent.person1.email" default="Email" /></th>
+						<th class="col-not-important"><g:message code="parent.person1.email" default="Email" /></th>
 						<th><g:message code="parent.person1.membershipno" default="Membership No." /></th>
-						<th><g:message code="parent.person2.childcount" default="No. of Children" /></th>
+						<th class="col-not-important"><g:message code="parent.person2.childcount" default="No. of Children" /></th>
 					
 					</tr>
 				</thead>
@@ -39,9 +39,9 @@
 					
 						<td><g:link action="show" id="${parentInstance.id}">${fieldValue(bean: parentInstance.person1, field: "lastName")},  ${fieldValue(bean: parentInstance.person1, field: "firstName")}</g:link></td>					
 						<td>${fieldValue(bean: parentInstance, field: "person1.mobileNo")}</td>
-						<td>${fieldValue(bean: parentInstance, field: "person1.email")}</td>	
+						<td class="col-not-important">${fieldValue(bean: parentInstance, field: "person1.email")}</td>	
 						<td>${fieldValue(bean: parentInstance, field: "membershipNo")}</td>					
-						<td>${parentInstance?.children?.size()}</td>
+						<td class="col-not-important">${parentInstance?.children?.size()}</td>
 					
 					</tr>
 				</g:each>

@@ -70,6 +70,12 @@
 					
 				</li>
 				</g:if>
+				<g:if test="${visitBookingInstance?.status}">
+					<li class="fieldcontain">
+						<span id="children-label" class="property-label"><g:message code="visitBooking.status.label" default="Status" /></span>
+						<span class="property-value" aria-labelledby="status-label"><g:fieldValue bean="${visitBookingInstance}" field="status"/></span>
+					</li>
+				</g:if>
 				<g:if test="${visitBookingInstance?.comments}">
 				<li class="fieldcontain">
 					<span id="comments-label" class="property-label"><g:message code="visitBooking.comments.label" default="Comments" /></span>

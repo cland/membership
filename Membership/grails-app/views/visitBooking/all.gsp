@@ -5,18 +5,18 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'visitBooking.label', default: 'VisitBooking')}" />
-		<title>Upcoming Bookings</title>
+		<title>All Bookings</title>
 	</head>
 	<body>
 		<a href="#list-visitBooking" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="nav navpage" role="navigation">
 			<ul>
 				<li><g:link class="create" action="create">Book a Visit</g:link></li>
-				<li><g:link class="list" action="all">All Bookings</g:link></li>
+				<li><g:link class="list" action="index">Upcoming Bookings</g:link></li>
 			</ul>
 		</div>
 		<div id="list-visitBooking" class="content scaffold-list" role="main">
-			<h1>Upcoming Bookings</h1>
+			<h1>All Bookings</h1>
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -41,7 +41,7 @@
 						<td class="col-not-important">${fieldValue(bean: visitBookingInstance, field: "office")}</td>	
 						<td>${fieldValue(bean: visitBookingInstance, field: "referenceNo")}</td>				
 						<td class="col-not-important">${visitBookingInstance?.children*.toString()}</td>
-						<td id="cell-booking-status-${visitBookingInstance?.id}">${visitBookingInstance?.status }</td>
+						<td id="cell-booking-status-${visitBookingInstance?.id}">${visitBookingInstance?.status }</td>	
 						<td>
 							<g:if test="${visitBookingInstance?.status?.equalsIgnoreCase('new')}">							
 								<asset:image src="skin/icon_cross.png" class="cancel-icon" onClick="setBookingStatus('${visitBookingInstance?.id }','cancelled');return false;" id="rm-booking-${visitBookingInstance?.id }" title="Cancel this booking!" alt="Cancel this booking!"/>
@@ -92,5 +92,6 @@ function setBookingStatus(_id, _status){
 	return false;
 }
 </script>
+
 	</body>
 </html>

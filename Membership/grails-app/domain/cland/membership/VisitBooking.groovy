@@ -16,6 +16,7 @@ class VisitBooking {
 	String referenceNo
 	Office office
 	String comments
+	String status		// new / in-progress / done / cancelled
 	
 	/** Admin Tracking Information **/
 	long createdBy
@@ -33,6 +34,7 @@ class VisitBooking {
 		office nullable:true
 		referenceNo unique:true
 		bookingDuration min:1, max:5
+		status nullable:true
     }
 	static mapping = {
 		comments type : 'text'
@@ -41,6 +43,7 @@ class VisitBooking {
 		long curId = groupManagerService.getCurrentUserId()
 		createdBy = curId
 		lastUpdatedBy = curId
+		status = "new"
 	}
 	def beforeUpdate = {
 		lastUpdatedBy = groupManagerService.getCurrentUserId()
@@ -58,8 +61,9 @@ class VisitBooking {
 	}
 	def toMap(){
 		return [id:id,
-			parent:parent.toMap(),			
-			bookingdate:bookingDate,
+			parentid:parent.id,
+			parentname: parent.toString(),			
+			bookingdate:bookingDate?.format("dd-MMM-yyyy HH:mm"),
 			referenceno:referenceNo,
 			comments:comments,
 			children:children*.toMap(),

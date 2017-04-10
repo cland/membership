@@ -80,7 +80,8 @@ class Visit {
 					membershipno:child?.parent?.membershipNo,
 					clienttype:child?.parent?.clientType,
 					comments:child?.parent?.comments,
-					relationship:child?.parent?.relationship
+					relationship:child?.parent?.relationship,
+					partnercontract:PartnerContract.findByParent(child?.parent)?.toMap()
 					]
 				],			
 			date:starttime?.format("dd MMM yyyy"),

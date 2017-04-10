@@ -514,33 +514,87 @@ class ParentController {
 		        }
 	}
 	def search(){	
+		DateTime today = new DateTime()
+		def selectList = []
 		def term = "%" + params?.term + "%"
-		def results = Parent.createCriteria().list(params) {
+		
+		def results = PartnerContract.createCriteria().list(params){
+			or{
+				ilike('membershipNo',term)
+				ilike('contractNo',term)
+			}
+			
+		}
+		
+		if (results.size() > 0){
+			//return the partnercontract results
+			results.each {
+				def parentInstance = it.parent
+				Map data = parentInstance.toAutoCompleteMap()
+				data.put("partnercontract", it.toMap())
+				def bookingInstance = VisitBooking.createCriteria().list(){
+					parent {
+						idEq(parentInstance.id)
+					}
+					ge("bookingDate",today.minusHours(1).toDate())
+					le("bookingDate",today.plusHours((24-today.getHourOfDay())).toDate())
+					eq("status","new")
+					order('bookingDate','asc')
+				}
+			
+				if(bookingInstance) data.put("booking", bookingInstance*.toMap())
+					
+				selectList.add(data)
+			}
+			render selectList as JSON
+			return
+		}
+		
+		//search the parents directly
+		results = Parent.createCriteria().list(params) {
 			or{
 				person1 {
 					or{
 						ilike('lastName',term)
 						ilike('mobileNo',term)
 						ilike('email',term)
-					}					
+					}
 				}
 				ilike('membershipNo',term)
 				
 			}
 		}
-		def selectList = []
 		if(results.size()>0){
 			results.each {
-				selectList.add(it.toAutoCompleteMap())
+				def parentInstance = it
+				Map data = parentInstance.toAutoCompleteMap()
+				
+				def contractInstance = PartnerContract.findByParent(parentInstance)				
+				if(contractInstance){					
+					data.put("partnercontract", contractInstance.toMap())				
+				}
+				def bookingInstance = VisitBooking.createCriteria().list(){
+					parent {
+						idEq(parentInstance.id)
+					}
+					ge("bookingDate",today.minusHours(1).toDate())
+					le("bookingDate",today.plusHours((24-today.getHourOfDay())).toDate())
+					eq("status","new")
+					order('bookingDate','asc')
+				}
+		
+				if(bookingInstance) data.put("booking", bookingInstance*.toMap())
+				selectList.add(data)
 			}
 		}else{
-			selectList = [id:-1,label:"No results found!",value:"",	childlist:null,category:"No Result"]
+			selectList = [id:-1,label:"No results found!",value:"No Result", childlist:null,category:"No Result"]
 		}
 
 		render selectList as JSON
 	} //end search
 	@Transactional
 	def checkout(params){
+		def officeInstance = cbcApiService.getOfficeContext()
 		def result = []
 		Map<String, String[]> vars = request.getParameterMap()
 		def _id = vars.id[0]
@@ -553,22 +607,39 @@ class ParentController {
 			visit.endtime = dateout //timeout.toLocalDateTime();
 			visit.status = _status
 			if(visit.save(flush:true)){
+				def parentInstance = visit?.child?.parent
 				//add the coupon if status is completed
 				if(visit?.status?.equalsIgnoreCase("complete")){
 					try{
-						def parentInstance = visit?.child?.parent
+						
 						if(parentInstance != null) {						
 							def coupon = cbcApiService.findActiveCoupon(parentInstance, visit.starttime,0)
 							if(coupon != null) {
 								coupon?.addToVisits(visit)
 								coupon.save()
-							}
+							}														
 						}
 						
 					}catch(Exception e){
 						e.printStackTrace()
 					}
 				}
+				
+				//complete any bookings
+				try{					
+					def bookings = cbcApiService.findVisitBookingFor(parentInstance,visit.starttime,visit.office)
+					def newStatus = "done"
+					if(visit?.status?.equalsIgnoreCase("complete")){										
+						println("Marking bookings as done... " + bookings)
+						for(def booking in bookings){
+							booking.status = newStatus
+							booking.save()
+						}
+					}
+				}catch(Exception e){
+					e.printStackTrace()
+				}
+				
 				result = [result:"success"]
 				result.putAll(visit?.toMap())				
 			}else{

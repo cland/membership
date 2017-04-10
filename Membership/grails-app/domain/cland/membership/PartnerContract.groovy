@@ -57,10 +57,12 @@ class PartnerContract {
 	def toMap(){
 		return [id:id,
 			clientname:parent?.toString(),
+			clientid:parent?.id,
 			contractno:contractNo,
 			membershipno:membershipNo,
 			isuserverified:isUserVerified,
 			isvalidmember:isValidPartnerMember,
+			partner:partner.toMap(),
 			createdbyname:getCreatedByName(),
 			lastupdatedbyname:getLastUpdatedByName()]
 	}
