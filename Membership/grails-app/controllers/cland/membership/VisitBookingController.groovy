@@ -219,6 +219,7 @@ class VisitBookingController {
 	
 	@Transactional
 	def setstatus(){
+		
 		def result = []
 		def curuser = groupManagerService.getCurrentUser()
 		try{
