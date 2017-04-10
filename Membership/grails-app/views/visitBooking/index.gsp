@@ -65,7 +65,7 @@ function setBookingStatus(_id, _status){
 	var waitEl = $("spinner-booking-wait-"+_id)
 	if(answer){
 		waitEl.show();
-		var url = "${g.createLink(controller: 'visitBooking', action: 'setstatus')}";
+		var url = "${g.createLink(controller: 'visitBooking', action: 'updatebookingstatus')}";
 		var postdata = {
 				  'status': _status,
 				  'bookingid': _id,			 							 

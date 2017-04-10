@@ -15,7 +15,7 @@ import org.joda.time.*
 class VisitBookingController {
 	def groupManagerService
 	def cbcApiService
-    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE", setstatus:"POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE", updatebookingstatus:"POST"]
 
     def index(Integer max) {
 		def officeInstance = cbcApiService.getOfficeContext()
@@ -218,7 +218,7 @@ class VisitBookingController {
     }
 	
 	@Transactional
-	def setstatus(){
+	def updatebookingstatus(){
 		
 		def result = []
 		def curuser = groupManagerService.getCurrentUser()
