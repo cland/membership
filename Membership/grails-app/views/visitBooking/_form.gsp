@@ -21,8 +21,7 @@
 		values="[1,2]"
 		labels="['1 Hour','2 Hours']">
 		${it.radio} <g:message code="${it.label}" />
-	</g:radioGroup>
-	<span style="margin-left:10px;font-size:0.8em;color:red;">** Please note: Only a maximum of 2 hours is applicable for the special! </span>
+	</g:radioGroup>	
 	
 </div>
 <div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'office', 'error')} ">
