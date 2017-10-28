@@ -13,7 +13,6 @@ class Booking {
 	static attachmentable = true
 	//Person person
 	Parent parent
-	Child birthdayChild
 	Date bookingDate
 		
 	Integer numKids
@@ -33,7 +32,7 @@ class Booking {
 	Date lastUpdated
 	String history
 	static transients = ["createdByName","lastUpdatedByName"]
-	static hasMany = [children:ChildLead]
+	static hasMany = [children:ChildLead, birthdaychildren:Child]
     static constraints = {
 		numKids nullable: true
 		numAdults nullable: true
@@ -71,7 +70,7 @@ class Booking {
 	def toMap(){
 		return [id:id,
 			parent:parent.toMap(),
-			birthdaychild:birthdayChild.toMap(),
+			birthdaychildren:birthdaychildren*.toMap(),
 			bookingdate:bookingDate,
 			timeslot:timeslot?.toMap(),
 			numkids:numKids,
@@ -87,9 +86,9 @@ class Booking {
 	}
 	def toAutoCompleteMap(){
 		return [id:id,
-		label:person.toString() + " (" + bookingDate?.format("dd-MMM-yyyy HH:mm") + ") | " + person?.mobileNo + " | " + person?.email,
+		label:parent.person1.toString() + " (" + bookingDate?.format("dd-MMM-yyyy HH:mm") + ") | " + parent.person1?.mobileNo + " | " + parent.person1?.email,
 		value:id,
-		office:person?.office,
+		office:office,
 		category:"Booking"]
 	}
 	String getCreatedByName(){

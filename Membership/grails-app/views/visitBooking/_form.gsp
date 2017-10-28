@@ -12,10 +12,18 @@
 </div>
 <div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'bookingDuration', 'error')} required">
 	<label for="bookingDuration">
-		<g:message code="visitBooking.bookingDuration.label" default="For how many hours?" />
+		<g:message code="visitBooking.bookingDuration.label" default="For 1 or 2 hours?" />
 		<span class="required-indicator">*</span>
 	</label>	
-	<g:textField name="bookingDuration" required="" id="booking-duration" value="${visitBookingInstance?.bookingDuration}"/>
+	
+	<g:radioGroup name="bookingDuration"
+		value="${(visitBookingInstance?.bookingDuration?visitBookingInstance?.bookingDuration:1)}"
+		values="[1,2]"
+		labels="['1 Hour','2 Hours']">
+		${it.radio} <g:message code="${it.label}" />
+	</g:radioGroup>
+	<span style="margin-left:10px;font-size:0.8em;color:red;">** Please note: Only a maximum of 2 hours is applicable for the special! </span>
+	
 </div>
 <div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'office', 'error')} ">
 	<label for="office">
@@ -42,7 +50,7 @@
 			<g:message code="visitBooking.parent.label" default="Parent" />
 			<span class="required-indicator">*</span>
 		</label>	
-		<g:select id="parent" name="parent.id" from="${cland.membership.Parent.list()}" optionKey="id" required="" value="${visitBookingInstance?.parent?.id}" class="many-to-one"/>			
+		<g:select id="parent" name="parent.id" from="${cland.membership.Parent.list().sort{it.person1.firstName}}" optionKey="id" required="" value="${visitBookingInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/>			
 	</div>
 	<div class="fieldcontain ${hasErrors(bean: visitBookingInstance, field: 'status', 'error')} required">
 		<label for="status">

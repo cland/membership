@@ -1,3 +1,5 @@
+<%@ page import="cland.membership.SystemRoles" %>
+<g:set var="settingsInstance" value="${cland.membership.Settings.find{true}}"/>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,14 +26,9 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:bookingInstance, action:'save']" >
-				<fieldset class="form">
-					<g:render template="form"/>
-				</fieldset>
-				<fieldset class="buttons">
-					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
-				</fieldset>
-			</g:form>
+			
+			<g:render template="bookingform" model="[settings:settingsInstance]"></g:render>
+		
 		</div>
 	</body>
 </html>

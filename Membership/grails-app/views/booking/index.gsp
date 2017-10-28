@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<a href="#list-booking" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav navpage" style="display:none" role="navigation">
+		<div class="nav navpage" style="" role="navigation">
 			<ul>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>

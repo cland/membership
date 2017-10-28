@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<g:if env="development">
-			<h2>Houston, we have a problem!</h2>
+			<h2>Harare, we have a problem!</h2>
 			<g:renderException exception="${exception}" />
 			<div class="message">
             <strong>Error ${request.'javax.servlet.error.status_code'}:</strong>
