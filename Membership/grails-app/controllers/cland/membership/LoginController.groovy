@@ -14,8 +14,8 @@
  */
 package cland.membership
 
+import cland.membership.security.Person
 import grails.converters.JSON
-
 import javax.servlet.http.HttpServletResponse
 import grails.plugin.springsecurity.SpringSecurityUtils;
 import org.springframework.security.access.annotation.Secured
@@ -107,7 +107,7 @@ println("Authentication required")
 	 */
 	def authfail() {
 
-		String msg = ''
+		String msg = 'Login Failed'
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {
 			if (exception instanceof AccountExpiredException) {
@@ -142,7 +142,8 @@ println("Authentication required")
 	 * The Ajax success redirect url.
 	 */
 	def ajaxSuccess() {
-		render([success: true, username: springSecurityService.authentication.name] as JSON)
+		Person user = springSecurityService.getCurrentUser()
+		render([success: true, username: user?.username, person:user?.toMap()] as JSON)
 	}
 
 	/**
