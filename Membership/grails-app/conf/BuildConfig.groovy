@@ -77,6 +77,9 @@ grails.project.dependency.resolution = {
 		compile ":mail:1.0.7"
 		compile ":rest:0.8"
 		compile ":excel-export:0.2.1"
+		compile "org.grails.plugins:spring-security-rest:1.5.4", {
+            excludes 'spring-security-core', 'cors'
+		}
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"
         //compile ":less-asset-pipeline:1.10.0"

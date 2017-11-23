@@ -181,6 +181,11 @@ grails.plugin.springsecurity.useSecurityEventListener = true
 grails.plugin.springsecurity.onAbstractAuthenticationFailureEvent = { e, appCtx ->
    println "\nERROR auth failed for user $e.authentication.name: $e.exception.message\n"
 }
+grails.plugin.springsecurity.rest.login.useJsonCredentials = true
+grails.plugin.springsecurity.rest.token.storage.useGorm = true
+grails.plugin.springsecurity.rest.token.storage.gorm.tokenDomainClassName = 'cland.membership.security.AuthenticationToken'
+//grails.plugin.springsecurity.rest.token.storage.gorm.tokenValuePropertyName = 'tokenValue'
+//grails.plugin.springsecurity.rest.token.storage.gorm.usernamePropertyName = 'username'
 log4j = {
 	//debug 'org.springframework.security'
  }
